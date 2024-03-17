@@ -18,7 +18,7 @@ def generate_and_save_audio(text, filename, api_key="a9ad61e19ef91f6814895c0a5f3
     # Set up the environment variable for ElevenLabs API key
     os.environ["ELEVEN_API_KEY"] = api_key
     voice_settings = VoiceSettings(stability=0.63, similarity_boost=1.0, clarity=1.0)
-
+ 
     # Generate audio with specified text, voice model, and settings
     audio = generate(
         text=text,
