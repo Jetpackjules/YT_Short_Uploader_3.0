@@ -1,6 +1,6 @@
 import praw
 import os
-import tts
+# import tts
 
 # Set up PRAW with your Reddit API credentials
 reddit = praw.Reddit(
@@ -9,21 +9,45 @@ reddit = praw.Reddit(
     user_agent="idk"
 )
 
-def scrape_and_convert_to_audio():
+def scrape_questions_and_answers():
     # Access the r/AskReddit subreddit and get the top posts of the day
     subreddit = reddit.subreddit('AskReddit')
     top_posts = subreddit.top('day', limit=1)  # Adjust 'limit' for the number of posts
 
-    for index, post in enumerate(top_posts, start=1):
-        # Prepare the text for TTS: Post title followed by top comments
-        text_for_tts = f"Question {index}: {post.title} "
-        top_comments = list(post.comments)[:6]  # Get the top 2 comments
+    qa_list = []  # This will store our questions and answers
+
+    for post in top_posts:
+        # Add the post title (the question) as the first item in the list
+        qa_list.append(post.title)
+        
+        # Fetch the top comments (the answers)
+        top_comments = list(post.comments)[:6]  # Adjust for the number of comments you want
         for idx, comment in enumerate(top_comments, start=1):
-            text_for_tts += f" Answer {idx}: {comment.body} "
+            # Append each comment to the list
+            qa_list.append(comment.body)
 
-        # Convert the text to speech
-        output = tts.speak(f'post_{index}', text_for_tts)
-        print(f'Generated audio file at: {output}')
+    return qa_list
 
-if __name__ == "__main__":
-    scrape_and_convert_to_audio()
+
+def scrape_questions_and_answers():
+    # Access the r/AskReddit subreddit and get the top posts of the day
+    subreddit = reddit.subreddit('AskReddit')
+    top_posts = subreddit.top('day', limit=1)  # Adjust 'limit' for the number of posts
+
+    qa_dict = {}  # This will store our questions and answers along with usernames
+
+    for post in top_posts:
+        # Create a unique identifier for the post
+        post_id = post.id
+        # Add the post title (the question) and the poster's username as the first item in the dict
+        qa_dict[post_id] = {'post': post.title, 'user': "u/"+str(post.author.name), 'comments': []}
+        
+        # Fetch the top comments (the answers)
+        top_comments = list(post.comments)[:6]  # Adjust for the number of comments you want
+        for comment in top_comments:
+            if comment.body != "[deleted]":
+                # Append each comment with the commenter's username to the list under the post's entry
+                qa_dict[post_id]['comments'].append({'text': comment.body, 'user': ("u/"+str(comment.author))})
+
+    return qa_dict
+
