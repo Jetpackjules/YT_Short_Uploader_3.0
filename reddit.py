@@ -43,7 +43,7 @@ def scrape_questions_and_answers():
         qa_dict[post_id] = {'post': post.title, 'user': "u/"+str(post.author.name), 'comments': []}
         
         # Fetch the top comments (the answers)
-        top_comments = list(post.comments)[:6]  # Adjust for the number of comments you want
+        top_comments = list(post.comments)[:15]  # Adjust for the number of comments you want
         for comment in top_comments:
             if comment.body != "[deleted]":
                 # Append each comment with the commenter's username to the list under the post's entry
