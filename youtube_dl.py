@@ -18,8 +18,7 @@ def download_clip():
         duration = info_dict.get('duration', None)
 
     # Calculate random start time
-    start_time = random.randint(20, max(20, duration - 120))  # Ensures a 1-minute clip (and cuts out intro + outro that might not be parcour)
-    end_time = start_time + 60
+    start_time = random.randint(20, max(80, duration - 120))  # Ensures a 1-minute clip (and cuts out intro + outro that might not be parcour)
 
     # FFmpeg command to download the segment
     ffmpeg_command = [
@@ -39,4 +38,4 @@ def download_clip():
     # Run the command
     subprocess.run(ffmpeg_command)
 
-download_clip()
+# download_clip()
