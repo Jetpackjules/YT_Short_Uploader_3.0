@@ -29,13 +29,13 @@ def generate_captions(file_url):
         deepgram.extra.to_SRT(response)
     srt_content = f.getvalue()
     
-    with open('Audiofiles\\subs.srt', 'w') as srt_file:
+    with open('output\\audiofiles\\subs.srt', 'w') as srt_file:
         srt_file.write(srt_content)
     print("SRT Generated!")
 
 
 
-def add_subs(subtitle_file_path="Audiofiles\\subs.srt", video_file_path="output\\video_raw.mp4",
+def add_subs(subtitle_file_path="output\\audiofiles\\subs.srt", video_file_path="output\\video_raw.mp4",
                                        output_file_path="output\\video_subbed.mp4", font='Impact', color='white', 
                                        fontsize=34, stroke_width=5):
     # Load the video clip

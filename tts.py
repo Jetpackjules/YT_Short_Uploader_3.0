@@ -1,15 +1,18 @@
 from gtts import gTTS
+from mutagen.mp3 import MP3
 
 def speak(filename, text_for_tts):
     # Convert the text to speech
     tts = gTTS(text_for_tts, lang='en')
-    audio_file = f'Audiofiles\\{filename}.mp3'
+    audio_file = f'output\\Audiofiles\\{filename}.mp3'
     tts.save(audio_file)
     print("TTS TEXT ------------------------------")
     print(text_for_tts)
     print(f'Generated audio file: {audio_file}')
+    duration = get_mp3_duration(audio_file)
+    return duration
 
-    return audio_file
+
 # a9ad61e19ef91f6814895c0a5f310ee9
 from elevenlabs import generate, play, Voice, VoiceSettings
 import os
@@ -30,8 +33,8 @@ def generate_and_save_audio(text, filename, api_key="a9ad61e19ef91f6814895c0a5f3
     )
 
     # Ensure the Audiofiles directory exists
-    os.makedirs("Audiofiles", exist_ok=True)
-    filepath = f"Audiofiles/{filename}.mp3"
+    os.makedirs("output\\audiofiles", exist_ok=True)
+    filepath = f"output\\audiofiles\\{filename}.mp3"
 
     # Save the audio to a file
     with open(filepath, "wb") as audio_file:
@@ -40,12 +43,18 @@ def generate_and_save_audio(text, filename, api_key="a9ad61e19ef91f6814895c0a5f3
     # You may need additional libraries or methods to calculate the length of the generated audio file
     # This part is just a placeholder as calculating exact duration might require examining the file
     # Typically, you might use a library like PyDub or similar to analyze the MP3 file's length
-    duration = "Unknown"  # Placeholder, replace with actual duration calculation
+    duration = get_mp3_duration(filepath)
 
-    return filepath, duration
+    return duration
+
+def get_mp3_duration(file_path):
+    """Returns the duration of an MP3 file in seconds."""
+    audio = MP3(file_path)
+    return audio.info.length  # Duration in seconds
 
 # Example usage
 text = "Hello, this is a test using ElevenLabs."
-filename = "test_audio2"
-filepath, duration = generate_and_save_audio(text, filename)
-print(f"File saved to: {filepath}, Duration: {duration} seconds")
+filename = "test_audio"
+# filepath, duration = generate_and_save_audio(text, filename)
+filepath, duration = speak(filename, text)
+print(f"Duration: {duration} seconds")

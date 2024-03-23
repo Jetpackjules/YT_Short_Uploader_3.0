@@ -4,6 +4,7 @@ from moviepy.video.fx.all import crop
 from reddit import scrape_questions_and_answers
 from bubbles import create_text_bubble
 from youtube_dl import download_clip
+from tts import speak
 # Update these paths and values to suit your setup
 # input_video_path = "assets\\input_video.mp4"
 # input_video_path = "random_minute.webm"
@@ -31,16 +32,22 @@ def make_vid(post):
 
     # Create a bubble for the main post
     main_post_img_path = create_text_bubble(post['post'], post['user'], "AskReddit")
-    main_post_clip = ImageClip(main_post_img_path).set_duration(5).set_start(start_time).set_position(("center", yPos), relative=True)
+    duration = speak("post", post['post'])
+
+    main_post_clip = ImageClip(main_post_img_path).set_duration(duration).set_start(start_time).set_position(("center", yPos), relative=True)
     annotations.append(main_post_clip)
-    start_time += 5
+
+    start_time += duration+0.4
 
     # Loop over comments to create bubbles
     for comment in post['comments']:
         img_path = create_text_bubble(comment['text'], comment['user'], "AskReddit")
-        img_clip = ImageClip(img_path).set_duration(4).set_start(start_time).set_position('center')
+        duration = speak("comment", comment['text'])
+
+        img_clip = ImageClip(img_path).set_duration(duration).set_start(start_time).set_position('center')
         annotations.append(img_clip)
-        start_time += 4.5
+
+        start_time += duration+0.4
 
     # Final composition and video generation
     final_clips = [clip_cropped] + annotations
