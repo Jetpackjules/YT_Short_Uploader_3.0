@@ -84,7 +84,7 @@ def make_vid(post):
         main_post_audio = AudioFileClip(main_post_audio_path).set_duration(duration).set_start(start_time)
         audio_clips.append(main_post_audio)
 
-    start_time += (duration + 0.1)
+    start_time += (duration)
     
     # Loop over comments to create bubbles and audio clips
     for idx, comment in enumerate(post['comments']):
@@ -102,7 +102,7 @@ def make_vid(post):
             comment_audio = AudioFileClip(comment_audio_path).set_duration(duration).set_start(start_time).set_end(start_time+duration-0.05)
             audio_clips.append(comment_audio)
 
-        start_time += (duration + 0.1)
+        start_time += (duration)
 
     # Concatenate all audio clips together
     if audio_clips:

@@ -1,4 +1,5 @@
 To create yaml go to terminal:
+conda env export > environment.yml
 
 To update it:
 conda env create --file=environment.yml
