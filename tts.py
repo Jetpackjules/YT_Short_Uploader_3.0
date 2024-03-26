@@ -75,9 +75,9 @@ def get_mp3_duration(file_path):
     return audio.info.length  # Duration in seconds
 
 # Example usage
-text = "Hello, this is a test using ElevenLabs."
-filename = "test_audio"
-# filepath, duration = generate_and_save_audio(text, filename)
-# filepath, duration = speak(filename, text)
-# print(f"Duration: {duration} seconds")
-speak(filename, text)
+# text = "Hello, this is a test using ElevenLabs."
+# filename = "test_audio"
+# # filepath, duration = generate_and_save_audio(text, filename)
+# # filepath, duration = speak(filename, text)
+# # print(f"Duration: {duration} seconds")
+# speak(filename, text)

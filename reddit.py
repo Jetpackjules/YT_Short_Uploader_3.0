@@ -12,7 +12,7 @@ reddit = praw.Reddit(
 def scrape_questions_and_answers():
     # Access the r/AskReddit subreddit and get the top posts of the day
     subreddit = reddit.subreddit('AskReddit')
-    top_posts = subreddit.top('day', limit=1)  # Adjust 'limit' for the number of posts
+    top_posts = subreddit.top('year', limit=1)  # Adjust 'limit' for the number of posts
 
     qa_list = []  # This will store our questions and answers
 

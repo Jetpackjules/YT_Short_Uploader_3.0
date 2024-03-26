@@ -3,7 +3,7 @@ import io
 from contextlib import redirect_stdout
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
-from lineUp import generate_srt
+from Sub_Align import generate_srt
 
 deepgram = Deepgram("73bfe43e53a979195482bdaf19865b539429e7e0")
 
@@ -39,7 +39,7 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
              fontsize=34, stroke_width=5):
     
     # generate_captions(video_file_path)
-    generate_srt("output\\video_subbed.mp4")
+    generate_srt("output\\video_raw.mp4")
     subtitle_file_path="output\\audiofiles\\subs.srt"
     # Load the video clip
     video = VideoFileClip(video_file_path)
@@ -83,4 +83,4 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
 
 # Example usage
 # generate_captions('output\\video_raw.mp4')
-add_subs()
+# add_subs()
