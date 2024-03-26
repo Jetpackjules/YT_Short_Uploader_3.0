@@ -25,7 +25,11 @@ def generate_srt(audio_path):
     original_transcript_path = "output\\audiofiles\\transcript.txt"
     modified_transcript_path = "output\\audiofiles\\transcript_MOD.txt"
     output_directory = "output\\audiofiles"
-    prepare_transcript(original_transcript_path, modified_transcript_path)
+
+    # prepare_transcript(original_transcript_path, modified_transcript_path)
+    modified_transcript_path = original_transcript_path
+
+
     conda_path = subprocess.run("where conda", text=True, capture_output=True).stdout.strip()
     env_name = os.environ["CONDA_PREFIX"].split(os.path.sep)[-1]
 
