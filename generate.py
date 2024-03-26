@@ -72,9 +72,12 @@ def make_vid(post):
     start_time = 0
     audio_clips = []
 
+    transcript = ""
     # Create a bubble for the main post
     main_post_img_path = create_text_bubble(post['post'], post['user'], "AskReddit")
     duration = speak("post", post['post'])
+    transcript += post['post']
+
     main_post_audio_path = f"output\\audiofiles\\post.mp3"  # Assuming 'id' is available in 'post'
 
     main_post_clip = ImageClip(main_post_img_path).set_duration(duration).set_start(start_time).set_position(("center", yPos), relative=True)
@@ -103,10 +106,13 @@ def make_vid(post):
             audio_clips.append(comment_audio)
 
         start_time += (duration)
+        transcript += comment['text']
 
     # Concatenate all audio clips together
     if audio_clips:
         combined_audio = concatenate_audioclips(audio_clips)
+    with open("output\\audiofiles\\transcript.txt", "w") as file:
+        file.write(transcript)
 
     # Final composition and video generation
     final_clips = [clip_cropped] + annotations
@@ -118,13 +124,10 @@ def make_vid(post):
     final_video.write_videofile(output_video_path, fps=24, codec="libx264", preset="fast")
     add_subs()
 
-# # Dummy data to represent API output
+# Scrape reddit
 redditPull = scrape_questions_and_answers()
 print("REDDIT SCRAPED! Generating video...")
 # Grab yt minecraft gameplay:
 download_clip()
-# # Add bubbles and compile:
-# for post_id, pInfo in redditPull.items():
-#     make_vid(pInfo)
-    
+# Add bubbles and compile:
 make_vid(next(iter(redditPull.values())))

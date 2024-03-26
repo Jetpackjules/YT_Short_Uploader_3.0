@@ -3,6 +3,7 @@ import io
 from contextlib import redirect_stdout
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
+from lineUp import generate_srt
 
 deepgram = Deepgram("73bfe43e53a979195482bdaf19865b539429e7e0")
 
@@ -33,13 +34,12 @@ def generate_captions(file_url):
         srt_file.write(srt_content)
     print("SRT Generated!")
 
-
-
 def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\video_subbed.mp4", 
              font='Impact', color='white', 
              fontsize=34, stroke_width=5):
     
-    generate_captions(video_file_path)
+    # generate_captions(video_file_path)
+    generate_srt("output\\video_subbed.mp4")
     subtitle_file_path="output\\audiofiles\\subs.srt"
     # Load the video clip
     video = VideoFileClip(video_file_path)
@@ -81,7 +81,6 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     final.write_videofile(output_file_path, codec="libx264", fps=video.fps)
 
 
-
 # Example usage
 # generate_captions('output\\video_raw.mp4')
-# add_subs()
+add_subs()
