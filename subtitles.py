@@ -34,11 +34,13 @@ def generate_captions(file_url):
         srt_file.write(srt_content)
     print("SRT Generated!")
 
+
+
 def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\video_subbed.mp4", 
              font='Impact', color='white', 
-             fontsize=34, stroke_width=5):
+             fontsize=37, stroke_width=8):
+            # OG: fontsize=34, stroke_width=5
     
-    # generate_captions(video_file_path)
     generate_srt("output\\video_subbed.mp4")
     subtitle_file_path="output\\audiofiles\\subs.srt"
     # Load the video clip
@@ -81,6 +83,6 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     final.write_videofile(output_file_path, codec="libx264", fps=video.fps)
 
 
-# Example usage
-# generate_captions('output\\video_raw.mp4')
-# add_subs()
+# RUNS WHEN NOT AN IMPORT:
+if __name__ == "__main__":
+    add_subs()

@@ -12,10 +12,17 @@ def prepare_transcript(original_path, modified_path):
     with open(original_path, 'r') as original, open(modified_path, 'w', encoding='utf-8') as modified:
         for line in original:
             words = line.split()
-            for i in range(0, len(words), 2):
+            for i in range(0, len(words), 3):
                 if (words[i] != "&#x200B;"):
-                    new_tex = ' '.join(words[i:i + 2])+" "
-                    # print(new_tex.replace('“','"').replace('”','"'))
+                    new_tex = ' '.join(words[i:i + 3])+" "
+                    print(new_tex)
+
+                    new_tex = new_tex.replace("‘", "'").replace("’", "'")
+                    # Replace curly double quotes
+                    new_tex = new_tex.replace("“", '"').replace("”", '"')
+                    # Replace curly commas (if any exist; they are less common)
+                    new_tex = new_tex.replace("‚", ",")
+                    new_tex = new_tex.replace("ï¿½", "")
                     modified.write(new_tex) 
 
 def generate_srt(audio_path):
@@ -32,7 +39,7 @@ def generate_srt(audio_path):
     env_name = os.environ["CONDA_PREFIX"].split(os.path.sep)[-1]
 
 
-    command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}\\subs.srt --overwrite"
+    command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}\\subs.srt --overwrite --subtitles.minWordsInLine=1 --language=en-US --subtitles.maxLineCount=1 --subtitles.maxLineWidth=20"
     print("ALIGNING TRANSCRIPT TO AUDIO FOR SRT...")
     try:
         # Run your command and capture output and errors
@@ -43,5 +50,9 @@ def generate_srt(audio_path):
     
     print("SRT files generated successfully in:", output_directory)
 
-generate_srt("output\\video_raw.mp4")
+
+# RUNS WHEN NOT AN IMPORT:
+if __name__ == "__main__":
+    generate_srt("output\\video_raw.mp4")
+# 
 
