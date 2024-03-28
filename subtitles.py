@@ -38,7 +38,7 @@ def generate_captions(file_url):
 
 def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\video_subbed.mp4", 
              font='Impact', color='white', 
-             fontsize=34, stroke_width=5):
+             fontsize=60, stroke_width=25):
             # OG: fontsize=34, stroke_width=5
     
     generate_srt("output\\video_raw.mp4")
@@ -46,7 +46,7 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     # Load the video clip
     video = VideoFileClip(video_file_path)
     vidHeight = video.h
-    vidWidth = video.w*1.3
+    vidWidth = video.w*1.0
     yPos = vidHeight * 4/9
     
     # Define the generator for the stroke (background text)

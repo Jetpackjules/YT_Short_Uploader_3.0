@@ -62,7 +62,7 @@ def make_vid(post):
             audio_clips.append(comment_audio)
 
         start_time += (duration)
-        transcript += ("\n"+comment['text'])
+        transcript += ("\n\n"+comment['text'])
 
     # Concatenate all audio clips together
     if audio_clips:

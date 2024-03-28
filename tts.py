@@ -69,10 +69,73 @@ def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
 
     return duration
 
+
 def get_mp3_duration(file_path):
     """Returns the duration of an MP3 file in seconds."""
     audio = MP3(file_path)
     return audio.info.length  # Duration in seconds
+
+
+import helper
+
+# def echoSpeak(filename, text):
+#     command = f'echogarden speak "{text}" sample_audio\\{filename}.mp3 --overwrite'
+#     helper.run(command)
+
+voices = [
+  "en_GB-alan-low",
+  "en_GB-alan-medium",
+  "en_GB-semaine-medium",
+  "en_GB-danny-low",
+  "en_GB-alba-medium",
+  "en_GB-aru-medium",
+  "en_GB-southern_english_female-low",
+  "en_GB-northern_english_male-medium",
+  "en_GB-vctk-medium",
+  "en_GB-jenny_dioco-medium",
+  "en_GB-cori-high",
+  "en_US-amy-low",
+  "en_US-amy-medium",
+  "en_US-kathleen-low",
+  "en_US-lessac-low",
+  "en_US-lessac-medium",
+  "en_US-lessac-high",
+  "en_US-libritts-high",
+  "en_US-libritts_r-medium",
+  "en_US-ryan-low",
+  "en_US-ryan-medium",
+  "en_US-ryan-high",
+  "en_US-joe-medium",
+  "en_US-kusal-medium",
+  "en_US-arctic-medium",
+  "en_US-l2arctic-medium",
+  "en_US-hfc_male-medium",
+  "en_US-hfc_female-medium",
+  "en_US-kristin-medium",
+  "en_US-ljspeech-high",
+  "en_US-ljspeech-medium"
+]
+
+
+def echoSpeak(filename, text):
+    # Base command parts
+    # DEFAULT ENGINE IS VITS!
+    command_parts = [
+        f'echogarden speak "{text}"',
+        f'sample_audio\\{filename}.mp3',
+        '--overwrite',
+        "--engine=vits",
+        f'--voice={filename}'           
+        ]
+
+    # Join all parts into the final command string
+    command = ' '.join(command_parts)
+    helper.run(command)
+
+
+# echoSpeak("test2", "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
+for voice in voices:
+    echoSpeak(voice, "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
 
 # Example usage
 # text = "Hello, this is a test using ElevenLabs."
@@ -81,3 +144,4 @@ def get_mp3_duration(file_path):
 # # filepath, duration = speak(filename, text)
 # # print(f"Duration: {duration} seconds")
 # speak(filename, text)
+
