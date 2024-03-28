@@ -47,7 +47,7 @@ def generate_srt(audio_path):
     except subprocess.CalledProcessError as e:
         print("TRYING OTHER COMMAND!")
         RESULT = subprocess.run(f'{conda_path} run -n {env_name} {command}', check=True, capture_output=True, text=True, shell=True)
-    
+        print(RESULT)
     print("SRT files generated successfully in:", output_directory)
 
 
