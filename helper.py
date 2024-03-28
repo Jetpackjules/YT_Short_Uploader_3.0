@@ -16,4 +16,4 @@ def run(command):
     # This almost always works:
     RESULT = subprocess.run(f'{conda_path} run -n {env_name} {command}', check=True, capture_output=True, text=True, shell=True)
     # print(RESULT)
-    print("Command RUN!")
+    # print("Command RUN!")
