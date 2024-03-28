@@ -122,7 +122,7 @@ def echoSpeak(filename, text):
     # DEFAULT ENGINE IS VITS!
     command_parts = [
         f'echogarden speak "{text}"',
-        f'sample_audio\\{filename}.mp3',
+        f'D:\\Miniconda_Projects\\YT_Shorts_Uploader_3.0\\sample_audio\\{filename}.mp3',
         '--overwrite',
         "--engine=vits",
         f'--voice={filename}'           
@@ -140,12 +140,3 @@ for voice in voices:
     echoSpeak(voice, "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
     t+=1
     print(f"{t}/{len(voices)}")
-
-# Example usage
-# text = "Hello, this is a test using ElevenLabs."
-# filename = "test_audio"
-# # filepath, duration = generate_and_save_audio(text, filename)
-# # filepath, duration = speak(filename, text)
-# # print(f"Duration: {duration} seconds")
-# speak(filename, text)
-

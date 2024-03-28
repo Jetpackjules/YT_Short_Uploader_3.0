@@ -3,7 +3,7 @@ import io
 from contextlib import redirect_stdout
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
-from sub_align import generate_srt
+from Sub_Align import generate_srt
 
 deepgram = Deepgram("73bfe43e53a979195482bdaf19865b539429e7e0")
 
