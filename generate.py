@@ -47,15 +47,14 @@ def make_vid(post):
     
     # Loop over comments to create bubbles and audio clips
     for idx, comment in enumerate(post['comments']):
+        duration = speak(f"comment_{idx}", comment['text'])
+        comment_audio_path = f"output\\audiofiles\\comment_{idx}.mp3"  # Unique path for each comment
         if ((start_time + duration) >= 60 | (comment['text'] == "[removed]")):
             break
 
-        img_path = create_text_bubble(comment['text'], comment['user'], "AskReddit")
-        duration = speak(f"comment_{idx}", comment['text'])
-        comment_audio_path = f"output\\audiofiles\\comment_{idx}.mp3"  # Unique path for each comment
-
-        img_clip = ImageClip(img_path).set_duration(duration).set_start(start_time).set_position(("center", yPos), relative=True)
-        annotations.append(img_clip)
+        # img_path = create_text_bubble(comment['text'], comment['user'], "AskReddit")
+        # img_clip = ImageClip(img_path).set_duration(duration).set_start(start_time).set_position(("center", yPos), relative=True)
+        # annotations.append(img_clip)
 
         if os.path.exists(comment_audio_path):
             comment_audio = AudioFileClip(comment_audio_path).set_duration(duration).set_start(start_time).set_end(start_time+duration-0.05)
