@@ -8,7 +8,7 @@ from bubbles import create_text_bubble
 from youtube_dl import download_clip
 from tts import speak, speak11
 from subtitles import add_subs
-
+import helper
 
 input_video_path = "output\\input_video.webm"
 output_video_path = "output\\video_raw.mp4"
@@ -16,12 +16,15 @@ output_video_path = "output\\video_raw.mp4"
 def make_vid(post):
     # Video processing
     clip = VideoFileClip(input_video_path)
-    clip_resized = clip.resize(height=1280)  # Resize to the desired height
+    # REMOVE: ALL DONE IN FFMPEG COMMAND:
 
-    # Crop to maintain aspect ratio and focus
-    x_center = clip_resized.w / 2
-    y_center = clip_resized.h / 2
-    clip_cropped = crop(clip_resized, width=720, height=1280, x_center=x_center, y_center=y_center)
+
+    # clip_resized = clip.resize(height=1280)  # Resize to the desired height
+
+    # # Crop to maintain aspect ratio and focus
+    # x_center = clip_resized.w / 2
+    # y_center = clip_resized.h / 2
+    # clip_cropped = crop(clip_resized, width=720, height=1280, x_center=x_center, y_center=y_center)
     yPos=0.2
 
     annotations = []
@@ -45,6 +48,7 @@ def make_vid(post):
 
     start_time += (duration)
     
+    user_times = []
     # Loop over comments to create bubbles and audio clips
     for idx, comment in enumerate(post['comments']):
         duration = speak(f"comment_{idx}", comment['text'])
@@ -55,6 +59,10 @@ def make_vid(post):
         # img_path = create_text_bubble(comment['text'], comment['user'], "AskReddit")
         # img_clip = ImageClip(img_path).set_duration(duration).set_start(start_time).set_position(("center", yPos), relative=True)
         # annotations.append(img_clip)
+        start_time = start_time  # Assuming `start_time` is in seconds
+        user = comment['user']
+        user_times.append((start_time, start_time+duration, user))
+
 
         if os.path.exists(comment_audio_path):
             comment_audio = AudioFileClip(comment_audio_path).set_duration(duration).set_start(start_time).set_end(start_time+duration-0.05)
@@ -63,6 +71,9 @@ def make_vid(post):
         start_time += (duration)
         transcript += ("\n\n"+comment['text'])
 
+    print("USER TIMES:")
+    print(user_times)
+    helper.save_as_srt(user_times)
     # Concatenate all audio clips together
     if audio_clips:
         combined_audio = concatenate_audioclips(audio_clips)
@@ -70,13 +81,13 @@ def make_vid(post):
         file.write(transcript)
 
     # Final composition and video generation
-    final_clips = [clip_cropped] + annotations
+    final_clips = [clip] + annotations
     final_video = CompositeVideoClip(final_clips)
 
     if audio_clips:
         final_video = final_video.set_audio(combined_audio)
 
-    final_video.write_videofile(output_video_path, fps=24, codec="libx264", preset="fast")
+    final_video.write_videofile(output_video_path, fps=36, codec="libx264", preset="medium")
     add_subs()
 
 # Scrape reddit

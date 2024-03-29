@@ -19,4 +19,16 @@ def run(command):
         print("Error:", e.stderr)
 
 
-# subprocess.run(['powesrhell', '-Command', "conda"], check=True, capture_output=True, text=True, shell=True)
+def save_as_srt(entries, output_file='output\\bubbles\\usernames.srt'):
+    with open(output_file, 'w', encoding='utf-8') as f:
+        for index, (start, end, user) in enumerate(entries, 1):
+            start_srt = format_srt_time(start)
+            end_srt = format_srt_time(end)
+            f.write(f"{index}\n{start_srt} --> {end_srt}\n{user}\n\n")
+
+def format_srt_time(seconds):
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    # SRT format requires milliseconds, so we multiply the fractional part by 1000
+    milliseconds = int((seconds - int(seconds)) * 1000)
+    return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02},{milliseconds:03}"
