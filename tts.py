@@ -132,11 +132,10 @@ def echoSpeak(filename, text):
     command = ' '.join(command_parts)
     helper.run(command)
 
-
-# echoSpeak("test2", "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
-t=0
-for voice in voices:
-
-    echoSpeak(voice, "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
-    t+=1
-    print(f"{t}/{len(voices)}")
+if __name__ == "__main__":
+    # echoSpeak("test2", "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
+    t=0
+    for voice in voices:
+        echoSpeak(voice, "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
+        t+=1
+        print(f"{t}/{len(voices)}")
