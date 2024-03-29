@@ -10,7 +10,7 @@ from tts import speak, speak11
 from subtitles import add_subs
 import helper
 
-input_video_path = "output\\input_video.webm"
+input_video_path = "output\\input_video.mp4"
 output_video_path = "output\\video_raw.mp4"
 
 def make_vid(post):
