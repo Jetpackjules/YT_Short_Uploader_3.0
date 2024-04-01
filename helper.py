@@ -1,5 +1,6 @@
 import subprocess
 import os
+from mutagen.mp3 import MP3
 
 def run(command):
     # Attempted fix for multiple conda locs:
@@ -32,3 +33,21 @@ def format_srt_time(seconds):
     # SRT format requires milliseconds, so we multiply the fractional part by 1000
     milliseconds = int((seconds - int(seconds)) * 1000)
     return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02},{milliseconds:03}"
+
+
+from mutagen.mp3 import MP3
+from moviepy.editor import VideoFileClip
+
+
+def get_media_duration(file_path):
+    """Returns the duration of an MP3 or MP4 file in seconds."""
+    if file_path.lower().endswith('.mp3'):
+        media = MP3(file_path)
+        duration = media.info.length
+    elif file_path.lower().endswith('.mp4'):
+        with VideoFileClip(file_path) as video:
+            duration = video.duration
+    else:
+        raise ValueError("Unsupported file format")
+
+    return duration

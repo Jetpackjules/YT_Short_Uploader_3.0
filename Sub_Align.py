@@ -11,13 +11,15 @@ def prepare_transcript(original_path, modified_path):
             for i in range(0, len(words), 3):
                 if (words[i] != "&#x200B;"):
                     new_tex = ' '.join(words[i:i + 3])+" "
-                    # print(new_tex)
+                    # Adding line breaks after each comment:
+                    new_tex = new_tex.replace('*', "\n\n*")
+
                     new_tex = new_tex.replace("‘", "'").replace("’", "'")
                     # Replace curly double quotes
                     new_tex = new_tex.replace("“", '"').replace("”", '"')
                     # Replace curly commas (if any exist; they are less common)
-                    new_tex = new_tex.replace("‚", ",")
-                    new_tex = new_tex.replace("ï¿½", "")
+                    new_tex = new_tex.replace("‚", ",").replace("i'", "I'")
+                    new_tex = new_tex.replace("ï¿½", "").replace("(", "").replace(")", "")
                     modified.write(new_tex) 
 
 def generate_srt(audio_path):
@@ -26,7 +28,7 @@ def generate_srt(audio_path):
     output_directory = "output\\audiofiles"
 
     prepare_transcript(original_transcript_path, modified_transcript_path)
-    
+    # modified_transcript_path = original_transcript_path 
 
     print("ALIGNING TRANSCRIPT TO AUDIO FOR SRT...")
     command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}\\subs.srt --overwrite --subtitles.minWordsInLine=1 --language=en-US --subtitles.maxLineCount=1 --subtitles.maxLineWidth=20"

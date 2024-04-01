@@ -51,11 +51,14 @@ def make_vid(post):
     
     user_times = []
     # Loop over comments to create bubbles and audio clips
+    clip_len = helper.get_media_duration("output\\input_video.mp4")
     for idx, comment in enumerate(post['comments']):
         duration = speak(f"comment_{idx}", comment['text'])
         comment_audio_path = f"output\\audiofiles\\comment_{idx}.mp3"  # Unique path for each comment
-        if ((start_time + duration) >= 60 | (comment['text'] == "[removed]")):
-            break
+        if (((start_time + duration) >= clip_len) | ((comment['text'] == "[removed]"))):
+            continue
+        print(comment["text"])
+
 
         # img_path = create_text_bubble(comment['text'], comment['user'], "AskReddit")
         # img_clip = ImageClip(img_path).set_duration(duration).set_start(start_time).set_position(("center", yPos), relative=True)
@@ -70,7 +73,7 @@ def make_vid(post):
             audio_clips.append(comment_audio)
 
         start_time += (duration)
-        transcript += ("\n\n"+comment['text'])
+        transcript += ("\n\n"+"*"+comment['text'])
 
     print("USER TIMES:")
     print(user_times)
@@ -85,12 +88,16 @@ def make_vid(post):
     final_clips = [clip] + annotations
     final_video = CompositeVideoClip(final_clips)
 
+
     if audio_clips:
         final_video = final_video.set_audio(combined_audio)
+        audio_duration = combined_audio.duration
+        video_duration = audio_duration # + 0.5  # 0.5 seconds longer than audio
+        final_video = final_video.set_duration(video_duration)
 
     final_video.write_videofile(output_video_path, fps=59, codec="libx264", preset="medium")
     add_subs()
-    upload_video("output\\video_subbed.mp4")
+
 
 # Scrape reddit
 redditPull = scrape_questions_and_answers()

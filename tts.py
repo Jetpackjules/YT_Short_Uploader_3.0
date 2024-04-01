@@ -1,8 +1,9 @@
 from gtts import gTTS
-from mutagen.mp3 import MP3
 from moviepy.editor import AudioFileClip, vfx
 from pydub import AudioSegment
 from pydub.playback import play
+from helper import get_media_duration
+
 
 def speak(filename, text_for_tts, speed=2.5, pitch_factor=0.45):
     # Convert the text to speech
@@ -31,7 +32,7 @@ def speak(filename, text_for_tts, speed=2.5, pitch_factor=0.45):
 
     print(f'Generated audio file: {audio_path}')
 
-    duration = get_mp3_duration(audio_path)
+    duration = get_media_duration(audio_path)
     return duration
 
 
@@ -70,10 +71,7 @@ def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
     return duration
 
 
-def get_mp3_duration(file_path):
-    """Returns the duration of an MP3 file in seconds."""
-    audio = MP3(file_path)
-    return audio.info.length  # Duration in seconds
+
 
 
 import helper

@@ -40,7 +40,7 @@ reddit_logo_path = "assets\\reddit_logo.jpg"
 subbers_path = "assets\\subbers.png"
 # from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=700):
+def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, scale_factor=1.4):
     # Constants for layout
     mult = 1.6
     padding = 15
@@ -63,7 +63,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     text_font = ImageFont.truetype(font_path, 18)
 
     # CUTTING OUT MORE THAN 30 WORDS FOR BREVITY (TBD IMPROVE THIS!)
-    text = ' '.join(text.split()[:30])+"..." if len(text.split()) > 30 else text
+    text = ' '.join(text.split()[:45])+"..." if len(text.split()) > 45 else text
 
     text_lines = wrap_text(text, text_font, base_width - 2 * inner_padding - logo_size - padding)
     max_text_width = max([text_font.getsize(line)[0] for line in text_lines] + [0])
@@ -103,9 +103,15 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     draw_rounded.rounded_rectangle([(0, 0), (bubble_width, total_height)], radius=20, fill=255)
     img.putalpha(rounded_mask)
 
+    # Scale the entire bubble by factor Y
+    if scale_factor != 1.0:
+        img = img.resize((int(bubble_width * scale_factor), int(total_height * scale_factor)), Image.ANTIALIAS)
+
     # Save or return the image
     img_path = f"output\\bubbles\\{filename}.png"
     img.save(img_path, format="PNG")
     return img_path
 
-# create_text_bubble("THIS to say. I have 10 other things to say about this issue so I am making a very long story about this", "default_username", "AskReddit")
+
+if __name__ == "__main__":
+    create_text_bubble("THIS to say. I have 10 other things to say about this issue so I am making a very long story about this", "default_username", "AskReddit")
