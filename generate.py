@@ -8,6 +8,7 @@ from bubbles import create_text_bubble
 from youtube_dl import download_clip
 from tts import speak, speak11
 from subtitles import add_subs
+from upload_video import upload_video
 import helper
 
 input_video_path = "output\\input_video.mp4"
@@ -87,8 +88,9 @@ def make_vid(post):
     if audio_clips:
         final_video = final_video.set_audio(combined_audio)
 
-    final_video.write_videofile(output_video_path, fps=36, codec="libx264", preset="medium")
+    final_video.write_videofile(output_video_path, fps=59, codec="libx264", preset="medium")
     add_subs()
+    upload_video("output\\video_subbed.mp4")
 
 # Scrape reddit
 redditPull = scrape_questions_and_answers()

@@ -38,7 +38,7 @@ def download_clip():
         '-t', '50',  # Duration of the clip
         '-i', video_url,
         '-vf', 'scale=-2:1280,crop=720:1280',  # Scale to 1280 height and crop to 720x1280
-        '-r', '36',  # Set frame rate
+        '-r', '59',  # Set frame rate
         '-c:v', 'libx264',  # Use H.264 codec for video
         # '-crf', '28',  # CRF for a balance between quality and size
         '-preset', 'medium',  # Faster encoding preset
