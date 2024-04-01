@@ -43,7 +43,6 @@ def unique_color_picker():
         '#90EE90',  # Soft green
         '#FFC0CB',  # Pale pink
         # '#E6E6FA',  # Lavender
-        '#F5F5DC',  # Beige
         # '#D3D3D3',  # Light gray
         '#F5FFFA',  # Mint cream
         '#87CEEB'   # Sky blues

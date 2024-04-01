@@ -3,7 +3,7 @@ from moviepy.editor import AudioFileClip, concatenate_audioclips
 import os
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from moviepy.video.fx.all import crop
-from reddit import scrape_questions_and_answers
+from reddit import scrape_questions_and_answers, get_unprocessed_post
 from bubbles import create_text_bubble
 from youtube_dl import download_clip
 from tts import speak, speak11
@@ -53,11 +53,16 @@ def make_vid(post):
     # Loop over comments to create bubbles and audio clips
     clip_len = helper.get_media_duration("output\\input_video.mp4")
     for idx, comment in enumerate(post['comments']):
+        # Ignore the rest if the vid is already at least 45 secs long
+        if (start_time >= 45):
+            break
+
         duration = speak(f"comment_{idx}", comment['text'])
         comment_audio_path = f"output\\audiofiles\\comment_{idx}.mp3"  # Unique path for each comment
         if (((start_time + duration) >= clip_len) | ((comment['text'] == "[removed]"))):
             continue
         print(comment["text"])
+        comment["text"] = comment['text'].replace("/", " or ")
 
 
         # img_path = create_text_bubble(comment['text'], comment['user'], "AskReddit")
@@ -100,9 +105,12 @@ def make_vid(post):
 
 
 # Scrape reddit
-redditPull = scrape_questions_and_answers()
+# redditPull = scrape_questions_and_answers()
+redditPull = get_unprocessed_post()  # Get an unprocessed post
 print("REDDIT SCRAPED! Generating video...")
 # Grab yt minecraft gameplay:
 download_clip()
 # Add bubbles and compile:
-make_vid(next(iter(redditPull.values())))
+make_vid(redditPull)
+# Send clip to YT:
+# upload_video("output\\video_subbed.mp4")
