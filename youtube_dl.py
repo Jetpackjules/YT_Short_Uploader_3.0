@@ -35,7 +35,7 @@ def download_clip():
         'ffmpeg',
         '-y',
         '-ss', str(start_time),  # Fast seek to start
-        '-t', '50',  # Duration of the clip
+        '-t', '60',  # Duration of the clip
         '-i', video_url,
         '-vf', 'scale=-2:1280,crop=720:1280',  # Scale to 1280 height and crop to 720x1280
         '-r', '59',  # Set frame rate

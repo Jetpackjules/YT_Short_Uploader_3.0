@@ -5,7 +5,7 @@
 import helper
 
 def prepare_transcript(original_path, modified_path):
-    with open(original_path, 'r') as original, open(modified_path, 'w', encoding='utf-8') as modified:
+    with open(original_path, 'r', encoding='utf-8') as original, open(modified_path, 'w', encoding='utf-8') as modified:
         for line in original:
             words = line.split()
             for i in range(0, len(words), 3):
@@ -15,6 +15,7 @@ def prepare_transcript(original_path, modified_path):
                     new_tex = new_tex.replace('*', "\n\n*")
 
                     new_tex = new_tex.replace("‘", "'").replace("’", "'")
+                    new_tex = new_tex.replace('"', "\n\n")
                     # Replace curly double quotes
                     new_tex = new_tex.replace("“", '"').replace("”", '"')
                     # Replace curly commas (if any exist; they are less common)

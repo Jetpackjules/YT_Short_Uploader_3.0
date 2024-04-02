@@ -30,7 +30,7 @@ def generate_captions(file_url):
         deepgram.extra.to_SRT(response)
     srt_content = f.getvalue()
     
-    with open('output\\audiofiles\\subs.srt', 'w') as srt_file:
+    with open('output\\audiofiles\\subs.srt', 'w', encoding='utf-8') as srt_file:
         srt_file.write(srt_content)
     print("SRT Generated!")
 
@@ -42,9 +42,9 @@ def unique_color_picker():
         # '#ADD8E6',  # Light blue
         '#90EE90',  # Soft green
         '#FFC0CB',  # Pale pink
-        # '#E6E6FA',  # Lavender
+        '#E6E6FA',  # Lavender
         # '#D3D3D3',  # Light gray
-        '#F5FFFA',  # Mint cream
+        # '#F5FFFA',  # Mint cream (TOO WHITE)!
         '#87CEEB'   # Sky blues
     ]
     used_colors = set()
@@ -90,7 +90,6 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
         
         # Skip if its just the symbol:
         if not txt.strip():
-            # txt = "BLANK"
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
 
         return TextClip(txt,
@@ -129,16 +128,6 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     # MIGHT NEED TO RE-INSTALL IMAGE MAGICK WITH ALL BOXES CHECKED (except last 2, but LEGACY FEATURES needs ot be installed)
     # Useful info: https://moviepy-tburrows13.readthedocs.io/en/improve-docs/ref/VideoClip/TextClip.html
     # Download: https://imagemagick.org/script/download.php#windows
-
-
-    # subtitles_text = SubtitlesClip(subtitle_file_path, text_generator).set_position(('center', yPos))
-    # subtitles_stroke = SubtitlesClip(subtitle_file_path, stroke_generator).set_position(('center', yPos))
-
-    # # Layer the stroke subtitles behind the actual subtitles
-    # final = CompositeVideoClip([video, subtitles_stroke, subtitles_text], size=video.size)
-
-    # # Write the result to file
-    # final.write_videofile(output_file_path, codec="libx264", fps=video.fps)
 
 
 # RUNS WHEN NOT AN IMPORT:

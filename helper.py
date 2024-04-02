@@ -51,3 +51,29 @@ def get_media_duration(file_path):
         raise ValueError("Unsupported file format")
 
     return duration
+
+
+from moviepy.audio.AudioClip import AudioArrayClip
+import numpy as np
+def make_silent_audio(duration, sample_rate=44100):
+    # Create a silent audio segment of the specified duration
+    silent_segment = np.zeros((int(duration * sample_rate), 2))  # 2 channels for stereo
+    silent_audio = AudioArrayClip(silent_segment, fps=sample_rate)
+    return silent_audio
+
+def clean(text):
+    text = text.replace("*", "")
+    text = text.replace("/", " or ")
+    text = text.replace("…", "...")
+    text = text.replace("’", "'")
+    
+    return text
+
+import re
+def contains_link(text):
+    # Regular expression pattern to find URLs
+    pattern = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
+    # Search for the pattern in the text
+    match = re.search(pattern, text)
+    # Return True if a match is found, False otherwise
+    return match is not None
