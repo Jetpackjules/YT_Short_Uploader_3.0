@@ -66,7 +66,7 @@ def clean(text):
     text = text.replace("/", " or ")
     text = text.replace("…", "...")
     text = text.replace("’", "'")
-    
+    text = text.replace(" i ", " I ")    
     return text
 
 import re

@@ -105,7 +105,7 @@ def make_vid(post):
 redditPull = get_unprocessed_post()  # Get an unprocessed post
 print("REDDIT SCRAPED! Generating video...")
 # Grab yt minecraft gameplay:
-# download_clip()
+download_clip()
 # Add bubbles and compile:
 make_vid(redditPull)
 # Send clip to YT:
