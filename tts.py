@@ -66,7 +66,7 @@ def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
     # You may need additional libraries or methods to calculate the length of the generated audio file
     # This part is just a placeholder as calculating exact duration might require examining the file
     # Typically, you might use a library like PyDub or similar to analyze the MP3 file's length
-    duration = helper.get_mp3_duration(filepath)
+    duration = helper.get_media_duration(filepath)
 
     return duration
 
@@ -120,7 +120,7 @@ def echoSpeak(filename, text):
     # DEFAULT ENGINE IS VITS!
     command_parts = [
         f'echogarden speak "{text}"',
-        f'D:\\Miniconda_Projects\\YT_Shorts_Uploader_3.0\\sample_audio\\{filename}.mp3',
+        f'sample_audio\\{filename}.mp3',
         '--overwrite',
         "--engine=vits",
         f'--voice={filename}'           
@@ -130,10 +130,58 @@ def echoSpeak(filename, text):
     command = ' '.join(command_parts)
     helper.run(command)
 
+# if __name__ == "__main__":
+#     # echoSpeak("test2", "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
+#     t=0
+#     for voice in voices:
+#         echoSpeak(voice, "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
+#         t+=1
+#         print(f"{t}/{len(voices)}")
+
+
+import os
+from google.cloud import texttospeech
+import random
+from pydub import AudioSegment
+# from pydub.playback import speedup
+from scipy.signal import resample_poly
+import io
+import numpy as np
+
+voice_num = 0
+def googleTTS(filename, text):
+    global voice_num
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="auths\\the-respect-419200-439d401c763c.json"
+
+    voices = ["en-US-Journey-F", "en-US-Journey-D"]
+    voice_num += 1
+    voice = voices[(voice_num % 2)]
+
+    client = texttospeech.TextToSpeechClient()
+    synthesis_input = texttospeech.SynthesisInput(text=text)
+
+    voice = texttospeech.VoiceSelectionParams(
+        language_code="en-US", name=voice
+    )
+
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3, pitch=random.uniform(-10.0, 10.0), speaking_rate=2.88
+    )
+
+    response = client.synthesize_speech(
+        input=synthesis_input, voice=voice, audio_config=audio_config
+    )
+
+    with open(f'output\\Audiofiles\\{filename}.mp3', "wb") as out:
+        out.write(response.audio_content)
+
+    duration = helper.get_media_duration(f'output\\Audiofiles\\{filename}.mp3')
+    # print(response.text)
+    print(duration)
+    print("DONE!")
+
+    return duration
+
 if __name__ == "__main__":
-    # echoSpeak("test2", "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
-    t=0
-    for voice in voices:
-        echoSpeak(voice, "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
-        t+=1
-        print(f"{t}/{len(voices)}")
+    googleTTS("testGoogle", 'Well, my reaction would be that you should have a very strong alibi for tonight, just in case.')
+    # googleTTS("testGoogle2", 'Hello this is some test audio for my new google text to speech reddit posts! "I really hope" it works OMG TTYL!!?')
