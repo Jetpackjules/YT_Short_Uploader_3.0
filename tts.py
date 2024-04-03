@@ -144,6 +144,9 @@ from google.cloud import texttospeech
 import random
 from pydub import AudioSegment
 # from pydub.playback import speedup
+from pydub.effects import speedup
+from io import BytesIO
+
 from scipy.signal import resample_poly
 import io
 import numpy as np
@@ -165,23 +168,35 @@ def googleTTS(filename, text):
     )
 
     audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3, pitch=random.uniform(-10.0, 10.0), speaking_rate=2.88
+        audio_encoding=texttospeech.AudioEncoding.MP3, pitch=random.uniform(-10.0, 10.0), speaking_rate=3.88
     )
 
     response = client.synthesize_speech(
         input=synthesis_input, voice=voice, audio_config=audio_config
     )
 
-    with open(f'output\\Audiofiles\\{filename}.mp3', "wb") as out:
-        out.write(response.audio_content)
+    # with open(f'output\\Audiofiles\\{filename}.mp3', "wb") as out:
+    #     out.write(response.audio_content)
 
-    duration = helper.get_media_duration(f'output\\Audiofiles\\{filename}.mp3')
-    # print(response.text)
+    # Use BytesIO to treat audio content as a file-like object
+    audio_content = BytesIO(response.audio_content)
+    audio = AudioSegment.from_file(audio_content, format="mp3")
+
+    # Speed up the audio
+    speed = 1.20  # Adjust the speed as needed
+    sped_up_audio = speedup(audio, playback_speed=speed)
+
+    # Save the sped-up audio
+    sped_up_path = f'output\\Audiofiles\\{filename}.mp3'
+    sped_up_audio.export(sped_up_path, format="mp3")
+
+    duration = helper.get_media_duration(sped_up_path)
     print(duration)
     print("DONE!")
+
 
     return duration
 
 if __name__ == "__main__":
-    googleTTS("testGoogle", 'Well, my reaction would be that you should have a very strong alibi for tonight, just in case.')
-    # googleTTS("testGoogle2", 'Hello this is some test audio for my new google text to speech reddit posts! "I really hope" it works OMG TTYL!!?')
+    googleTTS("testGoogle", 'as a former active H addict i will say i would not wish withdrawals on anyone. they are truly  hellacious. i feel blessed to have gotten out of all that before fentanyl took over, i would be dead now probably')
+    googleTTS("testGoogle", 'as a former active H addict i will say i would not wish withdrawals on anyone. they are truly  hellacious. i feel blessed to have gotten out of all that before fentanyl took over, i would be dead now probably')
