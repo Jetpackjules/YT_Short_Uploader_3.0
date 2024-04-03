@@ -22,7 +22,7 @@ input_video_path = "output\\input_video.mp4"
 output_video_path = "output\\video_raw.mp4"
 
 def make_vid(post):
-    comment_pause = 0.6
+    comment_pause = 0.35
 
     clip = VideoFileClip(input_video_path)
     yPos=0.2
@@ -116,4 +116,4 @@ download_clip()
 # Add bubbles and compile:
 make_vid(redditPull)
 # Send clip to YT:
-# upload_video("output\\video_subbed.mp4")
+upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n \n Please like and subscribe for more reddit stories!!", title=helper.generate_title())

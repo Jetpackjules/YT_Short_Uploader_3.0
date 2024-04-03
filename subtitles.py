@@ -42,7 +42,7 @@ def unique_color_picker():
         # '#ADD8E6',  # Light blue
         '#90EE90',  # Soft green
         '#FFC0CB',  # Pale pink
-        '#E6E6FA',  # Lavender
+        # '#E6E6FA',  # Lavender (TOO WHITE!)
         # '#D3D3D3',  # Light gray
         # '#F5FFFA',  # Mint cream (TOO WHITE)!
         '#87CEEB'   # Sky blues
@@ -61,7 +61,47 @@ def unique_color_picker():
 
     return get_color
 
+def trim_srt_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.readlines()
 
+    # Find the line with the first asterisk
+    asterisk_line = next((i for i, line in enumerate(content) if '*' in line), None)
+
+    if asterisk_line is not None and asterisk_line >= 2:
+        # Keep everything from two lines before the first asterisk onwards
+        trimmed_content = content[asterisk_line - 2:]
+        
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.writelines(trimmed_content)
+    else:
+        print("Asterisk not found or too close to the start of the file.")
+
+import re
+def srt_time_to_seconds(time_str):
+    """Convert a time string from SRT to seconds."""
+    hours, minutes, seconds = time_str.split(':')
+    seconds, milliseconds = seconds.split(',')
+    return int(hours) * 3600 + int(minutes) * 60 + int(seconds) + int(milliseconds) / 1000
+
+def parse_srt(srt_content):
+    # Split content into blocks separated by blank lines
+    blocks = re.split(r'\n\n+', srt_content.strip())
+    
+    subtitles = []
+    for block in blocks:
+        lines = block.split('\n')
+        if len(lines) >= 3:
+            # Second line contains the start and end times
+            times = lines[1].split(' --> ')
+            if len(times) == 2:
+                start_time = srt_time_to_seconds(times[0])
+                end_time = srt_time_to_seconds(times[1])
+                # All remaining lines are part of the subtitle text
+                text = ' '.join(lines[2:])
+                subtitles.append(((start_time, end_time), text))
+    
+    return subtitles
 
 
 def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\video_subbed.mp4", 
@@ -71,6 +111,7 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     
     generate_srt("output\\video_raw.mp4")
     subtitle_file_path="output\\audiofiles\\subs.srt"
+    trim_srt_file(subtitle_file_path)
     get_color = unique_color_picker()
 
 
@@ -84,6 +125,8 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
 
     def text_generator(txt):
         nonlocal current_color  # Use the nonlocal keyword to modify the outer variable
+
+        
         if '*' in txt:
             current_color = get_color()  # Change color if '*' found
             txt = txt.replace('*', '')  # Remove the asterisk if you don't want it displayed
@@ -103,12 +146,12 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     def stroke_generator(txt):
         if '*' in txt:
             txt = txt.replace('*', '')  # Remove the asterisk if you don't want it displayed
-        
         # Skip if its just the symbol:
         if not txt.strip():
             # txt = "BLANK"
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
         
+
         return TextClip(txt,
                         fontsize=fontsize,
                         font=font, 
@@ -119,9 +162,20 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
                         method="caption", 
                         align="north")
 
-    subtitles_text = SubtitlesClip(subtitle_file_path, text_generator).set_position(('center', yPos))
-    subtitles_stroke = SubtitlesClip(subtitle_file_path, stroke_generator).set_position(('center', yPos))
 
+
+    # Read the SRT file with utf8 encoding.
+
+    with open(subtitle_file_path, 'r', encoding='utf-8') as f:
+        subtitles = f.read()
+
+
+
+    subtitles = parse_srt(subtitles)
+
+    subtitles_text = SubtitlesClip(subtitles, text_generator).set_position(('center', yPos))
+    subtitles_stroke = SubtitlesClip(subtitles, stroke_generator).set_position(('center', yPos))
+    
     final = CompositeVideoClip([video, subtitles_stroke, subtitles_text], size=video.size)
     final.write_videofile(output_file_path, codec="libx264", fps=video.fps)
 

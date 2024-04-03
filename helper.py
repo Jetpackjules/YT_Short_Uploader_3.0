@@ -78,3 +78,17 @@ def contains_link(text):
     match = re.search(pattern, text)
     # Return True if a match is found, False otherwise
     return match is not None
+
+
+import random
+
+def generate_title():
+    words = ['CRAZY', 'UNBELIEVABLE', 'SHOCKING', 'HILARIOUS', 'EPIC', 'SAD', 'AMAZING', 'WOW', 'WHAT?!', 'HOW?!', 'NO WAY!', 'INSANE', 'MIND-BLOWING']
+    emojis = ['💀', '🤣', '😱', '👍', '😂', '😭', '🔥', '💯', '🌟', '👀', '🙌', '💥', '😜', '🎉', '🤔', '🧐', '🤯', '😕', '🙄', '🤓']
+
+    # Randomly pick 1 or 2 words and 1 to 3 emojis
+    chosen_words = ' '.join(random.sample(words, k=1))
+    chosen_emojis = ''.join(random.sample(emojis, k=random.randint(1, 3)))
+
+    return f"{chosen_words} {chosen_emojis}"
+
