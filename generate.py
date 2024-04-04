@@ -83,7 +83,6 @@ def make_vid(post):
         transcript += ("\n\n"+"*"+comment['text'])
 
     # print("USER TIMES:")
-    # print(user_times)
     helper.save_as_srt(user_times)
 
     # Concatenate all audio clips together

@@ -4,13 +4,12 @@ import yt_dlp
 
 # URLS:
 #  OG minecraft parcour (GOOD): https://www.youtube.com/watch?v=n_Dv4JMiwK8
-# Short satisfyig stuff: https://www.youtube.com/watch?v=G1XGfIqHd4o
-
+# Short satisfyig stuff: https://www.youtube.com/watch?v=fYPC3yraYs8
 
 
 
 def download_clip():
-    video_url = 'https://www.youtube.com/watch?v=G1XGfIqHd4o'
+    video_url = 'https://www.youtube.com/watch?v=fYPC3yraYs8'
 
     
 

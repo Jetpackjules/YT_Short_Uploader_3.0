@@ -15,11 +15,13 @@ def prepare_transcript(original_path, modified_path):
                     new_tex = new_tex.replace('*', "\n\n*")
 
                     new_tex = new_tex.replace("‘", "'").replace("’", "'")
+                    new_tex = new_tex.replace("‚", ",")
+                    new_tex = new_tex.replace("“", '"').replace("”", '"')
+
+                    new_tex = new_tex.replace('",', ",\n\n")
                     new_tex = new_tex.replace('"', "\n\n")
                     # Replace curly double quotes
-                    new_tex = new_tex.replace("“", '"').replace("”", '"')
                     # Replace curly commas (if any exist; they are less common)
-                    new_tex = new_tex.replace("‚", ",")
                     new_tex = new_tex.replace("ï¿½", "").replace("(", "").replace(")", "")
                     modified.write(new_tex) 
 
