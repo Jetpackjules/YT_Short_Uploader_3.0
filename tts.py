@@ -168,7 +168,7 @@ def googleTTS(filename, text):
     )
 
     audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3, pitch=random.uniform(-10.0, 10.0), speaking_rate=3.88
+        audio_encoding=texttospeech.AudioEncoding.MP3, pitch=random.uniform(-10.0, 10.0), speaking_rate=3.88, effects_profile_id=["handset-class-device"]
     )
 
     response = client.synthesize_speech(
@@ -183,7 +183,7 @@ def googleTTS(filename, text):
     audio = AudioSegment.from_file(audio_content, format="mp3")
 
     # Speed up the audio
-    speed = 1.20  # Adjust the speed as needed
+    speed = 1.15  # Adjust the speed as needed
     sped_up_audio = speedup(audio, playback_speed=speed)
 
     # Save the sped-up audio
