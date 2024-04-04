@@ -15,7 +15,8 @@ from upload_video import upload_video
 import helper
 
 # The function to use for TTS, changes often:
-tts_function = tts.googleTTS
+# OPTIONS: googleTTS | freeSpeak | 
+tts_function = tts.freeSpeak
 
 
 input_video_path = "output\\input_video.mp4"
@@ -103,7 +104,7 @@ def make_vid(post):
         video_duration = audio_duration # + 0.5  # 0.5 seconds longer than audio
         final_video = final_video.set_duration(video_duration)
 
-    final_video.write_videofile(output_video_path, fps=59, codec="libx264", preset="medium")
+    final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
 

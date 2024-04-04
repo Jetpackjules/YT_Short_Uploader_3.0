@@ -37,28 +37,27 @@ def generate_captions(file_url):
 import random
 def unique_color_picker():
     subtitle_colors = [
-        # '#FFFFFF',  # White
         '#FFFF00',  # Yellow
-        # '#ADD8E6',  # Light blue
         '#90EE90',  # Soft green
-        '#FFC0CB',  # Pale pink
-        # '#E6E6FA',  # Lavender (TOO WHITE!)
-        # '#D3D3D3',  # Light gray
-        # '#F5FFFA',  # Mint cream (TOO WHITE)!
-        '#87CEEB'   # Sky blues
+        # '#FFC0CB',  # Pale pink
+        # '#87CEEB'   # Sky blue
     ]
     used_colors = set()
+    last_color = None
 
     def get_color():
-        nonlocal used_colors
+        nonlocal used_colors, last_color
         if len(used_colors) == len(subtitle_colors):
             used_colors.clear()  # Reset the used colors
+            used_colors.add(last_color)  # Ensure last color is not picked again immediately
 
         available_colors = list(set(subtitle_colors) - used_colors)
         color = random.choice(available_colors)
         used_colors.add(color)
+        last_color = color
         return color
 
+    return get_color
     return get_color
 
 def trim_srt_file(file_path):

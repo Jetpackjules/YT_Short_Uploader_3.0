@@ -1,37 +1,14 @@
 from gtts import gTTS
-from moviepy.editor import AudioFileClip, vfx
-from pydub import AudioSegment
-from pydub.playback import play
 from helper import get_media_duration
 
 
-def speak(filename, text_for_tts, speed=2.5, pitch_factor=0.45):
+def freeSpeak(filename, text_for_tts):
     # Convert the text to speech
     tts = gTTS(text_for_tts, lang='en-au')
     audio_path = f'output\\Audiofiles\\{filename}.mp3'
     tts.save(audio_path)
-    # # Increase speed for slow tts audio:
-    # audio_clip = AudioFileClip(audio_file)
-    # audio_clip = audio_clip.fx(vfx.speedx, speed)
-    
-    # audio_clip.write_audiofile(audio_file, codec='libmp3lame')
-    # audio_clip.close()
-   # Load the audio file with pydub
-    # Load the audio file with Pydub
-    # Load the audio file with Pydub
-    audio = AudioSegment.from_mp3(audio_path)
-    
-    # Speed up the audio clip (this changes speed and pitch together)
-    sped_up_audio = audio._spawn(audio.raw_data, overrides={"frame_rate": int(audio.frame_rate * speed)})
-    
-    # Apply pitch correction (this changes pitch without altering speed)
-    corrected_pitch_audio = sped_up_audio._spawn(sped_up_audio.raw_data, overrides={"frame_rate": int(sped_up_audio.frame_rate * pitch_factor)})
-    
-    # Export the modified audio
-    corrected_pitch_audio.export(audio_path, format="mp3")
 
-    print(f'Generated audio file: {audio_path}')
-
+    speed_up_audio(audio_path)
     duration = get_media_duration(audio_path)
     return duration
 
@@ -142,14 +119,8 @@ def echoSpeak(filename, text):
 import os
 from google.cloud import texttospeech
 import random
-from pydub import AudioSegment
-# from pydub.playback import speedup
-from pydub.effects import speedup
-from io import BytesIO
+import subprocess
 
-from scipy.signal import resample_poly
-import io
-import numpy as np
 
 voice_num = 0
 def googleTTS(filename, text):
@@ -175,27 +146,35 @@ def googleTTS(filename, text):
         input=synthesis_input, voice=voice, audio_config=audio_config
     )
 
-    # with open(f'output\\Audiofiles\\{filename}.mp3', "wb") as out:
-    #     out.write(response.audio_content)
+    with open(f'output\\Audiofiles\\{filename}.mp3', "wb") as out:
+        out.write(response.audio_content)
 
-    # Use BytesIO to treat audio content as a file-like object
-    audio_content = BytesIO(response.audio_content)
-    audio = AudioSegment.from_file(audio_content, format="mp3")
+    speed_up_audio(f'output\\Audiofiles\\{filename}.mp3')
 
-    # Speed up the audio
-    speed = 1.15  # Adjust the speed as needed
-    sped_up_audio = speedup(audio, playback_speed=speed)
-
-    # Save the sped-up audio
-    sped_up_path = f'output\\Audiofiles\\{filename}.mp3'
-    sped_up_audio.export(sped_up_path, format="mp3")
-
-    duration = helper.get_media_duration(sped_up_path)
-    print(duration)
-    print("DONE!")
-
+    duration = helper.get_media_duration(f'output\\Audiofiles\\{filename}.mp3')
 
     return duration
+
+
+def speed_up_audio(input_path, speed=1.30):
+    # Construct the output file path
+    output_path = f'output\\Audiofiles\\speedup.mp3'
+
+    # Build the ffmpeg command
+    command = [
+        'ffmpeg',
+        '-y',  # Overwrite output file without asking
+        '-i', input_path,  # Input file
+        '-filter:a', f"atempo={speed}",  # Audio filter with speed change
+        output_path  # Output file
+    ]
+
+    # Run the ffmpeg command
+    subprocess.run(command, check=True)
+
+    # Overwrite the original file with the sped-up version
+    subprocess.run(['move', '/Y', output_path, input_path], shell=True, check=True)
+
 
 if __name__ == "__main__":
     googleTTS("testGoogle", 'as a former active H addict i will say i would not wish withdrawals on anyone. they are truly  hellacious. i feel blessed to have gotten out of all that before fentanyl took over, i would be dead now probably')
