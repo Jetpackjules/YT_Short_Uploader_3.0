@@ -176,7 +176,7 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     subtitles_stroke = SubtitlesClip(subtitles, stroke_generator).set_position(('center', yPos))
     
     final = CompositeVideoClip([video, subtitles_stroke, subtitles_text], size=video.size)
-    final.write_videofile(output_file_path, codec="libx264", fps=video.fps)
+    final.write_videofile(output_file_path, codec="libx264", fps=video.fps, preset="slow")
 
     # MIGHT NEED TO RE-INSTALL IMAGE MAGICK WITH ALL BOXES CHECKED (except last 2, but LEGACY FEATURES needs ot be installed)
     # Useful info: https://moviepy-tburrows13.readthedocs.io/en/improve-docs/ref/VideoClip/TextClip.html
