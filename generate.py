@@ -16,7 +16,7 @@ import helper
 
 # The function to use for TTS, changes often:
 # OPTIONS: googleTTS | freeSpeak | 
-tts_function = tts.freeSpeak
+tts_function = tts.googleTTS
 
 
 input_video_path = "output\\input_video.mp4"
@@ -108,7 +108,6 @@ def make_vid(post):
 
 
 # Scrape reddit
-# redditPull = scrape_questions_and_answers()
 redditPull = get_unprocessed_post()  # Get an unprocessed post
 print("REDDIT SCRAPED! Generating video...")
 # Grab yt minecraft gameplay:
@@ -116,4 +115,4 @@ download_clip()
 # Add bubbles and compile:
 make_vid(redditPull)
 # Send clip to YT:
-# upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!!", title=helper.generate_title())
+upload_video("output\\video_subbed.mp4", description=redditPull['post']+"👀🤔" + "\n\n🔔🔔Please like and subscribe for more reddit stories!!🔔🔔", title=helper.generate_title())

@@ -8,8 +8,8 @@ def freeSpeak(filename, text_for_tts):
     audio_path = f'output\\Audiofiles\\{filename}.mp3'
     tts.save(audio_path)
 
-    speed_up_audio(audio_path)
-    duration = get_media_duration(audio_path, 1.45)
+    speed_up_audio(audio_path, 1.45)
+    duration = get_media_duration(audio_path)
     return duration
 
 

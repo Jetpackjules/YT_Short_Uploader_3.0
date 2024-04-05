@@ -92,3 +92,44 @@ def generate_title():
 
     return f"{chosen_words} {chosen_emojis}"
 
+
+import datetime
+import pytz
+
+def next_optimal_post_time_final():
+    # Define the time slots for posting
+    optimal_times_weekday = [(10, 12), (14, 18), (20, 23)]
+    optimal_times_weekend = [(11, 13), (16, 19)]
+
+    # Get the current time in EST
+    est = pytz.timezone('America/New_York')
+    current_time = datetime.datetime.now(est)
+    current_est_time = current_time.strftime('%Y-%m-%dT%H:%M:%S')
+
+    # Determine the day of the week
+    weekday = current_time.weekday()
+
+    # Choose the optimal times based on the current day
+    if 0 <= weekday <= 4:  # Weekdays
+        optimal_times = optimal_times_weekday
+    else:  # Weekends
+        optimal_times = optimal_times_weekend
+
+    # Find the next optimal time
+    for start, end in optimal_times:
+        start_time = current_time.replace(hour=start, minute=0, second=0, microsecond=0)
+        if current_time < start_time:
+            # If current time is before the start of a slot, return the start of this slot
+            return current_est_time, start_time.isoformat()
+
+    # If current time is past all slots for the day, calculate the next day's first optimal slot
+    next_day = current_time + datetime.timedelta(days=1)
+    next_day_weekday = next_day.weekday()
+
+    if 0 <= next_day_weekday <= 4:  # Weekdays
+        next_day_start = optimal_times_weekday[0][0]
+    else:  # Weekend
+        next_day_start = optimal_times_weekend[0][0]
+
+    next_optimal_time = next_day.replace(hour=next_day_start, minute=0, second=0, microsecond=0)
+    return next_optimal_time.isoformat()

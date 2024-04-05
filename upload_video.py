@@ -12,7 +12,7 @@ from apiclient.http import MediaFileUpload
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
-
+import helper
 
 # Explicitly tell the underlying HTTP transport library not to retry, since
 # we are handling retry logic ourselves.
@@ -97,7 +97,8 @@ def initialize_upload(youtube, options):
             categoryId=options.category
         ),
         status=dict(
-            privacyStatus=options.privacyStatus
+            privacyStatus=options.privacyStatus,
+            publishAt=options.publishTime
         )
     )
 
@@ -163,12 +164,14 @@ def resumable_upload(insert_request):
 VALID_PRIVACY_STATUSES = ['private', 'public', 'unlisted']  # Example privacy statuses
 import argparse
 
+publish_time = helper.next_optimal_post_time_final()
+
 # Category 24 is entertainment, what everyone else uses
-def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="#askreddit, #shorts, #reddit, #minecraft, #redditshorts", privacyStatus="private"):
+def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="#askreddit, #shorts, #reddit, #minecraft, #redditshorts", privacyStatus="private", publishTime=publish_time):
     if not os.path.exists(file):
         exit("Please specify a valid file using the --file= parameter.")
     
-    args = argparse.Namespace(file=file, title=title, description=description, category=category, keywords=keywords, privacyStatus=privacyStatus)
+    args = argparse.Namespace(file=file, title=title, description=description, category=category, keywords=keywords, privacyStatus=privacyStatus, publishTime=publishTime)
     
     youtube = get_authenticated_service(args)
     try:
@@ -179,29 +182,3 @@ def upload_video(file, title="Test Title", description="Test Description", categ
 
 if __name__ == '__main__':
     upload_video("output\\video_subbed.mp4")
-    # argparser.add_argument("--file", required=True,
-    #                        help="Video file to upload")
-    # argparser.add_argument("--title", help="Video title", default="Test Title")
-    # argparser.add_argument("--description", help="Video description",
-    #                        default="Test Description")
-    # argparser.add_argument("--category", default="22",
-    #                        help="Numeric video category. " +
-    #                        "See https://developers.google.com/youtube/v3/docs/videoCategories/list")
-    # argparser.add_argument("--keywords", help="Video keywords, comma separated",
-    #                        default="")
-    # argparser.add_argument("--privacyStatus", choices=VALID_PRIVACY_STATUSES,
-    #                        default=VALID_PRIVACY_STATUSES[0], help="Video privacy status.")
-    # args = argparser.parse_args()
-
-    # if not os.path.exists(args.file):
-    #     exit("Please specify a valid file using the --file= parameter.")
-
-    # youtube = get_authenticated_service(args)
-    # try:
-    #     initialize_upload(youtube, args)
-    # except HttpError as e:
-    #     print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
-
-
-
-# //   python3 upload_video.py --file="video_subbed.mp4" --title="Summer vacation in California" --description="Had fun surfing in Santa Cruz" --keywords="surfing,Santa Cruz" --category="22" --privacyStatus="private"
