@@ -59,11 +59,14 @@ def make_vid(post):
         comment["text"] = helper.clean(comment['text'])
 
         # Ignore the rest if the vid is already at least 45 secs long
-        if (start_time >= 45):
+        if ((start_time >= 45)):
             break
+        if ((comment['text'] == "[removed]") | (helper.contains_link(comment['text']))):
+            continue
+        
         duration = tts_function(f"comment_{idx}", comment['text'])
         comment_audio_path = f"output\\audiofiles\\comment_{idx}.mp3"  # Unique path for each comment
-        if (((start_time + duration) >= 55) | ((start_time + duration) >= clip_len) | ((comment['text'] == "[removed]") | (helper.contains_link(comment['text'])))):
+        if (((start_time + duration) >= 55) | ((start_time + duration) >= clip_len)):
             continue
 
 
@@ -100,7 +103,7 @@ def make_vid(post):
     if audio_clips:
         final_video = final_video.set_audio(combined_audio)
         audio_duration = combined_audio.duration
-        video_duration = audio_duration - 0.4 # + 0.5  # 0.5 seconds longer than audio
+        video_duration = audio_duration - 0.1 # + 0.5  # 0.5 seconds longer than audio
         final_video = final_video.set_duration(video_duration)
 
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")

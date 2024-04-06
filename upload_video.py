@@ -98,7 +98,8 @@ def initialize_upload(youtube, options):
         ),
         status=dict(
             privacyStatus=options.privacyStatus,
-            publishAt=options.publishTime
+            publishAt=options.publishTime,
+            selfDeclaredMadeForKids=False
         )
     )
 

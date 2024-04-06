@@ -39,8 +39,8 @@ def unique_color_picker():
     subtitle_colors = [
         '#FFFF00',  # Yellow
         '#90EE90',  # Soft green
-        # '#FFC0CB',  # Pale pink
-        # '#87CEEB'   # Sky blue
+        '#FFC0CB',  # Pale pink
+        '#87CEEB'   # Sky blue
     ]
     used_colors = set()
     last_color = None
@@ -101,6 +101,7 @@ def parse_srt(srt_content):
                 subtitles.append(((start_time, end_time), text))
     
     return subtitles
+import textwrap
 
 
 def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\video_subbed.mp4", 
@@ -134,7 +135,10 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
         if not txt.strip():
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
 
-        return TextClip(txt,
+
+        wrapped_text = textwrap.fill(txt, width=50)  # Adjust 'width' based on your needs
+
+        return TextClip(wrapped_text,
                         fontsize=fontsize,
                         font=font,
                         color=current_color,
@@ -145,19 +149,20 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
     def stroke_generator(txt):
         if '*' in txt:
             txt = txt.replace('*', '')  # Remove the asterisk if you don't want it displayed
+
         # Skip if its just the symbol:
         if not txt.strip():
-            # txt = "BLANK"
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
         
+        wrapped_text = textwrap.fill(txt, width=50)  # Adjust 'width' based on your needs
 
-        return TextClip(txt,
+        return TextClip(wrapped_text,
                         fontsize=fontsize,
                         font=font, 
                         color='black',  # Stroke color
                         stroke_width=stroke_width,
                         stroke_color="black",
-                        size=(vidWidth*3/4 + stroke_width, None),
+                        size=(vidWidth*3/4 + stroke_width-5, None),
                         method="caption", 
                         align="north")
 

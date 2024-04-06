@@ -40,7 +40,7 @@ reddit_logo_path = "assets\\reddit_logo.jpg"
 subbers_path = "assets\\subbers.png"
 # from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, scale_factor=1.4):
+def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, scale_factor=1.3):
     # Constants for layout
     mult = 1.6
     padding = 15

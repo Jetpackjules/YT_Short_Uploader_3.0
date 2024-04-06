@@ -34,7 +34,7 @@ def generate_srt(audio_path):
     # modified_transcript_path = original_transcript_path 
 
     print("ALIGNING TRANSCRIPT TO AUDIO FOR SRT...")
-    command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}\\subs.srt --overwrite --subtitles.minWordsInLine=1 --language=en-US --subtitles.maxLineCount=1 --subtitles.maxLineWidth=20"
+    command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}\\subs.srt --overwrite --subtitles.minWordsInLine=1 --language=en-US --subtitles.maxLineCount=1 --subtitles.maxLineWidth=16"
     helper.run(command)
 
     print("SRT files generated successfully in:", output_directory)

@@ -4,11 +4,11 @@ import yt_dlp
 
 # URLS:
 #  OG minecraft parcour (GOOD): https://www.youtube.com/watch?v=n_Dv4JMiwK8
-# Short satisfyig stuff (10hr)(watermark): https://www.youtube.com/watch?v=fYPC3yraYs8
+# Short satisfyig stuff (10hr)(watermark): https://www.youtube.com/watch?v=fYPC3yraYs8 (GOT CONTENT DETECTED!)
 # Slightly better satisfying stuff (1hr): https://www.youtube.com/watch?v=d8vpIg1fWGA
 
-video_url = 'https://www.youtube.com/watch?v=fYPC3yraYs8'
-blur = True
+video_url = 'https://www.youtube.com/watch?v=d8vpIg1fWGA'
+blur = False
 speed = 2.0
 
 def download_clip():

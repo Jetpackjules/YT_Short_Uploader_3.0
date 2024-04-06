@@ -149,7 +149,7 @@ def googleTTS(filename, text):
     with open(f'output\\Audiofiles\\{filename}.mp3', "wb") as out:
         out.write(response.audio_content)
 
-    # speed_up_audio(f'output\\Audiofiles\\{filename}.mp3', 1.25)
+    speed_up_audio(f'output\\Audiofiles\\{filename}.mp3', 1.25)
 
     duration = helper.get_media_duration(f'output\\Audiofiles\\{filename}.mp3')
 

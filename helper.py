@@ -71,9 +71,10 @@ def clean(text):
     return text
 
 import re
+
 def contains_link(text):
     # Regular expression pattern to find URLs
-    pattern = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
+    pattern = r'https?://[^\s<>"]+|www\.[^\s<>"]+|\b\w+\.(com|org|net|edu|gov|mil|co\.uk|info|io|biz)\b'
     # Search for the pattern in the text
     match = re.search(pattern, text)
     # Return True if a match is found, False otherwise
@@ -104,7 +105,6 @@ def next_optimal_post_time_final():
     # Get the current time in EST
     est = pytz.timezone('America/New_York')
     current_time = datetime.datetime.now(est)
-    current_est_time = current_time.strftime('%Y-%m-%dT%H:%M:%S')
 
     # Determine the day of the week
     weekday = current_time.weekday()
@@ -120,16 +120,30 @@ def next_optimal_post_time_final():
         start_time = current_time.replace(hour=start, minute=0, second=0, microsecond=0)
         if current_time < start_time:
             # If current time is before the start of a slot, return the start of this slot
-            return current_est_time, start_time.isoformat()
+            next_optimal_time = start_time
+            break
+    else:
+        # If current time is past all slots for the day, calculate the next day's first optimal slot
+        next_day = current_time + datetime.timedelta(days=1)
+        next_day_weekday = next_day.weekday()
 
-    # If current time is past all slots for the day, calculate the next day's first optimal slot
-    next_day = current_time + datetime.timedelta(days=1)
-    next_day_weekday = next_day.weekday()
+        if 0 <= next_day_weekday <= 4:  # Weekdays
+            next_day_start = optimal_times_weekday[0][0]
+        else:  # Weekend
+            next_day_start = optimal_times_weekend[0][0]
 
-    if 0 <= next_day_weekday <= 4:  # Weekdays
-        next_day_start = optimal_times_weekday[0][0]
-    else:  # Weekend
-        next_day_start = optimal_times_weekend[0][0]
+        next_optimal_time = next_day.replace(hour=next_day_start, minute=0, second=0, microsecond=0)
 
-    next_optimal_time = next_day.replace(hour=next_day_start, minute=0, second=0, microsecond=0)
-    return next_optimal_time.isoformat()
+    # Convert the next optimal time to UTC
+    next_optimal_time_utc = next_optimal_time.astimezone(pytz.utc)
+
+    # Format the datetime to ISO 8601 with fractional seconds and 'Z' designator
+    next_optimal_time_iso8601 = next_optimal_time_utc.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+
+    return next_optimal_time_iso8601
+
+
+if __name__ == '__main__':
+    # print(next_optimal_post_time_final())
+    # print(contains_link("*Peak phosphorus: https: or or en.m.wikipedia.org or wiki or Peak_phosphorus It's an important resource for production of fertilizer and dwindling supplies could have a significant impact on global food security. Maybe an exaggeration to say that it would end civilization but it could be a contributing factor to a cascade of problems that have a devastating impact on modern civilization. "))
+    pass
