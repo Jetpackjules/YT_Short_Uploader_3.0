@@ -7,6 +7,8 @@ import yt_dlp
 # Short satisfyig stuff (10hr)(watermark): https://www.youtube.com/watch?v=fYPC3yraYs8 (GOT CONTENT DETECTED!)
 # Slightly better satisfying stuff (1hr): https://www.youtube.com/watch?v=d8vpIg1fWGA
 
+
+# FIND SOURCE OF THIS BACKGROUND!: https://www.youtube.com/shorts/1fEXqv7FkrU?feature=share
 video_url = 'https://www.youtube.com/watch?v=d8vpIg1fWGA'
 blur = False
 speed = 2.0

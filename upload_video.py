@@ -75,6 +75,8 @@ def get_authenticated_service(args):
     
     # print("%s-oauth2.json" % sys.argv[0])
     storage = Storage("auths\\oauth2.json")
+    # storage = Storage("%s-oauth2.json" % sys.argv[0])
+
     credentials = storage.get()
 
     if credentials is None or credentials.invalid:
@@ -171,8 +173,18 @@ publish_time = helper.next_optimal_post_time_final()
 def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="#askreddit, #shorts, #reddit, #minecraft, #redditshorts", privacyStatus="private", publishTime=publish_time):
     if not os.path.exists(file):
         exit("Please specify a valid file using the --file= parameter.")
-    
-    args = argparse.Namespace(file=file, title=title, description=description, category=category, keywords=keywords, privacyStatus=privacyStatus, publishTime=publishTime)
+
+    args = argparser.parse_args()
+    # Update args with function parameters if not set via command line
+    args.file = file
+    args.title = title
+    args.description = description
+    args.category = category
+    args.keywords = keywords
+    args.privacyStatus = privacyStatus
+    args.publishTime = publishTime
+
+    # args = argparse.Namespace(file=file, title=title, description=description, category=category, keywords=keywords, privacyStatus=privacyStatus, publishTime=publishTime)
     
     youtube = get_authenticated_service(args)
     try:
