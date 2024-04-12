@@ -109,13 +109,20 @@ def make_vid(post):
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
+def generate(vidName = "mc_parkour_1hr", pubTime="default"):
+    # Scrape reddit
+    redditPull = get_unprocessed_post()  # Get an unprocessed post
+    print("REDDIT SCRAPED! Generating video...")
+    # Grab yt minecraft gameplay:
+    download_clip(vidName)
+    # Add bubbles and compile:
+    make_vid(redditPull)
+    # Send clip to YT:
+    upload_video("output\\video_subbed.mp4", description=redditPull['post']+"👀🤔" + "\n\n🔔🔔Please like and subscribe for more reddit stories!!🔔🔔", title=helper.generate_title(), publishTime=pubTime)
 
-# Scrape reddit
-redditPull = get_unprocessed_post()  # Get an unprocessed post
-print("REDDIT SCRAPED! Generating video...")
-# Grab yt minecraft gameplay:
-download_clip()
-# Add bubbles and compile:
-make_vid(redditPull)
-# Send clip to YT:
-upload_video("output\\video_subbed.mp4", description=redditPull['post']+"👀🤔" + "\n\n🔔🔔Please like and subscribe for more reddit stories!!🔔🔔", title=helper.generate_title())
+
+
+
+# RUNS WHEN NOT AN IMPORT:
+if __name__ == "__main__":
+    generate()

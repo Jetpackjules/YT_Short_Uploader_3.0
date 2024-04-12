@@ -167,10 +167,9 @@ def resumable_upload(insert_request):
 VALID_PRIVACY_STATUSES = ['private', 'public', 'unlisted']  # Example privacy statuses
 import argparse
 
-publish_time = helper.next_optimal_post_time_final()
 
 # Category 24 is entertainment, what everyone else uses
-def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="#askreddit, #shorts, #reddit, #minecraft, #redditshorts", privacyStatus="private", publishTime=publish_time):
+def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="#askreddit, #shorts, #reddit, #minecraft, #redditshorts", privacyStatus="private", publishTime="default"):
     if not os.path.exists(file):
         exit("Please specify a valid file using the --file= parameter.")
 
@@ -182,7 +181,14 @@ def upload_video(file, title="Test Title", description="Test Description", categ
     args.category = category
     args.keywords = keywords
     args.privacyStatus = privacyStatus
+
+    publishTime = helper.times_for_tomorrow_pacific()[0]
+    if publishTime == "default":
+        publishTime = helper.next_optimal_post_time_final()
+
     args.publishTime = publishTime
+
+
 
     # args = argparse.Namespace(file=file, title=title, description=description, category=category, keywords=keywords, privacyStatus=privacyStatus, publishTime=publishTime)
     

@@ -9,14 +9,37 @@ import yt_dlp
 
 
 # FIND SOURCE OF THIS BACKGROUND!: https://www.youtube.com/shorts/1fEXqv7FkrU?feature=share
-video_url = 'https://www.youtube.com/watch?v=d8vpIg1fWGA'
-blur = False
-speed = 2.0
 
-def download_clip():
-    global blur
-    global video_url
+videos = {
+    "mc_parkour_1hr": {
+        "url": "https://www.youtube.com/watch?v=n_Dv4JMiwK8",
+        "speed": 1.0,
+        "blur": False
+    },
+    "satisfying_10hr_claimed": {
+        "url": "https://www.youtube.com/watch?v=fYPC3yraYs8",
+        "speed": 2.0,
+        "blur": True
+    },
+    "satisfying_1hr": {
+        "url": "https://www.youtube.com/watch?v=d8vpIg1fWGA",
+        "speed": 2.0,
+        "blur": False
+    }
+}
 
+
+
+def download_clip(name):
+    video_info = videos.get(name)
+    if not video_info:
+        print(f"No video found with name: {name}")
+        return
+
+    video_url = video_info["url"]
+    blur = video_info["blur"]
+    speed = video_info["speed"]
+    
     
 
     ydl_opts = {

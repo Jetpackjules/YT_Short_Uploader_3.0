@@ -143,7 +143,34 @@ def next_optimal_post_time_final():
     return next_optimal_time_iso8601
 
 
+def times_for_tomorrow_pacific():
+    # Get the current time in Pacific Time
+    pacific = pytz.timezone('America/Los_Angeles')
+    current_time = datetime.datetime.now(pacific)
+
+    # Calculate tomorrow's date
+    tomorrow = current_time + datetime.timedelta(days=1)
+    
+    # Define specific times for tomorrow
+    times = [datetime.time(hour=8, minute=30),  # 8:30 AM
+             datetime.time(hour=16, minute=0),  # 4 PM
+             datetime.time(hour=19, minute=0)]  # 7 PM
+
+    # Create datetime objects for each specific time
+    datetime_list = [datetime.datetime.combine(tomorrow, time) for time in times]
+
+    # Convert times to UTC for consistency in output, similar to the example function
+    datetime_list_utc = [dt.astimezone(pytz.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z' for dt in datetime_list]
+
+    return datetime_list_utc
+
+
+
+
+
 if __name__ == '__main__':
-    # print(next_optimal_post_time_final())
-    # print(contains_link("*Peak phosphorus: https: or or en.m.wikipedia.org or wiki or Peak_phosphorus It's an important resource for production of fertilizer and dwindling supplies could have a significant impact on global food security. Maybe an exaggeration to say that it would end civilization but it could be a contributing factor to a cascade of problems that have a devastating impact on modern civilization. "))
+    tomorrow_times_pacific = times_for_tomorrow_pacific()
+    old = next_optimal_post_time_final()
+    print(tomorrow_times_pacific)
+    print(old)
     pass
