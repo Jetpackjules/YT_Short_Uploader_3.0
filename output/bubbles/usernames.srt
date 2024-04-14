@@ -1,28 +1,28 @@
 1
-00:00:02,846 --> 00:00:18,603
-u/BarryCheckTheFuseBox
+00:00:03,782 --> 00:00:11,403
+u/Crew_Emphasis
 
 2
-00:00:18,603 --> 00:00:23,993
-u/bguzewicz
+00:00:11,403 --> 00:00:15,353
+u/Apprehensive_Pickle3
 
 3
-00:00:23,993 --> 00:00:32,816
-u/Fiddlesticklin
+00:00:15,353 --> 00:00:25,088
+u/mang0fandang0
 
 4
-00:00:32,816 --> 00:00:36,142
-u/writeyourwayout
+00:00:25,088 --> 00:00:32,878
+u/_Halboro_
 
 5
-00:00:36,142 --> 00:00:41,220
-u/Weekly-Rest1033
+00:00:32,878 --> 00:00:35,987
+u/Flutterflut
 
 6
-00:00:41,219 --> 00:00:44,258
-u/fortwaltonbleach
+00:00:35,987 --> 00:00:39,890
+u/AshamedClassroom413
 
 7
-00:00:44,257 --> 00:00:46,335
-u/rextremendae2007
+00:00:39,890 --> 00:00:45,688
+u/PeterDuttonsButtWipe
 

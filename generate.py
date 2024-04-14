@@ -103,7 +103,7 @@ def make_vid(post):
     if audio_clips:
         final_video = final_video.set_audio(combined_audio)
         audio_duration = combined_audio.duration
-        video_duration = audio_duration - 0.23 # + 0.5  # 0.5 seconds longer than audio
+        video_duration = audio_duration # - 0.23 # + 0.5  # 0.5 seconds longer than audio
         final_video = final_video.set_duration(video_duration)
 
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")

@@ -88,10 +88,10 @@ def generate_title():
     emojis = ['💀', '🤣', '😱', '👍', '😂', '😭', '🔥', '💯', '🌟', '👀', '🙌', '💥', '😜', '🎉', '🤔', '🧐', '🤯', '😕', '🙄', '🤓']
 
     # Randomly pick 1 or 2 words and 1 to 3 emojis
-    chosen_words = ' '.join(random.sample(words, k=1))
-    chosen_emojis = ''.join(random.sample(emojis, k=random.randint(1, 3)))
+    chosen_words = ' '.join(random.sample(words, k=1))+"!"
+    # chosen_emojis = ''.join(random.sample(emojis, k=random.randint(1, 3)))
 
-    return f"{chosen_words} {chosen_emojis}"
+    return f"{chosen_words}" # {chosen_emojis}"
 
 
 import datetime

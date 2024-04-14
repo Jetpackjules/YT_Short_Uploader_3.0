@@ -182,7 +182,6 @@ def upload_video(file, title="Test Title", description="Test Description", categ
     args.keywords = keywords
     args.privacyStatus = privacyStatus
 
-    publishTime = helper.times_for_tomorrow_pacific()[0]
     if publishTime == "default":
         publishTime = helper.next_optimal_post_time_final()
 
