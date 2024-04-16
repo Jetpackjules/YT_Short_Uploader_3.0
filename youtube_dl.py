@@ -34,6 +34,7 @@ def download_clip(name):
     video_info = videos.get(name)
     if not video_info:
         print(f"No video found with name: {name}")
+        stall = input("NO VIDEO FOUND! Press enter to continue...")
         return
 
     video_url = video_info["url"]
