@@ -125,7 +125,7 @@ import subprocess
 voice_num = 0
 def googleTTS(filename, text):
     global voice_num
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="auths\\the-respect-419200-439d401c763c.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="auths\\the-respect-419200-e26dd672601b.json"
 
     voices = ["en-US-Journey-F", "en-US-Journey-D"]
     voice_num += 1
