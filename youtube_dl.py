@@ -69,7 +69,7 @@ def download_clip(name):
         '-c:v', 'libx264',  # Use H.264 codec for video
         '-preset', 'slow',  # Faster encoding preset
         '-an',  # No audio
-        'output/input_video.mp4'  # Output file
+        'output\\input_video.mp4'  # Output file
     ]
 
     # Run the command
@@ -134,5 +134,5 @@ def blur_bottom_fifth(image, sigma=10):
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    download_clip()
+    download_clip("mc_parkour_1hr")
     # blur_rectangle_in_video()
