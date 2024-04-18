@@ -164,11 +164,14 @@ def times_for_tomorrow_pacific():
 
     return datetime_list_utc
 
-# from better_profanity import profanity
+from better_profanity import profanity
+def has_profanity(text):
+    return profanity.contains_profanity(text)
+
+def censor(text):
+    return profanity.censor(text)
 
 
-
-
-# if __name__ == '__main__':
-#     dir(profanity)
+if __name__ == '__main__':
+    pass
 

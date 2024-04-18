@@ -4,6 +4,7 @@ from contextlib import redirect_stdout
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
 from Sub_Align import generate_srt
+import helper
 
 deepgram = Deepgram("73bfe43e53a979195482bdaf19865b539429e7e0")
 
@@ -57,7 +58,6 @@ def unique_color_picker():
         last_color = color
         return color
 
-    return get_color
     return get_color
 
 def trim_srt_file(file_path):
@@ -154,6 +154,9 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
         if not txt.strip():
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
         
+        # Censor subtitles (shouldnt be necessary because we r doing this at post-level)
+        txt = helper.censor(txt)
+
         wrapped_text = textwrap.fill(txt, width=50)  # Adjust 'width' based on your needs
 
         return TextClip(wrapped_text,

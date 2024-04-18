@@ -2,6 +2,7 @@
 import praw
 import os
 import json
+import helper 
 
 # Set up PRAW with your Reddit API credentials
 reddit = praw.Reddit(
@@ -42,7 +43,7 @@ def scrape_questions_and_answers():
         top_posts = subreddit.top(limit=100, time_filter="month")  # Fetch more posts in each iteration to ensure we reach the required number
 
         for post in top_posts:
-            if not post.over_18:  # Check if the post is NSFW and skip if it is
+            if (not post.over_18) and (not helper.has_profanity(post.title)):  # Check if the post is NSFW and skip if it is
                 post_id = post.id
                 if post_id not in qa_dict:  # Check if the post is already processed
                     total_non_nsfw_posts += 1
@@ -56,7 +57,7 @@ def scrape_questions_and_answers():
                     }
                     top_comments = list(post.comments)[:11]
                     for comment in top_comments:
-                        if comment.body != "[deleted]":
+                        if ((comment.body != "[deleted]") and (not helper.has_profanity(comment.body))):
                             qa_dict[post_id]['comments'].append({
                                 'text': comment.body,
                                 'user': "u/" + str(comment.author)
