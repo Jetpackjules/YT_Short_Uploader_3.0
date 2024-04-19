@@ -1,4 +1,4 @@
-To CREATE/UPDATE YAML go to terminal:
+To CREATE/UPDATE YAML go to reg. terminal:
 conda env export > environment.yml
 
 To create env:
