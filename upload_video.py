@@ -169,7 +169,7 @@ import argparse
 
 
 # Category 24 is entertainment, what everyone else uses
-def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="#askreddit, #shorts, #reddit, #minecraft, #redditshorts", privacyStatus="private", publishTime="default"):
+def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="askreddit, reddit stories, reddit horror stories, reddit cheating stories, reddit, minecraft", privacyStatus="private", publishTime="default"):
     if not os.path.exists(file):
         exit("Please specify a valid file using the --file= parameter.")
 

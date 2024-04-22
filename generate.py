@@ -118,7 +118,8 @@ def generate(vidName = "mc_parkour_1hr", pubTime="default"):
     # Add bubbles and compile:
     make_vid(redditPull)
     # Send clip to YT:
-    upload_video("output\\video_subbed.mp4", description=redditPull['post']+"👀🤔" + "\n\n🔔🔔Please like and subscribe for more reddit stories!!🔔🔔", title=helper.generate_title(), publishTime=pubTime)
+    # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
+    upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!!", title=helper.generate_title(), publishTime=pubTime)
 
 
 

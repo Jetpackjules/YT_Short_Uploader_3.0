@@ -82,16 +82,62 @@ def contains_link(text):
 
 
 import random
+import json
+
+# def generate_title():
+#     words = ['CRAZY', 'UNBELIEVABLE', 'SHOCKING', 'HILARIOUS', 'EPIC', 'SAD', 'AMAZING', 'WOW', 'WHAT?!', 'HOW?!', 'NO WAY!', 'INSANE', 'MIND-BLOWING']
+#     emojis = ['💀', '🤣', '😱', '👍', '😂', '😭', '🔥', '💯', '🌟', '👀', '🙌', '💥', '😜', '🎉', '🤔', '🧐', '🤯', '😕', '🙄', '🤓']
+
+#     # Randomly pick 1 or 2 words and 1 to 3 emojis
+#     chosen_words = ' '.join(random.sample(words, k=1))+"!"
+#     # chosen_emojis = ''.join(random.sample(emojis, k=random.randint(1, 3)))
+
+#     return f"{chosen_words}" # {chosen_emojis}"
+
+
 
 def generate_title():
-    words = ['CRAZY', 'UNBELIEVABLE', 'SHOCKING', 'HILARIOUS', 'EPIC', 'SAD', 'AMAZING', 'WOW', 'WHAT?!', 'HOW?!', 'NO WAY!', 'INSANE', 'MIND-BLOWING']
-    emojis = ['💀', '🤣', '😱', '👍', '😂', '😭', '🔥', '💯', '🌟', '👀', '🙌', '💥', '😜', '🎉', '🤔', '🧐', '🤯', '😕', '🙄', '🤓']
+    # Path to the JSON file that stores the counts
+    file_path = 'title_counts.json'
+    
+    # Try to load existing counts from the file, or initialize an empty dictionary if the file doesn't exist
+    try:
+        with open(file_path, 'r') as file:
+            title_counts = json.load(file)
+    except FileNotFoundError:
+        title_counts = {}
 
-    # Randomly pick 1 or 2 words and 1 to 3 emojis
-    chosen_words = ' '.join(random.sample(words, k=1))+"!"
-    # chosen_emojis = ''.join(random.sample(emojis, k=random.randint(1, 3)))
+    # Compact and catchy titles
+    titles = [
+        "Reddit’s Weirdest Questions",
+        "3AM Reddit Secrets",
+        "Reddit Riddles Solved",
+        "Unseen Reddit Dramas",
+        "Top Reddit Meltdowns",
+        "Chilling Reddit Threads",
+        "Reddit Nightmares Unveiled",
+        "Reddit’s Epic Fails",
+        "Weird Reddit Wonders",
+        "Creepy Reddit Stories"
+    ]
 
-    return f"{chosen_words}" # {chosen_emojis}"
+    # Select a random title
+    title = random.choice(titles)
+
+    # Update the count for the selected title
+    if title in title_counts:
+        title_counts[title] += 1
+    else:
+        title_counts[title] = 1
+
+    # Append the part number if it has been chosen more than once
+    full_title = title + (f" (Part {title_counts[title]})" if title_counts[title] > 1 else "")
+
+    # Save the updated counts back to the JSON file
+    with open(file_path, 'w') as file:
+        json.dump(title_counts, file, indent=4)
+
+    return full_title
 
 
 import datetime
