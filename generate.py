@@ -109,7 +109,7 @@ def make_vid(post):
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
-def generate(vidName = "mc_parkour_1hr", pubTime="default"):
+def generate(vidName = "mc_parkour_1hr", pubTime="default", upload=True):
     # Scrape reddit
     redditPull = get_unprocessed_post()  # Get an unprocessed post
     print("REDDIT SCRAPED! Generating video...")
@@ -119,11 +119,14 @@ def generate(vidName = "mc_parkour_1hr", pubTime="default"):
     make_vid(redditPull)
     # Send clip to YT:
     # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
-    upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!!", title=helper.generate_title(), publishTime=pubTime)
-
+    if upload:
+        try:
+            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!!", title=helper.generate_title(), publishTime=pubTime)
+        except:
+            input("QUOTA REACHED CANCEL PROGRAM! __ ")
 
 
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    generate()
+    generate(upload=False)
