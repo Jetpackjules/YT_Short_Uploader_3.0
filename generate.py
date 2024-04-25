@@ -59,7 +59,7 @@ def make_vid(post):
         comment["text"] = helper.clean(comment['text'])
 
         # Ignore the rest if the vid is already at least 45 secs long
-        if ((start_time >= 45)):
+        if ((start_time >= min_len)):
             break
         if ((comment['text'] == "[removed]") | (helper.contains_link(comment['text']))):
             continue
@@ -126,6 +126,9 @@ def generate(vidName = "mc_parkour_1hr", pubTime="default", upload=True):
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 
 
+#How long min video length should be (wont go far over this!)
+#DEFAULT: 45
+min_len = 20
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
