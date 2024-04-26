@@ -69,7 +69,7 @@ def scrape_questions_and_answers():
     save_posts_to_file(qa_dict)
 
 
-def get_unprocessed_post(filename='saved_posts.json'):
+def get_unprocessed_post(filename='saved_posts.json', process=True):
     if os.path.exists(filename):
         with open(filename, 'r', encoding='utf-8') as file:
             try:
@@ -81,7 +81,8 @@ def get_unprocessed_post(filename='saved_posts.json'):
         for post_id, post_info in posts.items():
             if 'processed' not in post_info or not post_info['processed']:
                 unprocessed_found = True
-                post_info['processed'] = True
+                if process:
+                    post_info['processed'] = True
                 save_posts_to_file(posts, filename)
                 return post_info
 
@@ -97,13 +98,13 @@ def get_unprocessed_post(filename='saved_posts.json'):
                 print("ALL FETCHED POSTS ARE THE SAME, STOPPING EXECUTION.")
                 return None
             else:
-                return get_unprocessed_post(filename)
+                return get_unprocessed_post(filename, process)
     else:
         print("NO POSTS FILE FOUND, GETTING POSTS...")
         scrape_questions_and_answers()
-        return get_unprocessed_post(filename)
+        return get_unprocessed_post(filename, process)
         
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    post = get_unprocessed_post()
+    post = get_unprocessed_post(process=False)
     print(post['post'])

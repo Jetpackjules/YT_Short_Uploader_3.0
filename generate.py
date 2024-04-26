@@ -128,7 +128,7 @@ def generate(vidName = "mc_parkour_1hr", pubTime="default", upload=True):
 
 #How long min video length should be (wont go far over this!)
 #DEFAULT: 45
-min_len = 20
+min_len = 38
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
