@@ -103,7 +103,7 @@ def make_vid(post):
     if audio_clips:
         final_video = final_video.set_audio(combined_audio)
         audio_duration = combined_audio.duration
-        video_duration = audio_duration # - 0.23 # + 0.5  # 0.5 seconds longer than audio
+        video_duration = audio_duration - 0.23 # + 0.5  # 0.5 seconds longer than audio (COMMENTING THIS DOES NOT IMPROVE THE TIME ERRORS ON RENDER!!!)
         final_video = final_video.set_duration(video_duration)
 
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
@@ -119,7 +119,7 @@ def generate(vidName = "mc_parkour_1hr", pubTime="default", upload=True):
     make_vid(redditPull)
     # Send clip to YT:
     # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
-    if upload:
+    if upload==True:
         try:
             upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!!", title=helper.generate_title(), publishTime=pubTime)
         except:
