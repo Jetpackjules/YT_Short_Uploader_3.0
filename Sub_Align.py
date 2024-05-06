@@ -1,4 +1,4 @@
-# NEED TO DOWNLOAD NODE JS!: https://nodejs.org/en/downloads
+# NEED TO DOWNLOAD NODE JS!: https://nodejs.org/en/download
 # For echogarden: https://github.com/echogarden-project/echogarden OR: npm install echogarden -g
 # ALSO RUN THIS IN POWERSHELL AS ADMIN to fix permissions: Set-ExecutionPolicy RemoteSigned
 

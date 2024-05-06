@@ -81,6 +81,7 @@ def get_authenticated_service(args):
 
     if credentials is None or credentials.invalid:
         credentials = run_flow(flow, storage, args)
+        input("NEW CREDS LOADED - RESTART PROGRAM!")
 
     return build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
                  http=credentials.authorize(httplib2.Http()))
