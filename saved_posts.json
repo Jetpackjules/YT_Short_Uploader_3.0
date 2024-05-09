@@ -1615,7 +1615,7 @@
                 "user": "u/woman_thorned"
             }
         ],
-        "processed": false
+        "processed": true
     },
     "1cdug78": {
         "post": "What movie\u2019s visual effects have aged like milk, and conversely, what movie\u2019s visual effects have aged like fine wine? ",
@@ -1662,7 +1662,7 @@
                 "user": "u/iamthemosin"
             }
         ],
-        "processed": false
+        "processed": true
     },
     "1cfmy10": {
         "post": "What is an example of \u201cif it\u2019s free, you are the product\u201d?",
@@ -1713,6 +1713,6 @@
                 "user": "u/swiftie56"
             }
         ],
-        "processed": false
+        "processed": true
     }
 }
