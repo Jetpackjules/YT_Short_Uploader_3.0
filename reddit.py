@@ -1,8 +1,7 @@
-#  ---------------------------------------------------------------------------------
 import praw
 import os
 import json
-import helper 
+import helper
 
 # Set up PRAW with your Reddit API credentials
 reddit = praw.Reddit(
@@ -31,7 +30,7 @@ def save_posts_to_file(posts, filename='saved_posts.json'):
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(existing_posts, file, indent=4)
 
-def scrape_questions_and_answers():
+def scrape_questions_and_answers(existing_post_ids):
     subreddit = reddit.subreddit('AskReddit')
     
     # Initialize the dictionary to hold questions and answers
@@ -40,46 +39,49 @@ def scrape_questions_and_answers():
 
     # Continue fetching until we have 31 non-NSFW posts
     while total_non_nsfw_posts < 31:
-        top_posts = subreddit.top(limit=100, time_filter="month")  # Fetch more posts in each iteration to ensure we reach the required number
+        top_posts = subreddit.top(limit=200, time_filter="month")  # Fetch more posts in each iteration to ensure we reach the required number
 
         for post in top_posts:
+            if post.id in existing_post_ids:
+                continue  # Skip posts that are already processed
+
             if (not post.over_18) and (not helper.has_profanity(post.title)):  # Check if the post is NSFW and skip if it is
                 post_id = post.id
-                if post_id not in qa_dict:  # Check if the post is already processed
-                    total_non_nsfw_posts += 1
-                    author_name = "u/[deleted]" if post.author is None else "u/" + str(post.author.name)
+                total_non_nsfw_posts += 1
+                author_name = "u/[deleted]" if post.author is None else "u/" + str(post.author.name)
 
-                    qa_dict[post_id] = {
-                        'post': post.title,
-                        'user': author_name,
-                        # 'user': "u/" + str(post.author.name),
-                        'comments': []
-                    }
-                    top_comments = list(post.comments)[:11]
-                    for comment in top_comments:
-                        if ((comment.body != "[deleted]") and (not helper.has_profanity(comment.body))):
-                            qa_dict[post_id]['comments'].append({
-                                'text': comment.body,
-                                'user': "u/" + str(comment.author)
-                            })
+                qa_dict[post_id] = {
+                    'post': post.title,
+                    'user': author_name,
+                    'comments': []
+                }
+                top_comments = list(post.comments)[:11]
+                for comment in top_comments:
+                    if ((comment.body != "[deleted]") and (not helper.has_profanity(comment.body))):
+                        qa_dict[post_id]['comments'].append({
+                            'text': comment.body,
+                            'user': "u/" + str(comment.author)
+                        })
             
             if total_non_nsfw_posts >= 31:
                 break  # Exit the loop once we have enough posts
 
     save_posts_to_file(qa_dict)
-
+    return qa_dict
 
 def get_unprocessed_post(filename='saved_posts.json', process=True):
+    existing_post_ids = set()
     if os.path.exists(filename):
         with open(filename, 'r', encoding='utf-8') as file:
             try:
                 posts = json.load(file)
+                existing_post_ids = set(posts.keys())
             except json.JSONDecodeError:
                 posts = {}
 
         unprocessed_found = False
         for post_id, post_info in posts.items():
-            if 'processed' not in post_info or not post_info['processed']:
+            if ('processed' not in post_info) or (not post_info['processed']):
                 unprocessed_found = True
                 if process:
                     post_info['processed'] = True
@@ -89,22 +91,26 @@ def get_unprocessed_post(filename='saved_posts.json', process=True):
         if not unprocessed_found:
             print("RAN OUT OF POSTS, GETTING NEW ONES...")
             previous_post_count = len(posts)
-            scrape_questions_and_answers()
+            new_posts = scrape_questions_and_answers(existing_post_ids)
             
             with open(filename, 'r', encoding='utf-8') as file:
                 posts = json.load(file)
             
             if len(posts) == previous_post_count:
+                print(f"Found {len(posts)} posts")
                 print("ALL FETCHED POSTS ARE THE SAME, STOPPING EXECUTION.")
                 return None
             else:
                 return get_unprocessed_post(filename, process)
     else:
         print("NO POSTS FILE FOUND, GETTING POSTS...")
-        scrape_questions_and_answers()
+        scrape_questions_and_answers(existing_post_ids)
         return get_unprocessed_post(filename, process)
         
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
     post = get_unprocessed_post(process=False)
-    print(post['post'])
+    if post is not None:
+        print(post['post'])
+    else:
+        print("No unprocessed posts available.")
