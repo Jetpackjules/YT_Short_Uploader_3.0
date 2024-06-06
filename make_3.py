@@ -11,4 +11,3 @@ if __name__ == "__main__":
     generate(vidName = "satisfying_1hr", pubTime=publishtimes[1], upload=True)
     generate(vidName = "satisfying_1hr", pubTime=publishtimes[2], upload=True)
 
-
