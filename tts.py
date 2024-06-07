@@ -172,8 +172,11 @@ def speed_up_audio(input_path, speed=1.30):
     # Run the ffmpeg command
     subprocess.run(command, check=True)
 
+    # Move the output file to the input file
+    os.replace(output_path, input_path)
+    
     # Overwrite the original file with the sped-up version
-    subprocess.run(['move', '/Y', output_path, input_path], shell=True, check=True)
+    # subprocess.run(['move', '/Y', output_path, input_path], shell=True, check=True)
 
 
 if __name__ == "__main__":
