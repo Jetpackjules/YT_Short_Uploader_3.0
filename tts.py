@@ -156,7 +156,7 @@ def googleTTS(filename, text):
     return duration
 
 
-def speed_up_audio(input_path, speed=1.30):
+def speed_up_audio(input_path, speed=5.30):
     # Construct the output file path
     output_path = f'output\\Audiofiles\\speedup.mp3'
 
@@ -172,11 +172,11 @@ def speed_up_audio(input_path, speed=1.30):
     # Run the ffmpeg command
     subprocess.run(command, check=True)
 
-    # Move the output file to the input file
-    os.replace(output_path, input_path)
+    # Move the output file to the input file (BROKEN)
+    # os.replace(output_path, input_path)
     
     # Overwrite the original file with the sped-up version
-    # subprocess.run(['move', '/Y', output_path, input_path], shell=True, check=True)
+    subprocess.run(['move', '/Y', output_path, input_path], shell=True, check=True)
 
 
 if __name__ == "__main__":
