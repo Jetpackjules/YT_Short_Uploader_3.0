@@ -156,7 +156,7 @@ def googleTTS(filename, text):
     return duration
 
 
-def speed_up_audio(input_path, speed=5.30):
+def speed_up_audio(input_path, speed=1.30):
     # Construct the output file path
     output_path = f'output\\Audiofiles\\speedup.mp3'
 
