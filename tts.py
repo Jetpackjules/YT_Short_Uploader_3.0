@@ -176,9 +176,43 @@ def speed_up_audio(input_path, speed=1.30):
     # os.replace(output_path, input_path)
     
     # Overwrite the original file with the sped-up version
-    subprocess.run(['move', '/Y', output_path, input_path], shell=True, check=True)
+    # subprocess.run(['move', '/Y', output_path, input_path], shell=True, check=True)
+
+    import shutil
+    shutil.copyfile(output_path, input_path)
+
+
+from pathlib import Path
+from openai import OpenAI
+def openAItts(filename, text):
+    global voice_num
+    #Voice options: alloy, echo, fable, onyx, nova, and shimmer
+    voices = ["echo", "nova"] #Fable and shimmer are also pretty good
+    voice_num += 1
+    voice = voices[(voice_num % 2)]
+
+    api_key_base = "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"
+    client = OpenAI(api_key=api_key_base)
+    speech_file_path = Path(__file__).parent / f'output\\Audiofiles\\{filename}.mp3'
+    
+    response = client.audio.speech.create(
+    model="tts-1-hd",
+    voice=voice, #<- This is the voice, as a string
+    input=text#,
+    # speed=1.2 (THIS METHOD SUUUCKS!)
+    )
+    response.stream_to_file(speech_file_path)
+
+    speed_up_audio(f'output\\Audiofiles\\{filename}.mp3', 1.25)
+    print(f"Audio file '{filename}' saved successfully.")
+    duration = helper.get_media_duration(f'output\\Audiofiles\\{filename}.mp3')
+    return duration
+
 
 
 if __name__ == "__main__":
-    googleTTS("testGoogle", 'as a former active H addict i will say i would not wish withdrawals on anyone. they are truly  hellacious. i feel blessed to have gotten out of all that before fentanyl took over, i would be dead now probably')
-    googleTTS("testGoogle", 'as a former active H addict i will say i would not wish withdrawals on anyone. they are truly  hellacious. i feel blessed to have gotten out of all that before fentanyl took over, i would be dead now probably')
+    # googleTTS("testGoogle-man", 'While in a deep sleep on the beach when you are lost in slumber hearing the waves, feeling the warmth of the sun that makes you feel so cozy, and smelling the salt in the air.')
+    # googleTTS("testGoogle-fem", 'While in a deep sleep on the beach when you are lost in slumber hearing the waves, feeling the warmth of the sun that makes you feel so cozy, and smelling the salt in the air.')
+    
+    openAItts("testOpenAI_timing", "Mom doesn't listen to her kids' advice and yet completely believes anything gossipers tell her")
+

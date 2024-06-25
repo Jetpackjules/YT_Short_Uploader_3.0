@@ -15,8 +15,8 @@ from upload_video import upload_video
 import helper
 
 # The function to use for TTS, changes often:
-# OPTIONS: googleTTS | freeSpeak | 
-tts_function = tts.googleTTS
+# OPTIONS: googleTTS | freeSpeak | openAItts
+tts_function = tts.openAItts
 
 
 input_video_path = "output\\input_video.mp4"
@@ -103,8 +103,9 @@ def make_vid(post):
     if audio_clips:
         final_video = final_video.set_audio(combined_audio)
         audio_duration = combined_audio.duration
-        video_duration = audio_duration - 0.23 # + 0.5  # 0.5 seconds longer than audio (COMMENTING THIS DOES NOT IMPROVE THE TIME ERRORS ON RENDER!!!)
+        video_duration = audio_duration -0.17 #(- 0.23) <- THIS WAS MAIN # + 0.5  # 0.5 seconds longer than audio (COMMENTING THIS DOES NOT IMPROVE THE TIME ERRORS ON RENDER!!!)
         final_video = final_video.set_duration(video_duration)
+
 
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
@@ -128,7 +129,8 @@ def generate(vidName = "mc_parkour_1hr", pubTime="default", upload=True):
 
 #How long min video length should be (wont go far over this!)
 #DEFAULT: 45
-min_len = 28
+#Until 6/25: 28
+min_len = 34
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
