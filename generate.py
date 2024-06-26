@@ -8,7 +8,7 @@ from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from moviepy.video.fx.all import crop
 from reddit import scrape_questions_and_answers, get_unprocessed_post
 from bubbles import create_text_bubble
-from youtube_dl import download_clip
+from youtube_dl import download_clip, download_random_clip
 import tts
 from subtitles import add_subs
 from upload_video import upload_video
@@ -110,19 +110,23 @@ def make_vid(post):
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
-def generate(vidName = "mc_parkour_1hr", pubTime="default", upload=True):
+def generate(vidName = "", pubTime="default", upload=True):
     # Scrape reddit
     redditPull = get_unprocessed_post()  # Get an unprocessed post
     print("REDDIT SCRAPED! Generating video...")
     # Grab yt minecraft gameplay:
-    download_clip(vidName)
+    if (vidName != ""):
+        download_clip(vidName)
+    else:
+        download_random_clip()
+
     # Add bubbles and compile:
     make_vid(redditPull)
     # Send clip to YT:
     # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!!", title=helper.generate_title(), publishTime=pubTime)
+            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!! \n\nUsed: " + tts_function.__name__, title=helper.generate_title(), publishTime=pubTime)
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 

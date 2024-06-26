@@ -10,24 +10,16 @@ import yt_dlp
 
 # FIND SOURCE OF THIS BACKGROUND!: https://www.youtube.com/shorts/1fEXqv7FkrU?feature=share
 
-videos = {
-    "mc_parkour_1hr": {
-        "url": "https://www.youtube.com/watch?v=n_Dv4JMiwK8",
-        "speed": 1.0,
-        "blur": False
-    },
-    "satisfying_10hr_claimed": {
-        "url": "https://www.youtube.com/watch?v=fYPC3yraYs8",
-        "speed": 2.0,
-        "blur": True
-    },
-    "satisfying_1hr": {
-        "url": "https://www.youtube.com/watch?v=d8vpIg1fWGA",
-        "speed": 2.0,
-        "blur": False
-    }
-}
 
+videos = {
+    # "satisfying_1hr": {"url": "https://www.youtube.com/watch?v=d8vpIg1fWGA", "length": 60, "speed": 2.0, "blur": False},
+    "SAT-22": {"url": "https://www.youtube.com/watch?v=GOxi2-3fVIo", "length": 22, "speed": 2.0, "blur": False},
+    "3D-39": {"url": "https://www.youtube.com/watch?v=wLlGB9EssCs", "length": 39, "speed": 2.0, "blur": False},
+    "SAND-30": {"url": "https://www.youtube.com/watch?v=OOpcXTTKZaA", "length": 30, "speed": 2.0, "blur": False},
+    "SAT-10": {"url": "https://www.youtube.com/watch?v=j9lPiUVZ9_c", "length": 10, "speed": 2.0, "blur": False},
+    "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False}
+}
+#MAYBE ADD THIS 1HR one?? https://www.youtube.com/watch?v=orBT5NJkjrw (Not as good but works in a pinch and CC!)
 
 
 def download_clip(name):
@@ -77,6 +69,19 @@ def download_clip(name):
 
     if blur:
         blur_rectangle_in_video()
+
+
+def download_random_clip():
+    # Generate a list of video names and weights based on their length
+    video_names = list(videos.keys())
+    weights = [video["length"] for video in videos.values()]
+
+    # Select a video based on its length (as weight)
+    selected_video = random.choices(video_names, weights=weights, k=1)[0]
+    print(selected_video)
+    # Download the selected clip
+    download_clip(selected_video)
+
 
 from moviepy.editor import VideoFileClip, vfx
 import shutil
@@ -134,5 +139,6 @@ def blur_bottom_fifth(image, sigma=10):
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    download_clip("mc_parkour_1hr")
+    # download_clip("SAT-10")
+    download_random_clip()
     # blur_rectangle_in_video()
