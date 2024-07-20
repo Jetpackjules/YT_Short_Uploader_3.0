@@ -15,7 +15,7 @@ videos = {
     # "satisfying_1hr": {"url": "https://www.youtube.com/watch?v=d8vpIg1fWGA", "length": 60, "speed": 2.0, "blur": False},
     "SAT-22": {"url": "https://www.youtube.com/watch?v=GOxi2-3fVIo", "length": 22, "speed": 2.0, "blur": False},
     "3D-39": {"url": "https://www.youtube.com/watch?v=wLlGB9EssCs", "length": 39, "speed": 2.0, "blur": False}, #GOOD
-    "SAND-30": {"url": "https://www.youtube.com/watch?v=OOpcXTTKZaA", "length": 30, "speed": 2.0, "blur": False}, #GOOD
+    "SAND-30": {"url": "https://www.youtube.com/watch?v=OOpcXTTKZaA", "length": 30, "speed": 2.0, "blur": False}, #GOOD #error???
     "SAT-10": {"url": "https://www.youtube.com/watch?v=j9lPiUVZ9_c", "length": 10, "speed": 2.0, "blur": False},
     "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False}
 }
@@ -47,7 +47,7 @@ def download_clip(name):
         duration = info_dict.get('duration', None)
 
     # Calculate random start time
-    start_time = random.randint(20, max(80, duration - 120))  # Ensures a 1-minute clip (and cuts out intro + outro that might not be parcour)
+    start_time = random.randint(20, max(85, duration - 120))  # Ensures a 1-minute clip (and cuts out intro + outro that might not be parcour)
 
     ffmpeg_command = [
         'ffmpeg',
@@ -70,8 +70,10 @@ def download_clip(name):
     if blur:
         blur_rectangle_in_video()
 
-
+# Global variable to store the selected video name
+selected_video = None
 def download_random_clip():
+    global selected_video
     # Generate a list of video names and weights based on their length
     video_names = list(videos.keys())
     weights = [video["length"] for video in videos.values()]
@@ -81,6 +83,7 @@ def download_random_clip():
     print(selected_video)
     # Download the selected clip
     download_clip(selected_video)
+    return selected_video
 
 
 from moviepy.editor import VideoFileClip, vfx

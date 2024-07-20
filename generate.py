@@ -110,7 +110,9 @@ def make_vid(post):
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
+clip_name = ""
 def generate(vidName = "", pubTime="default", upload=True):
+    global clip_name
     # Scrape reddit
     redditPull = get_unprocessed_post()  # Get an unprocessed post
     print("REDDIT SCRAPED! Generating video...")
@@ -118,7 +120,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     if (vidName != ""):
         download_clip(vidName)
     else:
-        download_random_clip()
+        clip_name = download_random_clip()
 
     # Add bubbles and compile:
     make_vid(redditPull)
