@@ -1,7 +1,7 @@
-To CREATE/UPDATE YAML go to reg. terminal:
+To CREATE/UPDATE YAML (from PC to file) go to reg. terminal:
 conda env export > environment.yml
 
-To create env:
+To create env (from file to PC):
 conda env create --file=environment.yml
 
 To update ENV (FROM FILE TO PC) (run in conda terminal):

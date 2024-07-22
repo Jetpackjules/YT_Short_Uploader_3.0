@@ -184,6 +184,11 @@ def speed_up_audio(input_path, speed=1.30):
 
 from pathlib import Path
 from openai import OpenAI
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_random_exponential,
+)  # for exponential backoff
 def openAItts(filename, text):
     global voice_num
     #Voice options: alloy, echo, fable, onyx, nova, and shimmer
@@ -195,12 +200,19 @@ def openAItts(filename, text):
     client = OpenAI(api_key=api_key_base)
     speech_file_path = Path(__file__).parent / f'output\\Audiofiles\\{filename}.mp3'
     
-    response = client.audio.speech.create(
+    #This is code to circumvent the OpenAi TTS-1-HD rate limit of 5 RPM (retries after exponential wait times!)
+    @retry(wait=wait_random_exponential(min=10, max=60), stop=stop_after_attempt(6))
+    def completion_with_backoff(**kwargs):
+        print("RATE LIMIT REACHED! RETRYING AFER WAIT...")
+        return client.audio.speech.create(**kwargs)
+
+    response = completion_with_backoff(
     model="tts-1-hd",
     voice=voice, #<- This is the voice, as a string
     input=text#,
     # speed=1.2 (THIS METHOD SUUUCKS!)
     )
+
     response.stream_to_file(speech_file_path)
 
     speed_up_audio(f'output\\Audiofiles\\{filename}.mp3', 1.25)
@@ -214,5 +226,4 @@ if __name__ == "__main__":
     # googleTTS("testGoogle-man", 'While in a deep sleep on the beach when you are lost in slumber hearing the waves, feeling the warmth of the sun that makes you feel so cozy, and smelling the salt in the air.')
     # googleTTS("testGoogle-fem", 'While in a deep sleep on the beach when you are lost in slumber hearing the waves, feeling the warmth of the sun that makes you feel so cozy, and smelling the salt in the air.')
     
-    openAItts("testOpenAI_timing", "Mom doesn't listen to her kids' advice and yet completely believes anything gossipers tell her")
-
+    openAItts("testOpenAI_timing", "This is a test!")
