@@ -128,7 +128,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!!", title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!! \n\n #reddit #askReddit #reddistories", title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 

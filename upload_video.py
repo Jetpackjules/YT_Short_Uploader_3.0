@@ -42,7 +42,7 @@ CLIENT_SECRETS_FILE = "auths\\client_secrets.json"
 
 # This OAuth 2.0 access scope allows an application to upload files to the
 # authenticated user's YouTube channel, but doesn't allow other types of access.
-YOUTUBE_UPLOAD_SCOPE = "https://www.googleapis.com/auth/youtube.upload"
+YOUTUBE_UPLOAD_SCOPE = "https://www.googleapis.com/auth/youtube"# REMOVED A "".upload"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
@@ -198,6 +198,41 @@ def upload_video(file, title="Test Title", description="Test Description", categ
     except HttpError as e:
         print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
 
+from datetime import datetime, timezone
+def get_upload_offset(channel_id):
+    args = argparser.parse_args()
+    youtube = get_authenticated_service(args)
+    
+    request = youtube.search().list(
+        part="snippet",
+        channelId=channel_id,
+        type="video",
+        order="date",
+        maxResults=50
+    )
+    response = request.execute()
+
+    latest_publish_time = None
+
+    for item in response['items']:
+        publish_time = item['snippet'].get('publishTime')
+        print(f"Found publish time: {publish_time}")
+        if publish_time:
+            publish_time_dt = datetime.fromisoformat(publish_time.replace('Z', '+00:00'))
+            if latest_publish_time is None or publish_time_dt > latest_publish_time:
+                latest_publish_time = publish_time_dt
+
+    if latest_publish_time is None:
+        print("No scheduled videos found.")
+        return None
+
+    today = datetime.now(timezone.utc)
+    offset = (latest_publish_time - today).days
+    print(f"Latest publish time: {latest_publish_time}")
+    print(f"Today's date: {today}")
+    print(f"Offset: {offset} days")
+    return offset
 
 if __name__ == '__main__':
-    upload_video("output\\video_subbed.mp4")
+    print(get_upload_offset("UCOXlfVEB7I11AeIND_wJDrQ"))
+    # upload_video("output\\video_subbed.mp4")

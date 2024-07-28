@@ -195,7 +195,7 @@ def times_for_tomorrow_pacific():
     current_time = datetime.datetime.now(pacific)
 
     # Calculate tomorrow's date
-    tomorrow = current_time + datetime.timedelta(days=5) # <- THIS SHOULD BE ONE NORMALLY!
+    tomorrow = current_time + datetime.timedelta(days=1) # <- THIS SHOULD BE ONE NORMALLY!
     
     # Define specific times for tomorrow
     times = [datetime.time(hour=8, minute=30),  # 8:30 AM

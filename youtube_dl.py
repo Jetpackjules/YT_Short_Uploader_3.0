@@ -142,6 +142,6 @@ def blur_bottom_fifth(image, sigma=10):
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    download_clip("SAND-30")
+    download_clip("SAT-10")
     # download_random_clip()
     # blur_rectangle_in_video()
