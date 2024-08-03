@@ -170,7 +170,7 @@ def next_optimal_post_time_final():
             break
     else:
         # If current time is past all slots for the day, calculate the next day's first optimal slot
-        next_day = current_time + datetime.timedelta(days=1)
+        next_day = current_time + timedelta(days=1+get_scheduled_video_offset()) #1+ latest upload
         next_day_weekday = next_day.weekday()
 
         if 0 <= next_day_weekday <= 4:  # Weekdays
@@ -188,6 +188,12 @@ def next_optimal_post_time_final():
 
     return next_optimal_time_iso8601
 
+def get_unprocessed_times():
+    # Define specific times for tomorrow
+    times = [datetime.time(hour=8, minute=30),  # 8:30 AM
+             datetime.time(hour=16, minute=0),  # 4 PM
+             datetime.time(hour=19, minute=0)]  # 7 PM
+    return times
 
 def times_for_tomorrow_pacific():
     # Get the current time in Pacific Time
@@ -195,12 +201,10 @@ def times_for_tomorrow_pacific():
     current_time = datetime.datetime.now(pacific)
 
     # Calculate tomorrow's date
-    tomorrow = current_time + datetime.timedelta(days=1) # <- THIS SHOULD BE ONE NORMALLY!
+    tomorrow = current_time + timedelta(days=1+get_scheduled_video_offset()) # <- THIS SHOULD BE ONE NORMALLY!
     
     # Define specific times for tomorrow
-    times = [datetime.time(hour=8, minute=30),  # 8:30 AM
-             datetime.time(hour=16, minute=0),  # 4 PM
-             datetime.time(hour=19, minute=0)]  # 7 PM
+    times = get_unprocessed_times()
 
     # Create datetime objects for each specific time
     datetime_list = [datetime.datetime.combine(tomorrow, time) for time in times]
@@ -209,6 +213,115 @@ def times_for_tomorrow_pacific():
     datetime_list_utc = [dt.astimezone(pytz.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z' for dt in datetime_list]
 
     return datetime_list_utc
+
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
+import googleapiclient.errors
+import os
+# from datetime import datetime
+
+import httplib2
+import os
+import random
+import sys
+import time
+
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.file import Storage
+from oauth2client.tools import argparser, run_flow
+from apiclient.discovery import build
+from apiclient.errors import HttpError
+from datetime import timedelta
+
+
+def get_scheduled_video_offset():
+    # Set up the YouTube API client
+    scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
+    YOUTUBE_API_SERVICE_NAME = "youtube"
+    YOUTUBE_API_VERSION = "v3"
+    CLIENT_SECRETS_FILE = "auths\\client_secrets.json"
+
+
+    MISSING_CLIENT_SECRETS_MESSAGE = """
+    WARNING: Please configure OAuth 2.0
+
+    To make this sample run you will need to populate the client_secrets.json file
+    found at:
+
+    %s
+
+    with information from the API Console
+    https://console.cloud.google.com/
+
+    For more information about the client_secrets.json file format, please visit:
+    https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
+    """ % os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                    CLIENT_SECRETS_FILE))
+
+
+    flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
+                                   scope=scopes,
+                                   message=MISSING_CLIENT_SECRETS_MESSAGE)
+
+    
+    # print("%s-oauth2.json" % sys.argv[0])
+    storage = Storage("auths\\oauth2.json")
+    # storage = Storage("%s-oauth2.json" % sys.argv[0])
+
+    credentials = storage.get()
+
+    if credentials is None or credentials.invalid:
+        credentials = run_flow(flow, storage)
+        input("NEW CREDS LOADED - RESTART PROGRAM!")
+
+    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+                 http=credentials.authorize(httplib2.Http()))
+
+
+    # Fetch videos uploaded by the authenticated user
+    search_response = youtube.search().list(
+        part="id,snippet",
+        forMine=True,
+        type="video",
+        maxResults=50  # Fetch up to 50 videos to ensure we find scheduled ones
+    ).execute()
+
+    # Get video IDs
+    video_ids = [item["id"]["videoId"] for item in search_response.get("items", [])]
+
+    if not video_ids:
+        print("No videos found.")
+        return
+
+    # Fetch details for the videos
+    videos_response = youtube.videos().list(
+        part="snippet,status",
+        id=",".join(video_ids)
+    ).execute()
+
+    # Iterate through the videos and find the scheduled one
+    for video in videos_response.get("items", []):
+        if video["status"]["privacyStatus"] == "private" and "publishAt" in video["status"]:
+            scheduled_upload_date_str = video["status"]["publishAt"]
+            scheduled_upload_date = datetime.datetime.strptime(scheduled_upload_date_str, "%Y-%m-%dT%H:%M:%SZ")
+
+            today = datetime.datetime.utcnow()
+
+            # Set time to midnight
+            scheduled_upload_date -= timedelta(hours=7)
+            today -= timedelta(hours=7)
+            # scheduled_upload_date = scheduled_upload_date.replace(hour=0, minute=0, second=0, microsecond=0)
+            today = today.replace(hour=19, minute=0, second=0, microsecond=0)
+
+
+            offset_days = ((scheduled_upload_date - today).days)
+
+            print(f"The offset between today and the video's scheduled upload date is {offset_days} day(s).")
+            return offset_days
+
+    print("No scheduled videos found.")
+
+
 
 from better_profanity import profanity
 def has_profanity(text):
@@ -219,5 +332,11 @@ def censor(text):
 
 
 if __name__ == '__main__':
+    get_scheduled_video_offset()
+    # Extract the hour from the third time (7 PM)
+    test = get_unprocessed_times()
+    hour_19 = test[2].hour
+
+    print(hour_19)  # Output: 19
     pass
 

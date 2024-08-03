@@ -198,6 +198,8 @@ def upload_video(file, title="Test Title", description="Test Description", categ
     except HttpError as e:
         print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
 
+
+
 from datetime import datetime, timezone
 def get_upload_offset(channel_id):
     args = argparser.parse_args()
