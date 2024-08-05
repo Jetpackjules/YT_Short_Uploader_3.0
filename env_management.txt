@@ -7,8 +7,6 @@ conda env create --file=environment.yml
 To update ENV (FROM FILE TO PC) (run in conda terminal):
 conda env update --file environment.yml --prune
 
-
-
 INSTALL:
 1. FFMPEG (website) (OR RUN: [[ winget install "FFmpeg (Essentials Build)" ]]) (VERSION: ffmpeg version 7.0-essentials_build-www.gyan.dev)
 2.  # MIGHT NEED TO RE-INSTALL IMAGE MAGICK WITH ALL BOXES CHECKED (except last 2, but LEGACY FEATURES needs ot be installed)
