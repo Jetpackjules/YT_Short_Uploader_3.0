@@ -24,7 +24,7 @@ tts_function = tts.openAItts
 input_video_path = "output\\input_video.mp4"
 output_video_path = "output\\video_raw.mp4"
 
-music_volume = ""
+music_volume = 0
 transcript = ""
 def make_vid(post):
     global music_volume
@@ -155,7 +155,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     # Send clip to YT:
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + music_volume, keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(music_volume), keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 
