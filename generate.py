@@ -14,7 +14,7 @@ from subtitles import add_subs
 from upload_video import upload_video
 import helper
 import random
-from ai import gen_description
+from ai import gen_description, gen_tags
 
 # The function to use for TTS, changes often:
 # OPTIONS: googleTTS | freeSpeak | openAItts
@@ -152,7 +152,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + music_volume, title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + music_volume, keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 

@@ -86,6 +86,22 @@ def get_authenticated_service(args):
     return build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
                  http=credentials.authorize(httplib2.Http()))
 
+def add_video_to_playlist(youtube, video_id, playlist_id):
+    add_to_playlist_request = youtube.playlistItems().insert(
+        part="snippet",
+        body={
+            "snippet": {
+                "playlistId": playlist_id,
+                "resourceId": {
+                    "kind": "youtube#video",
+                    "videoId": video_id
+                }
+            }
+        }
+    )
+    add_to_playlist_request.execute()
+    print(f"Video id '{video_id}' was added to playlist id '{playlist_id}'.")
+
 
 def initialize_upload(youtube, options):
     tags = None
@@ -124,7 +140,14 @@ def initialize_upload(youtube, options):
         media_body=MediaFileUpload(options.file, chunksize=-1, resumable=True)
     )
 
-    resumable_upload(insert_request)
+    response = resumable_upload(insert_request)
+
+    # Add video to playlist if upload was successful
+    if response and 'id' in response:
+        video_id = response['id']
+        playlist_id = options.playlistId
+        if playlist_id:
+            add_video_to_playlist(youtube, video_id, playlist_id)
 
 # This method implements an exponential backoff strategy to resume a
 # failed upload.
@@ -170,7 +193,7 @@ import argparse
 
 
 # Category 24 is entertainment, what everyone else uses
-def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="askreddit, reddit stories, reddit horror stories, askreddit reading, reddit cheating stories, reddit, minecraft", privacyStatus="private", publishTime="default"):
+def upload_video(file, title="Test Title", description="Test Description", category="24", keywords="", privacyStatus="private", publishTime="default", playlistId="PLw8KwGTnJQ8QJbiuyzmm7eTpqbIbsLPTf"):
     if not os.path.exists(file):
         exit("Please specify a valid file using the --file= parameter.")
 
@@ -182,6 +205,7 @@ def upload_video(file, title="Test Title", description="Test Description", categ
     args.category = category
     args.keywords = keywords
     args.privacyStatus = privacyStatus
+    args.playlistId = playlistId
 
     if publishTime == "default":
         publishTime = helper.next_optimal_post_time_final()
