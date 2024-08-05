@@ -320,6 +320,7 @@ def get_scheduled_video_offset():
             return offset_days
 
     print("No scheduled videos found.")
+    return 0
 
 
 
