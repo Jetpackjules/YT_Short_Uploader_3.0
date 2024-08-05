@@ -14,7 +14,7 @@ from subtitles import add_subs
 from upload_video import upload_video
 import helper
 import random
-
+from ai import gen_description
 
 # The function to use for TTS, changes often:
 # OPTIONS: googleTTS | freeSpeak | openAItts
@@ -25,8 +25,10 @@ input_video_path = "output\\input_video.mp4"
 output_video_path = "output\\video_raw.mp4"
 
 music_volume = ""
+transcript = ""
 def make_vid(post):
     global music_volume
+    global transcript
     comment_pause = 0.35
 
     clip = VideoFileClip(input_video_path)
@@ -34,7 +36,6 @@ def make_vid(post):
     annotations = []
     start_time = 0
     audio_clips = []
-    transcript = ""
 
 
     # Create a bubble for the main post
@@ -135,6 +136,7 @@ clip_name = ""
 def generate(vidName = "", pubTime="default", upload=True):
     global clip_name
     global music_volume
+    global transcript
     # Scrape reddit
     redditPull = get_unprocessed_post()  # Get an unprocessed post
     print("REDDIT SCRAPED! Generating video...")
@@ -150,7 +152,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!! Vol: " + music_volume +" \n\n #reddit #askReddit #reddistories", title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + music_volume, title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 
