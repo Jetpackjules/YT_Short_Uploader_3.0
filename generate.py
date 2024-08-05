@@ -104,7 +104,7 @@ def make_vid(post):
         background_music_path = os.path.join(background_music_folder, random_music_file)
         background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration)
 
-        music_volume = 0.15  # Change this value to adjust the volume of the music
+        music_volume = 0.11  # Change this value to adjust the volume of the music
         background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration).volumex(music_volume)
 
         finalAudio = CompositeAudioClip([background_music, combined_audio])
