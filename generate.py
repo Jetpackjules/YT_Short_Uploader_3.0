@@ -24,7 +24,9 @@ tts_function = tts.openAItts
 input_video_path = "output\\input_video.mp4"
 output_video_path = "output\\video_raw.mp4"
 
+music_volume = ""
 def make_vid(post):
+    global music_volume
     comment_pause = 0.35
 
     clip = VideoFileClip(input_video_path)
@@ -104,7 +106,8 @@ def make_vid(post):
         background_music_path = os.path.join(background_music_folder, random_music_file)
         background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration)
 
-        music_volume = 0.11  # Change this value to adjust the volume of the music
+        
+        music_volume = random.uniform(0.01, 0.17)  # Change this value to adjust the volume of the music
         background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration).volumex(music_volume)
 
         finalAudio = CompositeAudioClip([background_music, combined_audio])
@@ -131,6 +134,7 @@ def make_vid(post):
 clip_name = ""
 def generate(vidName = "", pubTime="default", upload=True):
     global clip_name
+    global music_volume
     # Scrape reddit
     redditPull = get_unprocessed_post()  # Get an unprocessed post
     print("REDDIT SCRAPED! Generating video...")
@@ -146,7 +150,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!! \n\n #reddit #askReddit #reddistories", title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output\\video_subbed.mp4", description=redditPull['post'] + "\n\nPlease like and subscribe for more reddit stories!! Vol: " + music_volume +" \n\n #reddit #askReddit #reddistories", title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 

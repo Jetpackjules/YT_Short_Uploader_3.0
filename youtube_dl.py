@@ -9,15 +9,17 @@ import yt_dlp
 
 
 # FIND SOURCE OF THIS BACKGROUND!: https://www.youtube.com/shorts/1fEXqv7FkrU?feature=share
-
-
+# A little narrow aspect ratio?? https://www.youtube.com/watch?v=OOpcXTTKZaA&t=213s # THIS ONE IS GODDAM BROKEN!
+#1 HR COOKING DECENT WITH CC - https://www.youtube.com/watch?v=uFHfyqOztvg
 videos = {
     # "satisfying_1hr": {"url": "https://www.youtube.com/watch?v=d8vpIg1fWGA", "length": 60, "speed": 2.0, "blur": False},
     "SAT-22": {"url": "https://www.youtube.com/watch?v=GOxi2-3fVIo", "length": 22, "speed": 2.0, "blur": False},
-    "3D-39": {"url": "https://www.youtube.com/watch?v=wLlGB9EssCs", "length": 39, "speed": 2.0, "blur": False}, #GOOD
+    "3D-60": {"url": "https://www.youtube.com/watch?v=Lx2yQ-CVoxQ", "length": 60, "speed": 2.0, "blur": False}, #GOOD
     # "SAND-30": {"url": "https://www.youtube.com/watch?v=OOpcXTTKZaA", "length": 30, "speed": 2.0, "blur": False}, #GOOD #error??? #Error! #ERRRORORORORORO!! #DISCONTINUED
     "SAT-10": {"url": "https://www.youtube.com/watch?v=j9lPiUVZ9_c", "length": 10, "speed": 2.0, "blur": False},
-    "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False}
+    "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False},
+    "COK-60": {"url": "https://www.youtube.com/watch?v=uFHfyqOztvg", "length": 60, "speed": 2.0, "blur": False}
+
 }
 #MAYBE ADD THIS 1HR one?? https://www.youtube.com/watch?v=orBT5NJkjrw (Not as good but works in a pinch and CC!)
 
@@ -142,6 +144,6 @@ def blur_bottom_fifth(image, sigma=10):
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    download_clip("SAT-10")
+    download_clip("COK-60")
     # download_random_clip()
     # blur_rectangle_in_video()
