@@ -102,6 +102,21 @@ def add_video_to_playlist(youtube, video_id, playlist_id):
     add_to_playlist_request.execute()
     print(f"Video id '{video_id}' was added to playlist id '{playlist_id}'.")
 
+def set_thumbnail(youtube, video_id, thumbnail_path):
+    if not os.path.exists(thumbnail_path):
+        print(f"Thumbnail file {thumbnail_path} not found.")
+        return
+
+    try:
+        youtube.thumbnails().set(
+            videoId=video_id,
+            media_body=MediaFileUpload(thumbnail_path)
+        ).execute()
+        print(f"Thumbnail for video id '{video_id}' successfully uploaded.")
+    except HttpError as e:
+        print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
+
+
 
 def initialize_upload(youtube, options):
     tags = None
@@ -146,8 +161,14 @@ def initialize_upload(youtube, options):
     if response and 'id' in response:
         video_id = response['id']
         playlist_id = options.playlistId
+        thumbnail_path = "output\\thumbnail.png"
+
+
         if playlist_id:
             add_video_to_playlist(youtube, video_id, playlist_id)
+        if thumbnail_path:
+            set_thumbnail(youtube, video_id, thumbnail_path)
+
 
 # This method implements an exponential backoff strategy to resume a
 # failed upload.

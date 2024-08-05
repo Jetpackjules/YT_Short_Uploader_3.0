@@ -148,8 +148,11 @@ def generate(vidName = "", pubTime="default", upload=True):
 
     # Add bubbles and compile:
     make_vid(redditPull)
+
+    #Make thumbnail:
+    helper.save_first_frame_as_png()
+
     # Send clip to YT:
-    # Old emojis that were removed from description: 🔔🔔 (And this after the post text... 👀🤔)
     if upload==True:
         try:
             upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + music_volume, keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__

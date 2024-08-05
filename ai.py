@@ -6,7 +6,6 @@ import os
 MODEL="gpt-4o-mini"
 api_key_base = "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"
 
-script = "What's your best response to 'fuck you?'\n* I'm sorry you feel that way. \nNot even on your birthday\nGet in line\nYou're not that lucky and I'm not that desperate.\nDepends on the person, 'Maybe later' is the go-to though.\nHere? At this hour?\nDinner first buddy, dinner first.\nNo thanks. This evening has been disappointing enough...\nYou wouldn't like it. I'd just lay there and laugh at you"
 
 def gen_description(script):
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", api_key_base))
@@ -40,6 +39,7 @@ def gen_tags(script):
 
 
 
-
-# gen_description(script)
-gen_tags(script)
+if __name__ == "__main__":
+    script = "What's your best response to 'fuck you?'\n* I'm sorry you feel that way. \nNot even on your birthday\nGet in line\nYou're not that lucky and I'm not that desperate.\nDepends on the person, 'Maybe later' is the go-to though.\nHere? At this hour?\nDinner first buddy, dinner first.\nNo thanks. This evening has been disappointing enough...\nYou wouldn't like it. I'd just lay there and laugh at you"
+    gen_description(script)
+    gen_tags(script)
