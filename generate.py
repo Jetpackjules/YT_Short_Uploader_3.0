@@ -13,6 +13,8 @@ import tts
 from subtitles import add_subs
 from upload_video import upload_video
 import helper
+import random
+
 
 # The function to use for TTS, changes often:
 # OPTIONS: googleTTS | freeSpeak | openAItts
@@ -87,13 +89,29 @@ def make_vid(post):
 
     # print("USER TIMES:")
     helper.save_as_srt(user_times)
+    with open("output\\audiofiles\\transcript.txt", "w", encoding="utf-8") as file:
+        file.write(transcript)
 
     # Concatenate all audio clips together
     combined_audio = concatenate_audioclips(audio_clips)
 
+    # 66% chance of adding background music
+    if random.random() < 0.66:
+        # Select a random background music file from the folder:
+        background_music_folder = "assets\\background_music"
+        background_music_files = [f for f in os.listdir(background_music_folder) if f.endswith('.mp3')]
+        random_music_file = random.choice(background_music_files)
+        background_music_path = os.path.join(background_music_folder, random_music_file)
+        background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration)
 
-    with open("output\\audiofiles\\transcript.txt", "w", encoding="utf-8") as file:
-        file.write(transcript)
+        music_volume = 0.15  # Change this value to adjust the volume of the music
+        background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration).volumex(music_volume)
+
+        finalAudio = CompositeAudioClip([background_music, combined_audio])
+
+        combined_audio = finalAudio
+
+
 
     # Final composition and video generation
     final_clips = [clip] + annotations
@@ -106,7 +124,7 @@ def make_vid(post):
         video_duration = audio_duration -0.17 #(- 0.23) <- THIS WAS MAIN # + 0.5  # 0.5 seconds longer than audio (COMMENTING THIS DOES NOT IMPROVE THE TIME ERRORS ON RENDER!!!)
         final_video = final_video.set_duration(video_duration)
 
-
+    
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
