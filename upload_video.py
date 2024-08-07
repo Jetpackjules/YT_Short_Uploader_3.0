@@ -244,44 +244,7 @@ def upload_video(file, title="Test Title", description="Test Description", categ
         print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
 
 
-
-from datetime import datetime, timezone
-def get_upload_offset(channel_id):
-    args = argparser.parse_args()
-    youtube = get_authenticated_service(args)
-    
-    request = youtube.search().list(
-        part="snippet",
-        channelId=channel_id,
-        type="video",
-        order="date",
-        maxResults=50
-    )
-    response = request.execute()
-
-    latest_publish_time = None
-
-    for item in response['items']:
-        publish_time = item['snippet'].get('publishTime')
-        print(f"Found publish time: {publish_time}")
-        if publish_time:
-            publish_time_dt = datetime.fromisoformat(publish_time.replace('Z', '+00:00'))
-            if latest_publish_time is None or publish_time_dt > latest_publish_time:
-                latest_publish_time = publish_time_dt
-
-    if latest_publish_time is None:
-        print("No scheduled videos found.")
-        return None
-
-    today = datetime.now(timezone.utc)
-    offset = (latest_publish_time - today).days
-    print(f"Latest publish time: {latest_publish_time}")
-    print(f"Today's date: {today}")
-    print(f"Offset: {offset} days")
-    return offset
-
 if __name__ == '__main__':
-    # print(get_upload_offset("UCOXlfVEB7I11AeIND_wJDrQ"))
     from ai import gen_description, gen_tags
     transcript = "What celebrity has abused plastic surgery to the point they don't look like their former selves?\n\nSimon Cowell. I feel like Simon Cowell from 20 years ago would ridicule and lambast current Simon worse than any crazy X Factor or American Idol contestant\n\nDonatella Versace which is heartbreaking because she didn't need any of the surgery\n\nMadonna.\n\nMickey Rourke looks like he was made by a cobbler. - Henchman 21\n\nSmokey Robinson. If the surgeons pull his face any tighter it'll tear with a snap. He used to be gorgeous.\n\nFamke Janssen was a shock to me\n\nJessica Simpson doesn't look like herself anymore\n\nCarrot Top\n\n*Sharon and Kelly Osborne"
-    upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(13), keywords=gen_tags(transcript), title="Test Upload")
+    upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(13, 2)), keywords=gen_tags(transcript), title="Test Upload")

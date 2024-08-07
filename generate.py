@@ -155,7 +155,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     # Send clip to YT:
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(music_volume), keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(music_volume, 3)), keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 
