@@ -121,7 +121,8 @@ def set_thumbnail(youtube, video_id, thumbnail_path):
 def initialize_upload(youtube, options):
     tags = None
     if options.keywords:
-        tags = options.keywords.split(",")
+        tags = options.keywords.split(", ")
+        print("PROCESSED TAGES: ", tags)
 
     body = dict(
         snippet=dict(
@@ -163,11 +164,11 @@ def initialize_upload(youtube, options):
         playlist_id = options.playlistId
         thumbnail_path = "output\\thumbnail.png"
 
-
-        if playlist_id:
-            add_video_to_playlist(youtube, video_id, playlist_id)
-        if thumbnail_path:
-            set_thumbnail(youtube, video_id, thumbnail_path)
+        #Doesnt really work :( TBD
+        # if playlist_id:
+        #     add_video_to_playlist(youtube, video_id, playlist_id)
+        # if thumbnail_path:
+        #     set_thumbnail(youtube, video_id, thumbnail_path)
 
 
 # This method implements an exponential backoff strategy to resume a
