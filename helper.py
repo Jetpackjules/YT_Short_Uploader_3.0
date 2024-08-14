@@ -13,7 +13,14 @@ def run(command):
         # RESULT = subprocess.run(f'{conda_path} run -v -n -cwd{env_name} {command}', check=True, capture_output=True, text=True, shell=True)
 
         # I THINK THIS WORKS!!! HOLY SHIT!
-        subprocess.run(['powershell', '-Command', command], check=True, capture_output=True, text=True, shell=False, encoding='utf-8')
+        result = subprocess.run(['powershell', '-Command', command], check=True, capture_output=True, text=True, shell=False, encoding='utf-8')
+        if result.returncode != 0:
+            print("RESULT RECIEVED: \n" + str(result))
+            print("Command!s failed. Pausing execution...")
+            input("Press Enter to continue...")  # This will pause execution until Enter is pressed
+            # or alternatively use time.sleep() if you want a timed pause
+            # time.sleep(10)  # Pauses for 10 seconds
+            sys.exit(1)  # Exit the script if needed
     except subprocess.CalledProcessError as e:
         print("Command failed with return code", e.returncode)
         print("Output:", e.output)
