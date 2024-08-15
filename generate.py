@@ -138,7 +138,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     global music_volume
     global transcript
     # Scrape reddit
-    redditPull = get_unprocessed_post()  # Get an unprocessed post
+    redditPull = get_unprocessed_post("AskReddit")  # Get an unprocessed post
     print("REDDIT SCRAPED! Generating video...")
     # Grab yt minecraft gameplay:
     if (vidName != ""):

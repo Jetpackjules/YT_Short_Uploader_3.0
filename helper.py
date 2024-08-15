@@ -18,8 +18,6 @@ def run(command):
             print("RESULT RECIEVED: \n" + str(result))
             print("Command!s failed. Pausing execution...")
             input("Press Enter to continue...")  # This will pause execution until Enter is pressed
-            # or alternatively use time.sleep() if you want a timed pause
-            # time.sleep(10)  # Pauses for 10 seconds
             sys.exit(1)  # Exit the script if needed
     except subprocess.CalledProcessError as e:
         print("Command failed with return code", e.returncode)
@@ -361,6 +359,36 @@ def has_profanity(text):
 def censor(text):
     return profanity.censor(text)
 
+import json
+def retain_latest_entries(file_path, num_entries=100):
+    try:
+        # Load the JSON data from the file
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+
+        # Ensure that data is a dictionary
+        if isinstance(data, dict):
+            # Sort the dictionary keys based on the insertion order (Python 3.7+ guarantees dict order)
+            keys = list(data.keys())
+            keys_to_keep = keys[-num_entries:]
+
+            # Create a new dictionary with only the latest `num_entries`
+            new_data = {key: data[key] for key in keys_to_keep}
+
+            # Save the updated data back to the JSON file
+            with open(file_path, 'w') as file:
+                json.dump(new_data, file, indent=4)
+
+            print(f"Successfully retained the latest {num_entries} entries.")
+            return True
+        else:
+            print("The JSON structure is not a dictionary. Please check the file.")
+            return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
+
+
 
 if __name__ == '__main__':
     # get_scheduled_video_offset()
@@ -373,4 +401,5 @@ if __name__ == '__main__':
 
     save_first_frame_as_png()
     pass
+
 
