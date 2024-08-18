@@ -101,7 +101,9 @@ def make_vid(post):
 
 
     # 66% chance of adding background music
-    if random.random() < 0.66:
+    randomNum = random.random()
+    print("RANDOM NUM: " + str(randomNum))
+    if randomNum < 0.66:
         # Select a random background music file from the folder:
         background_music_folder = "assets\\background_music"
         background_music_files = [f for f in os.listdir(background_music_folder) if f.endswith('.mp3')]
@@ -110,7 +112,7 @@ def make_vid(post):
         background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration)
 
         
-        music_volume = random.uniform(0.01, 0.17)  # Change this value to adjust the volume of the music
+        music_volume = random.uniform(0.01, 0.14)  # Change this value to adjust the volume of the music
         music_volume = round(music_volume, 3)
         
         background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration).volumex(music_volume)
@@ -118,6 +120,9 @@ def make_vid(post):
         finalAudio = CompositeAudioClip([background_music, combined_audio])
 
         combined_audio = finalAudio
+        print("ADDED MUSIC")
+    else:
+        print("NO MUSIC ADDED")
 
 
 
