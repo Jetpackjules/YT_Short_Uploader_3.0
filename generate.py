@@ -24,11 +24,11 @@ tts_function = tts.openAItts
 input_video_path = "output\\input_video.mp4"
 output_video_path = "output\\video_raw.mp4"
 
-music_volume = 0
-transcript = ""
+
+
 def make_vid(post):
-    global music_volume
-    global transcript
+    music_volume = 0.00
+    transcript = "" 
     comment_pause = 0.35
 
     clip = VideoFileClip(input_video_path)
@@ -136,11 +136,10 @@ def make_vid(post):
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
-clip_name = ""
+    return transcript, music_volume
+
+
 def generate(vidName = "", pubTime="default", upload=True):
-    global clip_name
-    global music_volume
-    global transcript
     # Scrape reddit
     redditPull = get_unprocessed_post("AskReddit")  # Get an unprocessed post
     print("REDDIT SCRAPED! Generating video...")
@@ -151,10 +150,10 @@ def generate(vidName = "", pubTime="default", upload=True):
         clip_name = download_random_clip()
 
     # Add bubbles and compile:
-    make_vid(redditPull)
+    transcript, music_volume = make_vid(redditPull)
 
     #Make thumbnail:
-    helper.save_first_frame_as_png()
+    # helper.save_first_frame_as_png()
 
     # Send clip to YT:
     if upload==True:
@@ -171,4 +170,5 @@ min_len = 34
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
+    generate(upload=False)
     generate(upload=False)
