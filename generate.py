@@ -97,6 +97,8 @@ def make_vid(post):
 
     # Concatenate all audio clips together
     combined_audio = concatenate_audioclips(audio_clips)
+    combined_audio.write_audiofile("output\\audiofiles\\combined_audio_no_music.mp3")
+
 
     # 66% chance of adding background music
     if random.random() < 0.66:
@@ -109,6 +111,8 @@ def make_vid(post):
 
         
         music_volume = random.uniform(0.01, 0.17)  # Change this value to adjust the volume of the music
+        music_volume = round(music_volume, 3)
+        
         background_music = AudioFileClip(background_music_path).set_duration(combined_audio.duration).volumex(music_volume)
 
         finalAudio = CompositeAudioClip([background_music, combined_audio])

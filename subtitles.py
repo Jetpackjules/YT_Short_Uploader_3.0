@@ -109,7 +109,7 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
              fontsize=60, stroke_width=25):
             # OG: fontsize=34, stroke_width=5
     
-    generate_srt("output\\video_raw.mp4")
+    generate_srt("output\\audiofiles\\combined_audio_no_music.mp3")
     subtitle_file_path="output\\audiofiles\\subs.srt"
     trim_srt_file(subtitle_file_path)
     get_color = unique_color_picker()

@@ -44,5 +44,5 @@ def generate_srt(audio_path):
         
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    generate_srt("output\\video_raw.mp4")
+    generate_srt("output\\audiofiles\\combined_audio_no_music.mp3")
 

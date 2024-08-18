@@ -122,7 +122,7 @@ def initialize_upload(youtube, options):
     tags = None
     if options.keywords:
         tags = options.keywords.split(", ")
-        print("PROCESSED TAGES: ", tags)
+        print("PROCESSED TAGS: ", tags)
 
     body = dict(
         snippet=dict(
