@@ -195,9 +195,9 @@ def next_optimal_post_time_final():
 
 def get_unprocessed_times():
     # Define specific times for tomorrow
-    times = [datetime.time(hour=6, minute=45),  # 6:45 AM
-             datetime.time(hour=15, minute=0),  # 3 PM
-             datetime.time(hour=21, minute=0)]  # 9 PM
+    times = [datetime.time(hour=8, minute=30),  # 6:45 AM
+             datetime.time(hour=13, minute=30),  # 3 PM
+             datetime.time(hour=20, minute=0)]  # 9 PM
     return times
 
 def times_for_tomorrow_pacific():
@@ -316,7 +316,7 @@ def get_scheduled_video_offset():
             scheduled_upload_date -= timedelta(hours=7)
             today -= timedelta(hours=7)
             # scheduled_upload_date = scheduled_upload_date.replace(hour=0, minute=0, second=0, microsecond=0)
-            today = today.replace(hour=21, minute=0, second=0, microsecond=0)
+            today = today.replace(hour=20, minute=0, second=0, microsecond=0)
 
 
             offset_days = ((scheduled_upload_date - today).days)
