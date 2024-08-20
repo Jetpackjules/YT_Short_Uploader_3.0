@@ -1,39 +1,9 @@
-from deepgram import Deepgram
 import io
 from contextlib import redirect_stdout
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
 from Sub_Align import generate_srt
 import helper
-
-deepgram = Deepgram("73bfe43e53a979195482bdaf19865b539429e7e0")
-
-def generate_captions(file_url):
-    # Assuming 'file_path' is the path to your local audio file
-    with open(file_url, 'rb') as audio_file:
-        file_content = audio_file.read()
-
-    source = {
-            'buffer': file_content,
-            'mimetype': 'audio/mp4'  # Replace with the correct MIME type for your audio file
-    }
-
-    # Request transcript with utterances for creating captions
-    response = deepgram.transcription.sync_prerecorded(source, {'smart_format': True,
-                                                                'punctuation': True, 
-                                                                'utterances': True,
-                                                                'paragraphs': True,
-                                                                'numerals': True})
-    
-    # Capture the printed output
-    f = io.StringIO()
-    with redirect_stdout(f):
-        deepgram.extra.to_SRT(response)
-    srt_content = f.getvalue()
-    
-    with open('output\\audiofiles\\subs.srt', 'w', encoding='utf-8') as srt_file:
-        srt_file.write(srt_content)
-    print("SRT Generated!")
 
 import random
 def unique_color_picker():
