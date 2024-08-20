@@ -14,10 +14,11 @@ def freeSpeak(filename, text_for_tts):
 
 
 # a9ad61e19ef91f6814895c0a5f310ee9
-from elevenlabs import generate, play, Voice, VoiceSettings
-import os
+
 
 def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
+    from elevenlabs import generate, play, Voice, VoiceSettings
+    import os
     # Set up the environment variable for ElevenLabs API key
     os.environ["ELEVEN_API_KEY"] = api_key
     voice_settings = VoiceSettings(stability=0.63, similarity_boost=1.0, clarity=1.0)

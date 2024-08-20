@@ -38,7 +38,7 @@ RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 #   https://developers.google.com/youtube/v3/guides/authentication
 # For more information about the client_secrets.json file format, see:
 #   https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
-CLIENT_SECRETS_FILE = "auths\\client_secrets.json"
+CLIENT_SECRETS_FILE = "auths/client_secrets.json"
 
 # This OAuth 2.0 access scope allows an application to upload files to the
 # authenticated user's YouTube channel, but doesn't allow other types of access.
@@ -74,7 +74,7 @@ def get_authenticated_service(args):
 
     
     # print("%s-oauth2.json" % sys.argv[0])
-    storage = Storage("auths\\oauth2.json")
+    storage = Storage("auths/oauth2.json")
     # storage = Storage("%s-oauth2.json" % sys.argv[0])
 
     credentials = storage.get()
@@ -162,7 +162,7 @@ def initialize_upload(youtube, options):
     if response and 'id' in response:
         video_id = response['id']
         playlist_id = options.playlistId
-        thumbnail_path = "output\\thumbnail.png"
+        thumbnail_path = "output/thumbnail.png"
 
         #Doesnt really work :( TBD
         # if playlist_id:
@@ -249,4 +249,4 @@ def upload_video(file, title="Test Title", description="Test Description", categ
 if __name__ == '__main__':
     from ai import gen_description, gen_tags
     transcript = "What celebrity has abused plastic surgery to the point they don't look like their former selves?\n\nSimon Cowell. I feel like Simon Cowell from 20 years ago would ridicule and lambast current Simon worse than any crazy X Factor or American Idol contestant\n\nDonatella Versace which is heartbreaking because she didn't need any of the surgery\n\nMadonna.\n\nMickey Rourke looks like he was made by a cobbler. - Henchman 21\n\nSmokey Robinson. If the surgeons pull his face any tighter it'll tear with a snap. He used to be gorgeous.\n\nFamke Janssen was a shock to me\n\nJessica Simpson doesn't look like herself anymore\n\nCarrot Top\n\n*Sharon and Kelly Osborne"
-    upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(13, 2)), keywords=gen_tags(transcript), title="Test Upload")
+    upload_video("output/video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(13, 2)), keywords=gen_tags(transcript), title="Test Upload")

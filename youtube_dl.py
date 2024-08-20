@@ -63,7 +63,7 @@ def download_clip(name):
         '-c:v', 'libx264',  # Use H.264 codec for video
         '-preset', 'slow',  # Faster encoding preset
         '-an',  # No audio
-        'output\\input_video.mp4'  # Output file
+        'output/input_video.mp4'  # Output file
     ]
 
     # Run the command
@@ -138,67 +138,11 @@ def blur_bottom_fifth(image, sigma=10):
 
     return blurred_image
 
-import subprocess as sp
-from realesrgan_ncnn_py import Realesrgan
-
-def ai_upscale_video(input_path, output_path, target_width=608, target_height=1080, gpuid=0):
-    """
-    Upscales the video using Real-ESRGAN and resizes it back to the original resolution.
-    """
-    # Initialize the Real-ESRGAN model
-    realesrgan = Realesrgan(gpuid=gpuid)
-
-
-    # FFmpeg commands to read the video and write the output
-    ffmpeg_command_in = [
-        'ffmpeg',
-        '-i', input_path,
-        '-f', 'rawvideo',
-        '-pix_fmt', 'rgb24',
-        '-'
-    ]
-    
-    ffmpeg_command_out = [
-        'ffmpeg',
-        '-y',
-        '-f', 'rawvideo',
-        '-pix_fmt', 'rgb24',
-        '-s', f'{target_width}x{target_height}',
-        '-r', '60',
-        '-i', '-',
-        '-vf', f'scale={target_width}:{target_height}',
-        '-c:v', 'libx264',
-        '-preset', 'slow',
-        output_path
-    ]
-
-    # Open subprocesses for FFmpeg
-    pipe_in = sp.Popen(ffmpeg_command_in, stdout=sp.PIPE)
-    pipe_out = sp.Popen(ffmpeg_command_out, stdin=sp.PIPE)
-
-    # Process the video frame by frame
-    while True:
-        raw_frame = pipe_in.stdout.read(target_width * target_height * 3)  # Read one frame
-        if not raw_frame:
-            break
-        # Use Real-ESRGAN to upscale the frame
-        upscaled_frame = realesrgan.process_bytes(raw_frame, target_width, target_height, 3)
-        # Write the upscaled frame to FFmpeg output
-        pipe_out.stdin.write(upscaled_frame)
-
-    # Close the FFmpeg processes
-    pipe_in.stdout.close()
-    pipe_out.stdin.close()
-    pipe_in.wait()
-    pipe_out.wait()
-
-# Example usage:
-# ai_upscale_video('output\\input_video.mp4', 'output\\input_video_upscaled.mp4')
-
+import subprocess as sps
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
+    # pass
     # download_clip("SAT-60")
-    # download_random_clip()
+    download_random_clip()
     # blur_rectangle_in_video()
-    ai_upscale_video('output/input_video.mp4', 'output/input_video_upscaled.mp4')

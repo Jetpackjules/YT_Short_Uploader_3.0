@@ -32,7 +32,7 @@ def save_posts_to_file(posts, filename):
 
 def scrape_questions_and_answers(subreddit_name='AskReddit'):
     subreddit = reddit.subreddit(subreddit_name)
-    filename=f'Reddit_Posts\\{subreddit_name}_saved_posts.json'
+    filename=f'Reddit_Posts/{subreddit_name}_saved_posts.json'
     helper.retain_latest_entries(filename, 100)
     
 
@@ -93,7 +93,7 @@ def scrape_questions_and_answers(subreddit_name='AskReddit'):
     return qa_dict
 
 def get_unprocessed_post(subreddit='AskReddit', process=True):
-    filename=f'Reddit_Posts\\{subreddit}_saved_posts.json'
+    filename=f'Reddit_Posts/{subreddit}_saved_posts.json'
     if os.path.exists(filename):
         with open(filename, 'r', encoding='utf-8') as file:
             try:
