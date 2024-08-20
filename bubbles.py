@@ -1,10 +1,17 @@
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from moviepy.video.fx.all import crop
+from helper import detect_os
 
+font_path = ""
+os_name = detect_os()
+if os_name == 'macOS':
+    font_path = "/Library/Fonts/Arial.ttf"
+elif os_name == 'Windows':
+    font_path = "C:/Windows/Fonts/arial.ttf"
+else:
+    input("FAILED TO DETECT OS!!!! ERROR!!")
 
-# font_path = "C:/Windows/Fonts/arial.ttf"  # Windows path example
-font_path = "/Library/Fonts/Arial.ttf"
 
 
 def getsize_from_bbox(font, text):

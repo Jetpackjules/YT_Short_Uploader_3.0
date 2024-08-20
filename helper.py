@@ -57,6 +57,22 @@ def get_media_duration(file_path):
 
     return duration
 
+import platform
+def detect_os():
+    """
+    Detect the operating system of the current device.
+    
+    Returns:
+        str: 'macOS' if the device is running macOS, 'Windows' if the device is running Windows, or 'Other' for other operating systems.
+    """
+    system = platform.system()
+    if system == 'Darwin':
+        return 'macOS'
+    elif system == 'Windows':
+        return 'Windows'
+    else:
+        return 'Other'
+
 
 from moviepy.audio.AudioClip import AudioArrayClip
 import numpy as np
