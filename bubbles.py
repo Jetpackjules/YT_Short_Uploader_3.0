@@ -3,8 +3,13 @@ from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from moviepy.video.fx.all import crop
 
 
-font_path = "C:/Windows/Fonts/arial.ttf"  # Windows path example
+# font_path = "C:/Windows/Fonts/arial.ttf"  # Windows path example
+font_path = "/Library/Fonts/Arial.ttf"
 
+
+def getsize_from_bbox(font, text):
+    bbox = font.getbbox(text)
+    return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
 def paste_with_transparency(target_image, image_to_paste, position):
     """
@@ -22,7 +27,7 @@ def wrap_text(text, font, max_width):
     words = text.split()
     while words:
         line = ''
-        while words and font.getsize(line + words[0])[0] <= max_width:
+        while words and getsize_from_bbox(font, line + words[0])[0] <= max_width:
             line += (words.pop(0) + ' ')
         lines.append(line.strip())
     return lines
@@ -51,11 +56,11 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     username_transparency = 228  # Username text transparency (0-255)
 
     # Load and prepare images
-    reddit_logo = Image.open(reddit_logo_path).resize((logo_size, logo_size), Image.ANTIALIAS)
+    reddit_logo = Image.open(reddit_logo_path).resize((logo_size, logo_size), Image.LANCZOS)
     subbers = Image.open(subbers_path)
     subbers_aspect_ratio = subbers.width / subbers.height
     subbers_width = int(button_height * subbers_aspect_ratio)
-    subbers = subbers.resize((subbers_width, button_height), Image.ANTIALIAS)
+    subbers = subbers.resize((subbers_width, button_height), Image.LANCZOS)
 
     # Font and text processing
     subreddit_font = ImageFont.truetype(font_path, subreddit_font_size)
@@ -66,13 +71,13 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     text = ' '.join(text.split()[:45])+"..." if len(text.split()) > 45 else text
 
     text_lines = wrap_text(text, text_font, base_width - 2 * inner_padding - logo_size - padding)
-    max_text_width = max([text_font.getsize(line)[0] for line in text_lines] + [0])
-    min_width = inner_padding + logo_size + padding + (logo_size + mult * padding) + (subreddit_font.getsize(subreddit)[0])
+    max_text_width = max([getsize_from_bbox(text_font, line)[0] for line in text_lines] + [0])
+    min_width = inner_padding + logo_size + padding + (logo_size + mult * padding) + (getsize_from_bbox(subreddit_font, subreddit)[0])
     bubble_width = int(min(max(max_text_width + 2 * inner_padding + 2 * padding, min_width), base_width))
     
 
     # Calculate total height
-    text_height = sum(text_font.getsize(line)[1] for line in text_lines) + (len(text_lines) - 1) * inner_padding
+    text_height = sum(getsize_from_bbox(text_font, line)[1] for line in text_lines) + (len(text_lines) - 1) * inner_padding
     content_height = logo_size + text_height + 2 * inner_padding
     total_height = content_height + 2 * padding + 6
 
@@ -92,7 +97,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     # Add main text below logo, subreddit, and username
     y_text_start = padding + logo_size + inner_padding - 1
     for line in text_lines:
-        text_width, text_height = text_font.getsize(line)
+        text_width, text_height = getsize_from_bbox(text_font, line)
         text_x = padding + inner_padding - 5
         d.text((text_x, y_text_start), line, fill="black", font=text_font)
         y_text_start += text_height + 3
@@ -105,7 +110,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
 
     # Scale the entire bubble by factor Y
     if scale_factor != 1.0:
-        img = img.resize((int(bubble_width * scale_factor), int(total_height * scale_factor)), Image.ANTIALIAS)
+        img = img.resize((int(bubble_width * scale_factor), int(total_height * scale_factor)), Image.LANCZOS)
 
     # Save or return the image
     img_path = f"output/bubbles/{filename}.png"
