@@ -74,14 +74,14 @@ def parse_srt(srt_content):
 import textwrap
 
 
-def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\video_subbed.mp4", 
+def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/video_subbed.mp4", 
              font='Impact', 
              fontsize=55, stroke_width=18):
             # NEW OG: fontsize=60, stroke_width=25
             # OG: fontsize=34, stroke_width=5
     
-    generate_srt("output\\audiofiles\\combined_audio_no_music.mp3")
-    subtitle_file_path="output\\audiofiles\\subs.srt"
+    generate_srt("output/audiofiles/combined_audio_no_music.mp3")
+    subtitle_file_path="output/audiofiles/subs.srt"
     trim_srt_file(subtitle_file_path)
     get_color = unique_color_picker()
 
@@ -164,4 +164,4 @@ def add_subs(video_file_path="output\\video_raw.mp4", output_file_path="output\\
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    add_subs(output_file_path="output\\video_subbed_whisper .mp4")
+    add_subs(output_file_path="output/video_subbed_whisper .mp4")

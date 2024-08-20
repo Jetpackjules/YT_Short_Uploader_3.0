@@ -21,8 +21,8 @@ from ai import gen_description, gen_tags
 tts_function = tts.openAItts
 
 
-input_video_path = "output\\input_video.mp4"
-output_video_path = "output\\video_raw.mp4"
+input_video_path = "output/input_video.mp4"
+output_video_path = "output/video_raw.mp4"
 
 
 
@@ -44,7 +44,7 @@ def make_vid(post):
     duration = tts_function("post", post['post'])
     transcript += post['post']
 
-    main_post_audio_path = f"output\\audiofiles\\post.mp3"  # Assuming 'id' is available in 'post'
+    main_post_audio_path = f"output/audiofiles/post.mp3"  # Assuming 'id' is available in 'post'
 
     main_post_clip = ImageClip(main_post_img_path).set_duration(duration).set_start(start_time).set_position(("center", yPos), relative=True)
     annotations.append(main_post_clip)
@@ -70,7 +70,7 @@ def make_vid(post):
             continue
         
         duration = tts_function(f"comment_{idx}", comment['text'])
-        comment_audio_path = f"output\\audiofiles\\comment_{idx}.mp3"  # Unique path for each comment
+        comment_audio_path = f"output/audiofiles/comment_{idx}.mp3"  # Unique path for each comment
         if (((start_time + duration) >= 55) | ((start_time + duration) >= clip_len)):
             continue
 
@@ -92,12 +92,12 @@ def make_vid(post):
 
     # print("USER TIMES:")
     helper.save_as_srt(user_times)
-    with open("output\\audiofiles\\transcript.txt", "w", encoding="utf-8") as file:
+    with open("output/audiofiles/transcript.txt", "w", encoding="utf-8") as file:
         file.write(transcript)
 
     # Concatenate all audio clips together
     combined_audio = concatenate_audioclips(audio_clips)
-    combined_audio.write_audiofile("output\\audiofiles\\combined_audio_no_music.mp3")
+    combined_audio.write_audiofile("output/audiofiles/combined_audio_no_music.mp3")
 
 
     # 66% chance of adding background music
@@ -105,7 +105,7 @@ def make_vid(post):
     print("RANDOM NUM: " + str(randomNum))
     if randomNum < 0.66:
         # Select a random background music file from the folder:
-        background_music_folder = "assets\\background_music"
+        background_music_folder = "assets/background_music"
         background_music_files = [f for f in os.listdir(background_music_folder) if f.endswith('.mp3')]
         random_music_file = random.choice(background_music_files)
         background_music_path = os.path.join(background_music_folder, random_music_file)
@@ -163,7 +163,7 @@ def generate(vidName = "", pubTime="default", upload=True):
     # Send clip to YT:
     if upload==True:
         try:
-            upload_video("output\\video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(music_volume, 3)), keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output/video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(music_volume, 3)), keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 

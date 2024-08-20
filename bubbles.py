@@ -3,7 +3,7 @@ from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from moviepy.video.fx.all import crop
 
 
-font_path = "C:\\Windows\\Fonts\\arial.ttf"  # Windows path example
+font_path = "C:/Windows/Fonts/arial.ttf"  # Windows path example
 
 
 def paste_with_transparency(target_image, image_to_paste, position):
@@ -36,8 +36,8 @@ subberLeftPadding = 18
 min_width = 10  # Minimum width of the bubble
 
 
-reddit_logo_path = "assets\\reddit_logo.jpg"
-subbers_path = "assets\\subbers.png"
+reddit_logo_path = "assets/reddit_logo.jpg"
+subbers_path = "assets/subbers.png"
 # from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, scale_factor=1.3):
@@ -108,7 +108,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
         img = img.resize((int(bubble_width * scale_factor), int(total_height * scale_factor)), Image.ANTIALIAS)
 
     # Save or return the image
-    img_path = f"output\\bubbles\\{filename}.png"
+    img_path = f"output/bubbles/{filename}.png"
     img.save(img_path, format="PNG")
     return img_path
 

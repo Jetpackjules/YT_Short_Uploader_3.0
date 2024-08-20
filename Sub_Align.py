@@ -26,15 +26,15 @@ def prepare_transcript(original_path, modified_path):
                     modified.write(new_tex) 
 
 def generate_srt(audio_path):
-    original_transcript_path = "output\\audiofiles\\transcript.txt"
-    modified_transcript_path = "output\\audiofiles\\transcript_MOD.txt"
-    output_directory = "output\\audiofiles"
+    original_transcript_path = "output/audiofiles/transcript.txt"
+    modified_transcript_path = "output/audiofiles/transcript_MOD.txt"
+    output_directory = "output/audiofiles"
 
     prepare_transcript(original_transcript_path, modified_transcript_path)
     # modified_transcript_path = original_transcript_path 
 
     print("ALIGNING TRANSCRIPT TO AUDIO FOR SRT...")
-    command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}\\subs.srt --overwrite --engine=whisper --subtitles.minWordsInLine=1 --language=en-US --subtitles.maxLineCount=1 --subtitles.maxLineWidth=18" #NOTE: MAKE MULTIPLE LNIES WORK IF THAT IS POPULAR
+    command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}/subs.srt --overwrite --engine=whisper --subtitles.minWordsInLine=1 --language=en-US --subtitles.maxLineCount=1 --subtitles.maxLineWidth=18" #NOTE: MAKE MULTIPLE LNIES WORK IF THAT IS POPULAR
     helper.run(command)
 
     print("SRT files generated successfully in:", output_directory)
@@ -44,5 +44,5 @@ def generate_srt(audio_path):
         
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    generate_srt("output\\audiofiles\\combined_audio_no_music.mp3")
+    generate_srt("output/audiofiles/combined_audio_no_music.mp3")
 

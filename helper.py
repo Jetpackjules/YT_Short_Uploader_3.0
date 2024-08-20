@@ -25,7 +25,7 @@ def run(command):
         print("Error:", e.stderr)
 
 
-def save_as_srt(entries, output_file='output\\bubbles\\usernames.srt'):
+def save_as_srt(entries, output_file='output/bubbles/usernames.srt'):
     with open(output_file, 'w', encoding='utf-8') as f:
         for index, (start, end, user) in enumerate(entries, 1):
             start_srt = format_srt_time(start)
@@ -244,7 +244,7 @@ def get_scheduled_video_offset():
     scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
     YOUTUBE_API_SERVICE_NAME = "youtube"
     YOUTUBE_API_VERSION = "v3"
-    CLIENT_SECRETS_FILE = "auths\\client_secrets.json"
+    CLIENT_SECRETS_FILE = "auths/client_secrets.json"
 
 
     MISSING_CLIENT_SECRETS_MESSAGE = """
@@ -270,7 +270,7 @@ def get_scheduled_video_offset():
 
     
     # print("%s-oauth2.json" % sys.argv[0])
-    storage = Storage("auths\\oauth2.json")
+    storage = Storage("auths/oauth2.json")
     # storage = Storage("%s-oauth2.json" % sys.argv[0])
 
     credentials = storage.get()
@@ -328,7 +328,7 @@ def get_scheduled_video_offset():
     return 0
 
 # import cv2
-# def save_first_frame_as_png(video_path="output\\video_subbed.mp4", output_path="output\\thumbnail.png"):
+# def save_first_frame_as_png(video_path="output/video_subbed.mp4", output_path="output/thumbnail.png"):
 #     # Check if the input video file exists
 #     if not os.path.exists(video_path):
 #         raise FileNotFoundError(f"The video file '{video_path}' does not exist.")

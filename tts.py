@@ -5,7 +5,7 @@ from helper import get_media_duration
 def freeSpeak(filename, text_for_tts):
     # Convert the text to speech
     tts = gTTS(text_for_tts, lang='en-au')
-    audio_path = f'output\\Audiofiles\\{filename}.mp3'
+    audio_path = f'output/Audiofiles/{filename}.mp3'
     tts.save(audio_path)
 
     speed_up_audio(audio_path, 1.45)
@@ -34,8 +34,8 @@ def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
     )
 
     # Ensure the Audiofiles directory exists
-    # os.makedirs("output\\audiofiles", exist_ok=True)
-    filepath = f"output\\audiofiles\\{filename}.mp3"
+    # os.makedirs("output/audiofiles", exist_ok=True)
+    filepath = f"output/audiofiles/{filename}.mp3"
 
     # Save the audio to a file
     with open(filepath, "wb") as audio_file:
@@ -55,7 +55,7 @@ def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
 import helper
 
 # def echoSpeak(filename, text):
-#     command = f'echogarden speak "{text}" sample_audio\\{filename}.mp3 --overwrite'
+#     command = f'echogarden speak "{text}" sample_audio/{filename}.mp3 --overwrite'
 #     helper.run(command)
 
 voices = [
@@ -98,7 +98,7 @@ def echoSpeak(filename, text):
     # DEFAULT ENGINE IS VITS!
     command_parts = [
         f'echogarden speak "{text}"',
-        f'sample_audio\\{filename}.mp3',
+        f'sample_audio/{filename}.mp3',
         '--overwrite',
         "--engine=vits",
         f'--voice={filename}'           
@@ -126,7 +126,7 @@ import subprocess
 voice_num = 0
 def googleTTS(filename, text):
     global voice_num
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="auths\\the-respect-419200-e26dd672601b.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="auths/the-respect-419200-e26dd672601b.json"
 
     voices = ["en-US-Journey-F", "en-US-Journey-D"]
     voice_num += 1
@@ -147,19 +147,19 @@ def googleTTS(filename, text):
         input=synthesis_input, voice=voice, audio_config=audio_config
     )
 
-    with open(f'output\\Audiofiles\\{filename}.mp3', "wb") as out:
+    with open(f'output/Audiofiles/{filename}.mp3', "wb") as out:
         out.write(response.audio_content)
 
-    speed_up_audio(f'output\\Audiofiles\\{filename}.mp3', 1.25)
+    speed_up_audio(f'output/Audiofiles/{filename}.mp3', 1.25)
 
-    duration = helper.get_media_duration(f'output\\Audiofiles\\{filename}.mp3')
+    duration = helper.get_media_duration(f'output/Audiofiles/{filename}.mp3')
 
     return duration
 
 
 def speed_up_audio(input_path, speed=1.30):
     # Construct the output file path
-    output_path = f'output\\Audiofiles\\speedup.mp3'
+    output_path = f'output/Audiofiles/speedup.mp3'
 
     # Build the ffmpeg command
     command = [
@@ -199,7 +199,7 @@ def openAItts(filename, text):
 
     api_key_base = "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"
     client = OpenAI(api_key=api_key_base)
-    speech_file_path = Path(__file__).parent / f'output\\Audiofiles\\{filename}.mp3'
+    speech_file_path = Path(__file__).parent / f'output/Audiofiles/{filename}.mp3'
     
     #This is code to circumvent the OpenAi TTS-1-HD rate limit of 5 RPM (retries after exponential wait times!)
     @retry(wait=wait_random_exponential(min=10, max=60), stop=stop_after_attempt(6))
@@ -216,9 +216,9 @@ def openAItts(filename, text):
 
     response.stream_to_file(speech_file_path)
 
-    speed_up_audio(f'output\\Audiofiles\\{filename}.mp3', 1.25)
+    speed_up_audio(f'output/Audiofiles/{filename}.mp3', 1.25)
     print(f"Audio file '{filename}' saved successfully.")
-    duration = helper.get_media_duration(f'output\\Audiofiles\\{filename}.mp3')
+    duration = helper.get_media_duration(f'output/Audiofiles/{filename}.mp3')
     return duration
 
 
