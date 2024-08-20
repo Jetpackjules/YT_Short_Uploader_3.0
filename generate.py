@@ -146,7 +146,7 @@ def make_vid(post):
 
 def generate(vidName = "", pubTime="default", upload=True):
     # Scrape reddit
-    redditPull = get_unprocessed_post("AskReddit")  # Get an unprocessed post
+    redditPull = get_unprocessed_post("AskReddit", process=upload)  # Get an unprocessed post #dont process if not uploading
     print("REDDIT SCRAPED! Generating video...")
     # Grab yt minecraft gameplay:
     if (vidName != ""):
