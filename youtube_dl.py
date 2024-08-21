@@ -1,7 +1,7 @@
 import subprocess
 import random
 import yt_dlp
-
+from helper import run_ffmpeg
 # URLS:
 #  OG minecraft parcour (GOOD): https://www.youtube.com/watch?v=n_Dv4JMiwK8
 # Short satisfyig stuff (10hr)(watermark): https://www.youtube.com/watch?v=fYPC3yraYs8 (GOT CONTENT DETECTED!)
@@ -67,7 +67,9 @@ def download_clip(name):
     ]
 
     # Run the command
-    subprocess.run(ffmpeg_command)
+    # subprocess.run(ffmpeg_command)
+    # subprocess.run(ffmpeg_command, stdout=subprocess.DEVNULL)
+    run_ffmpeg(ffmpeg_command)
 
     if blur:
         blur_rectangle_in_video()
@@ -82,7 +84,7 @@ def download_random_clip():
 
     # Select a video based on its length (as weight)
     selected_video = random.choices(video_names, weights=weights, k=1)[0]
-    print(selected_video)
+    print("VIDEO CHOSE AS BACKGROUND: " + selected_video)
     # Download the selected clip
     download_clip(selected_video)
     return selected_video

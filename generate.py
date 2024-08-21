@@ -1,18 +1,18 @@
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+# from PIL import Image, ImageDraw, ImageFont, ImageOps
 from moviepy.editor import AudioFileClip, concatenate_audioclips
 import os
-import moviepy as mp
-from moviepy.audio.AudioClip import AudioClip
+# import moviepy as mp
+# from moviepy.audio.AudioClip import AudioClip
 from moviepy.editor import CompositeAudioClip
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from moviepy.video.fx.all import crop
-from reddit import scrape_questions_and_answers, get_unprocessed_post
+from reddit import get_unprocessed_post
 from bubbles import create_text_bubble
 from youtube_dl import download_clip, download_random_clip
 import tts
 from subtitles import add_subs
 from upload_video import upload_video
-import helper
+from helper import clean, contains_link, save_as_srt, make_silent_audio, generate_title, get_media_duration
 import random
 from ai import gen_description, gen_tags
 
@@ -40,7 +40,7 @@ def make_vid(post):
 
     # Create a bubble for the main post
     main_post_img_path = create_text_bubble(post['post'], post['user'], "AskReddit")
-    post['post'] = helper.clean(post['post'])
+    post['post'] = clean(post['post'])
     duration = tts_function("post", post['post'])
     transcript += post['post']
 
@@ -57,16 +57,16 @@ def make_vid(post):
     
     user_times = []
     # Loop over comments to create bubbles and audio clips
-    clip_len = helper.get_media_duration(input_video_path)
+    clip_len = get_media_duration(input_video_path)
     for idx, comment in enumerate(post['comments']):
         # Clean up comment:
-        print(comment["text"])
-        comment["text"] = helper.clean(comment['text'])
+        # print(comment["text"])
+        comment["text"] = clean(comment['text'])
 
         # Ignore the rest if the vid is already at least 45 secs long
         if ((start_time >= min_len)):
             break
-        if ((comment['text'] == "[removed]") | (helper.contains_link(comment['text']))):
+        if ((comment['text'] == "[removed]") | (contains_link(comment['text']))):
             continue
         
         duration = tts_function(f"comment_{idx}", comment['text'])
@@ -84,14 +84,14 @@ def make_vid(post):
             audio_clips.append(comment_audio)
             # Insert a silent audio clip between the comments
             if idx < len(post['comments']) - 1:  # Check if it's not the last comment
-                silent_audio = helper.make_silent_audio(comment_pause)
+                silent_audio = make_silent_audio(comment_pause)
                 audio_clips.append(silent_audio)
 
         start_time += (duration+comment_pause)
         transcript += ("\n\n"+"*"+comment['text'])
 
     # print("USER TIMES:")
-    helper.save_as_srt(user_times)
+    save_as_srt(user_times)
     with open("output/audiofiles/transcript.txt", "w", encoding="utf-8") as file:
         file.write(transcript)
 
@@ -158,12 +158,12 @@ def generate(vidName = "", pubTime="default", upload=True):
     transcript, music_volume = make_vid(redditPull)
 
     #Make thumbnail:
-    # helper.save_first_frame_as_png()
+    # save_first_frame_as_png()
 
     # Send clip to YT:
     if upload==True:
         try:
-            upload_video("output/video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(music_volume, 3)), keywords=gen_tags(transcript), title=helper.generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
+            upload_video("output/video_subbed.mp4", description=gen_description(transcript) + "\n\n Vol: " + str(round(music_volume, 3)), keywords=gen_tags(transcript), title=generate_title(), publishTime=pubTime) #for tts typem add to desc: \n\nUsed: " + tts_function.__name__
         except:
             input("QUOTA REACHED CANCEL PROGRAM! __ ")
 

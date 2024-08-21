@@ -1,7 +1,7 @@
 import praw
 import os
 import json
-import helper
+from helper import retain_latest_entries, has_profanity
 
 # Set up PRAW with your Reddit API credentials
 reddit = praw.Reddit(
@@ -33,7 +33,7 @@ def save_posts_to_file(posts, filename):
 def scrape_questions_and_answers(subreddit_name='AskReddit'):
     subreddit = reddit.subreddit(subreddit_name)
     filename=f'Reddit_Posts/{subreddit_name}_saved_posts.json'
-    helper.retain_latest_entries(filename, 100)
+    retain_latest_entries(filename, 100)
     
 
     existing_post_ids = set()
@@ -62,7 +62,7 @@ def scrape_questions_and_answers(subreddit_name='AskReddit'):
                 continue  # Skip posts that are already processed
                 
 
-            if (not post.over_18) and (not helper.has_profanity(post.title)) and (not helper.has_profanity(post.selftext)):  # Check if the post is NSFW and skip if it is
+            if (not post.over_18) and (not has_profanity(post.title)) and (not has_profanity(post.selftext)):  # Check if the post is NSFW and skip if it is
                 print("New posts found: ", str(total_non_nsfw_posts))
                 post_id = post.id
                 total_non_nsfw_posts += 1
@@ -79,7 +79,7 @@ def scrape_questions_and_answers(subreddit_name='AskReddit'):
             
                 top_comments = list(post.comments)[:11]
                 for comment in top_comments:
-                    if ((comment.body != "[deleted]") and (not helper.has_profanity(comment.body))):
+                    if ((comment.body != "[deleted]") and (not has_profanity(comment.body))):
                         qa_dict[post_id]['comments'].append({
                             'text': comment.body,
                             'user': "u/" + str(comment.author)

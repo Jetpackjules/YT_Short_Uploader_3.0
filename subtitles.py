@@ -1,9 +1,9 @@
-import io
-from contextlib import redirect_stdout
+# import io
+# from contextlib import redirect_stdout
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
 from Sub_Align import generate_srt
-import helper
+from helper import censor
 
 import random
 def unique_color_picker():
@@ -126,7 +126,7 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
         
         # Censor subtitles (shouldnt be necessary because we r doing this at post-level)
-        txt = helper.censor(txt)
+        txt = censor(txt)
 
         wrapped_text = textwrap.fill(txt, width=50)  # Adjust 'width' based on your needs
 

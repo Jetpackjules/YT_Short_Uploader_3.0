@@ -12,7 +12,6 @@ from apiclient.http import MediaFileUpload
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
-import helper
 
 # Explicitly tell the underlying HTTP transport library not to retry, since
 # we are handling retry logic ourselves.
@@ -231,7 +230,7 @@ def upload_video(file, title="Test Title", description="Test Description", categ
     args.playlistId = playlistId
 
     if publishTime == "default":
-        publishTime = helper.next_optimal_post_time_final()
+        input("CODE SOMETHING HERE OR DONT LEAVE DEFAULT!!!!!!!!!!!!!!!!!1")
 
     args.publishTime = publishTime
 

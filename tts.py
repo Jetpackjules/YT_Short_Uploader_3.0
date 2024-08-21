@@ -44,7 +44,7 @@ def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
     # You may need additional libraries or methods to calculate the length of the generated audio file
     # This part is just a placeholder as calculating exact duration might require examining the file
     # Typically, you might use a library like PyDub or similar to analyze the MP3 file's length
-    duration = helper.get_media_duration(filepath)
+    duration = get_media_duration(filepath)
 
     return duration
 
@@ -52,11 +52,8 @@ def speak11(filename, text, api_key="a9ad61e19ef91f6814895c0a5f310ee9"):
 
 
 
-import helper
+from helper import get_media_duration, run
 
-# def echoSpeak(filename, text):
-#     command = f'echogarden speak "{text}" sample_audio/{filename}.mp3 --overwrite'
-#     helper.run(command)
 
 voices = [
   "en_GB-alan-low",
@@ -106,7 +103,7 @@ def echoSpeak(filename, text):
 
     # Join all parts into the final command string
     command = ' '.join(command_parts)
-    helper.run(command)
+    run(command)
 
 # if __name__ == "__main__":
 #     # echoSpeak("test2", "Hello you, this is echogarden sample audio for reddit posts! I am happy to be here.")
@@ -152,7 +149,7 @@ def googleTTS(filename, text):
 
     speed_up_audio(f'output/Audiofiles/{filename}.mp3', 1.25)
 
-    duration = helper.get_media_duration(f'output/Audiofiles/{filename}.mp3')
+    duration = get_media_duration(f'output/Audiofiles/{filename}.mp3')
 
     return duration
 
@@ -171,7 +168,8 @@ def speed_up_audio(input_path, speed=1.30):
     ]
 
     # Run the ffmpeg command
-    subprocess.run(command, check=True)
+    # subprocess.run(command, check=True)
+    subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Move the output file to the input file (BROKEN)
     # os.replace(output_path, input_path)
@@ -190,6 +188,12 @@ from tenacity import (
     stop_after_attempt,
     wait_random_exponential,
 )  # for exponential backoff
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+
 def openAItts(filename, text):
     global voice_num
     #Voice options: alloy, echo, fable, onyx, nova, and shimmer
@@ -204,21 +208,25 @@ def openAItts(filename, text):
     #This is code to circumvent the OpenAi TTS-1-HD rate limit of 5 RPM (retries after exponential wait times!)
     @retry(wait=wait_random_exponential(min=10, max=60), stop=stop_after_attempt(6))
     def completion_with_backoff(**kwargs):
-        print("RATE LIMIT REACHED! RETRYING AFER WAIT...")
+        logger.info("Attempting API call... (again maybe)")
         return client.audio.speech.create(**kwargs)
 
-    response = completion_with_backoff(
-    model="tts-1-hd",
-    voice=voice, #<- This is the voice, as a string
-    input=text#,
-    # speed=1.2 (THIS METHOD SUUUCKS!)
-    )
-
-    response.stream_to_file(speech_file_path)
+    try:
+        response = completion_with_backoff(
+            model="tts-1-hd",
+            voice=voice,
+            input=text
+        )
+        response.write_to_file(speech_file_path)
+        # response.stream_to_file(speech_file_path)
+        logger.info(f"Audio file '{filename}' saved successfully.")
+    except Exception as e:
+        logger.error(f"Error in openAItts: {str(e)}")
+        return 0  # Return 0 duration in case of error
 
     speed_up_audio(f'output/Audiofiles/{filename}.mp3', 1.25)
     print(f"Audio file '{filename}' saved successfully.")
-    duration = helper.get_media_duration(f'output/Audiofiles/{filename}.mp3')
+    duration = get_media_duration(f'output/Audiofiles/{filename}.mp3')
     return duration
 
 

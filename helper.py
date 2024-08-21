@@ -2,6 +2,24 @@ import subprocess
 import os
 from mutagen.mp3 import MP3
 
+def run_ffmpeg(ffmpeg_command):
+    # Run the ffmpeg command, capturing stderr
+    process = subprocess.Popen(ffmpeg_command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+
+    while True:
+        # Read line by line
+        output = process.stderr.readline()
+        
+        if output == "" and process.poll() is not None:
+            break
+        
+        # Print only lines with the progress bar (typically containing "frame=")
+        if "frame=" in output or "size=" in output or "time=" in output or "bitrate=" in output:
+            print(f"\r{output.strip()}", end="")
+
+    print("\n")  # Print a newline after the progress bar
+    
+        
 def run(command):
     # Attempted fix for multiple conda locs:
     output = subprocess.run("where conda", text=True, capture_output=True).stdout
@@ -164,51 +182,6 @@ def generate_title():
 import datetime
 import pytz
 
-def next_optimal_post_time_final():
-    # Define the time slots for posting
-    optimal_times_weekday = [(10, 12), (14, 18), (20, 23)]
-    optimal_times_weekend = [(11, 13), (16, 19)]
-
-    # Get the current time in EST
-    est = pytz.timezone('America/New_York')
-    current_time = datetime.datetime.now(est)
-
-    # Determine the day of the week
-    weekday = current_time.weekday()
-
-    # Choose the optimal times based on the current day
-    if 0 <= weekday <= 4:  # Weekdays
-        optimal_times = optimal_times_weekday
-    else:  # Weekends
-        optimal_times = optimal_times_weekend
-
-    # Find the next optimal time
-    for start, end in optimal_times:
-        start_time = current_time.replace(hour=start, minute=0, second=0, microsecond=0)
-        if current_time < start_time:
-            # If current time is before the start of a slot, return the start of this slot
-            next_optimal_time = start_time
-            break
-    else:
-        # If current time is past all slots for the day, calculate the next day's first optimal slot
-        next_day = current_time + timedelta(days=1+get_scheduled_video_offset()) #1+ latest upload
-        next_day_weekday = next_day.weekday()
-
-        if 0 <= next_day_weekday <= 4:  # Weekdays
-            next_day_start = optimal_times_weekday[0][0]
-        else:  # Weekend
-            next_day_start = optimal_times_weekend[0][0]
-
-        next_optimal_time = next_day.replace(hour=next_day_start, minute=0, second=0, microsecond=0)
-
-    # Convert the next optimal time to UTC
-    next_optimal_time_utc = next_optimal_time.astimezone(pytz.utc)
-
-    # Format the datetime to ISO 8601 with fractional seconds and 'Z' designator
-    next_optimal_time_iso8601 = next_optimal_time_utc.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-
-    return next_optimal_time_iso8601
-
 def get_unprocessed_times():
     # Define specific times for tomorrow
     times = [datetime.time(hour=8, minute=30),  # 6:45 AM
@@ -216,22 +189,45 @@ def get_unprocessed_times():
              datetime.time(hour=20, minute=0)]  # 9 PM
     return times
 
-def times_for_tomorrow_pacific():
+def times_for_next_uploads_pacific():
     # Get the current time in Pacific Time
     pacific = pytz.timezone('America/Los_Angeles')
     current_time = datetime.datetime.now(pacific)
 
-    # Calculate tomorrow's date
-    tomorrow = current_time + timedelta(days=1+get_scheduled_video_offset()) # <- THIS SHOULD BE ONE NORMALLY!
+    # Calculate next upload day's date
+    today = datetime.datetime.utcnow()
+    scheduled_upload_date = get_scheduled_video()
+    today = today.replace(hour=20, minute=0, second=0, microsecond=0)
     
+    offset_days = ((scheduled_upload_date - today).days)
+
+    print(f"The offset between today and the video's scheduled upload date is {offset_days} day(s).")
+
+    first_day = current_time + timedelta(days=1+offset_days) # <- THIS SHOULD BE ONE NORMALLY!
+    second_day = current_time + timedelta(days=2+offset_days) # <- THIS SHOULD BE ONE NORMALLY!
+    third_day = current_time + timedelta(days=3+offset_days) # <- THIS SHOULD BE ONE NORMALLY!
+
     # Define specific times for tomorrow
     times = get_unprocessed_times()
 
     # Create datetime objects for each specific time
-    datetime_list = [datetime.datetime.combine(tomorrow, time) for time in times]
+    datetime_list_1 = [datetime.datetime.combine(first_day, time) for time in times]
+    datetime_list_2 = [datetime.datetime.combine(second_day, time) for time in times]
+    datetime_list_3 = [datetime.datetime.combine(third_day, time) for time in times]
+
+    # Repeat the times list 3 times
+    repeated_times = datetime_list_1 + datetime_list_2 + datetime_list_3
+    for time in repeated_times:
+        if time == scheduled_upload_date:
+            repeated_times = repeated_times[repeated_times.index(time):]
+
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(datetime_list_1)
+    print(scheduled_upload_date)
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
     # Convert times to UTC for consistency in output, similar to the example function
-    datetime_list_utc = [dt.astimezone(pytz.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z' for dt in datetime_list]
+    datetime_list_utc = [dt.astimezone(pytz.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z' for dt in repeated_times]
 
     return datetime_list_utc
 
@@ -255,7 +251,7 @@ from apiclient.errors import HttpError
 from datetime import timedelta
 
 
-def get_scheduled_video_offset():
+def get_scheduled_video():
     # Set up the YouTube API client
     scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
     YOUTUBE_API_SERVICE_NAME = "youtube"
@@ -326,20 +322,11 @@ def get_scheduled_video_offset():
             scheduled_upload_date_str = video["status"]["publishAt"]
             scheduled_upload_date = datetime.datetime.strptime(scheduled_upload_date_str, "%Y-%m-%dT%H:%M:%SZ")
 
-            today = datetime.datetime.utcnow()
-
-            # Set time to midnight
+            # today = datetime.datetime.utcnow()
             scheduled_upload_date -= timedelta(hours=7)
-            # today -= timedelta(hours=7)
-            # scheduled_upload_date = scheduled_upload_date.replace(hour=0, minute=0, second=0, microsecond=0)
-            today = today.replace(hour=20, minute=0, second=0, microsecond=0)
-            
+            return scheduled_upload_date
 
-            offset_days = ((scheduled_upload_date - today).days)
-
-            print(f"The offset between today and the video's scheduled upload date is {offset_days} day(s).")
-            return offset_days
-
+        
     print("No scheduled videos found.")
     return 0
 
@@ -407,7 +394,7 @@ def retain_latest_entries(file_path, num_entries=100):
 
 
 if __name__ == '__main__':
-    # get_scheduled_video_offset()
+    times_for_next_uploads_pacific()
     # # Extract the hour from the third time (7 PM)
     # test = get_unprocessed_times()
     # hour_19 = test[2].hour

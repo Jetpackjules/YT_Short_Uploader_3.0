@@ -2,7 +2,7 @@
 # For echogarden: https://github.com/echogarden-project/echogarden OR: npm install echogarden -g
 # ALSO RUN THIS IN POWERSHELL AS ADMIN to fix permissions: Set-ExecutionPolicy RemoteSigned
 
-import helper
+from helper import run
 
 def prepare_transcript(original_path, modified_path):
     with open(original_path, 'r', encoding='utf-8') as original, open(modified_path, 'w', encoding='utf-8') as modified:
@@ -35,7 +35,7 @@ def generate_srt(audio_path):
 
     print("ALIGNING TRANSCRIPT TO AUDIO FOR SRT...")
     command = f"echogarden align {audio_path} {modified_transcript_path} {output_directory}/subs.srt --overwrite --engine=whisper --subtitles.minWordsInLine=1 --language=en-US --subtitles.maxLineCount=1 --subtitles.maxLineWidth=18" #NOTE: MAKE MULTIPLE LNIES WORK IF THAT IS POPULAR
-    helper.run(command)
+    run(command)
 
     print("SRT files generated successfully in:", output_directory)
 
