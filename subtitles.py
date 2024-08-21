@@ -1,5 +1,6 @@
 # import io
 # from contextlib import redirect_stdout
+from cv2 import VIDEOWRITER_PROP_RAW_VIDEO
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
 from Sub_Align import generate_srt
@@ -8,10 +9,11 @@ from helper import censor
 import random
 def unique_color_picker():
     subtitle_colors = [
-        '#FFFF00',  # Yellow
+        # '#FFFF00',  # Yellow
         '#90EE90',  # Soft green
         '#FFC0CB',  # Pale pink
         '#87CEEB'   # Sky blue
+        '#FFFFFF',  # White
     ]
     used_colors = set()
     last_color = None
@@ -76,10 +78,11 @@ import textwrap
 
 def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/video_subbed.mp4", 
              font='Impact', 
-             fontsize=55, stroke_width=18):
+             fontsize=65, stroke_width=30, subtitle_height=0.35):
             # NEW OG: fontsize=60, stroke_width=25
             # OG: fontsize=34, stroke_width=5
-    
+
+
     generate_srt("output/audiofiles/combined_audio_no_music.mp3")
     subtitle_file_path="output/audiofiles/subs.srt"
     trim_srt_file(subtitle_file_path)
@@ -90,7 +93,12 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
     video = VideoFileClip(video_file_path)
     vidHeight = video.h
     vidWidth = video.w*1.0
-    yPos = vidHeight * 4/9
+    
+    # Ensure subtitle_height is within the valid range
+    subtitle_height = max(0.0, min(1.0, subtitle_height))
+    
+    # Calculate yPos based on subtitle_height
+    yPos = vidHeight * (1 - subtitle_height)
     
     current_color = "white"  # Initialize with default color
 
@@ -106,14 +114,14 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
         if not txt.strip():
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
 
-
-        wrapped_text = textwrap.fill(txt, width=50)  # Adjust 'width' based on your needs
+        wrapped_text = textwrap.fill(txt, width=500)  # Adjust 'width' based on your needs
+        #I DONT THINK THIS REALLY DOES ANYTHING!^^^
 
         return TextClip(wrapped_text,
                         fontsize=fontsize,
                         font=font,
                         color=current_color,
-                        size=(vidWidth*3/4, None),
+                        size=(vidWidth*3.3/4, None),
                         method="caption",
                         align="north")
 
@@ -136,7 +144,7 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
                         color='black',  # Stroke color
                         stroke_width=stroke_width,
                         stroke_color="black",
-                        size=(vidWidth*3/4 + stroke_width-5, None),
+                        size=(vidWidth*3.3/4 + stroke_width-5, None),
                         method="caption", 
                         align="north")
 
@@ -164,4 +172,4 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    add_subs(output_file_path="output/video_subbed_whisper .mp4")
+    add_subs(output_file_path="output/video_moved_subs.mp4")
