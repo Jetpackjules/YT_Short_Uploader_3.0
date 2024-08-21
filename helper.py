@@ -330,10 +330,10 @@ def get_scheduled_video_offset():
 
             # Set time to midnight
             scheduled_upload_date -= timedelta(hours=7)
-            today -= timedelta(hours=7)
+            # today -= timedelta(hours=7)
             # scheduled_upload_date = scheduled_upload_date.replace(hour=0, minute=0, second=0, microsecond=0)
             today = today.replace(hour=20, minute=0, second=0, microsecond=0)
-
+            
 
             offset_days = ((scheduled_upload_date - today).days)
 
