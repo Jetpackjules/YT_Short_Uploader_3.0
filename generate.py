@@ -50,7 +50,12 @@ def make_vid(post):
     annotations.append(main_post_clip)
 
     if os.path.exists(main_post_audio_path):
-        main_post_audio = AudioFileClip(main_post_audio_path).set_duration(duration).set_start(start_time)
+        main_post_audio = AudioFileClip(main_post_audio_path)
+        actual_duration = main_post_audio.duration
+        if abs(actual_duration - duration) > 0.1:  # Allow for a small difference
+            print(f"Warning: Expected duration {duration} doesn't match actual duration {actual_duration} for main post")
+            duration = actual_duration  # Use the actual duration instead
+        main_post_audio = main_post_audio.set_duration(duration).set_start(start_time)
         audio_clips.append(main_post_audio)
 
     start_time += (duration + comment_pause)
@@ -74,13 +79,17 @@ def make_vid(post):
         if (((start_time + duration) >= 55) | ((start_time + duration) >= clip_len)):
             continue
 
-
         user = comment['user']
         user_times.append((start_time, start_time+duration+comment_pause, user))
 
-
         if os.path.exists(comment_audio_path):
-            comment_audio = AudioFileClip(comment_audio_path).set_duration(duration).set_start(start_time).set_end(start_time+duration -0.15)
+            comment_audio = AudioFileClip(comment_audio_path)
+            actual_duration = comment_audio.duration
+            if abs(actual_duration - duration) > 0.1:  # Allow for a small difference
+                print(f"Warning: Expected duration {duration} doesn't match actual duration {actual_duration} for comment {idx}")
+                duration = actual_duration  # Use the actual duration instead
+
+            comment_audio = comment_audio.set_duration(duration).set_start(start_time).set_end(start_time+duration -0.15)
             audio_clips.append(comment_audio)
             # Insert a silent audio clip between the comments
             if idx < len(post['comments']) - 1:  # Check if it's not the last comment
