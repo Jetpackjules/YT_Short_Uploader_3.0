@@ -18,7 +18,7 @@ def run_ffmpeg(ffmpeg_command):
             print(f"\r{output.strip()}", end="")
 
     print("\n")  # Print a newline after the progress bar
-    
+
         
 def run(command):
     # Attempted fix for multiple conda locs:
@@ -219,7 +219,7 @@ def times_for_next_uploads_pacific():
     repeated_times = datetime_list_1 + datetime_list_2 + datetime_list_3
     for time in repeated_times:
         if time == scheduled_upload_date:
-            repeated_times = repeated_times[repeated_times.index(time):]
+            repeated_times = repeated_times[repeated_times.index(time)+1:]
 
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     print(datetime_list_1)
