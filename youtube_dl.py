@@ -18,9 +18,27 @@ videos = {
     # "SAND-30": {"url": "https://www.youtube.com/watch?v=OOpcXTTKZaA", "length": 30, "speed": 2.0, "blur": False}, #GOOD #error??? #Error! #ERRRORORORORORO!! #DISCONTINUED
     "SAT-10": {"url": "https://www.youtube.com/watch?v=j9lPiUVZ9_c", "length": 10, "speed": 2.0, "blur": False},
     "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False},
-    "COK-60": {"url": "https://www.youtube.com/watch?v=uFHfyqOztvg", "length": 60, "speed": 1.2, "blur": False}
+    "COK-60": {"url": "https://www.youtube.com/watch?v=uFHfyqOztvg", "length": 60, "speed": 1.0, "blur": False},
+#COPYWRITED:
+    "COK-23": {"url": "https://www.youtube.com/watch?v=Y9p5YLvNt50", "length": 23, "speed": 1.2, "blur": False}
 
 }
+
+
+GTA_videos = {
+    "GTA-RAMP-1": {"url": "https://www.youtube.com/watch?v=ZtLrNBdXT7M", "length": 10, "speed": 1.0, "blur": False},
+    "GTA-RAMP-2": {"url": "https://www.youtube.com/watch?v=OoP7csWPmWo", "length": 10, "speed": 1.0, "blur": False},
+    "GTA-RAMP-3": {"url": "https://www.youtube.com/watch?v=10gjsgA6fTE", "length": 10, "speed": 1.0, "blur": False},
+    "GTA-RAMP-4": {"url": "https://www.youtube.com/watch?v=z121mUPexGc", "length": 10, "speed": 1.0, "blur": False},
+    "GTA-RAMP-5": {"url": "https://www.youtube.com/watch?v=QqRRG1ZfsAs", "length": 10, "speed": 1.0, "blur": False},
+    "GTA-RAMP-6": {"url": "https://www.youtube.com/watch?v=ZEU3vROi7KQ", "length": 10, "speed": 1.0, "blur": False},
+    "GTA-RAMP-7": {"url": "https://www.youtube.com/watch?v=VS3D8bgYhf4", "length": 10, "speed": 1.0, "blur": False}
+}
+#IF YOU WANNA JUST USE GTA VIDS?
+videos = GTA_videos
+
+
+
 #MAYBE ADD THIS 1HR one?? https://www.youtube.com/watch?v=orBT5NJkjrw (Not as good but works in a pinch and CC!)
 
 
@@ -38,38 +56,46 @@ def download_clip(name):
     
 
     ydl_opts = {
-        'format': 'bestvideo[height<=1280]/best',
+        'format': 'bv/best',
         'quiet': True,
         'no_warnings': True,
+        'downloader': 'ffmpeg',  # Use ffmpeg instead of the default avconv
+        'downloader_args': ['-reconnect', '1', '-reconnect_streamed', '1', '-reconnect_delay_max', '5'],  # Retry downloading if the connection is lost
+        # 'get_url': True,  # This tells yt_dlp to only get the URL, not download the video
+
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info_dict = ydl.extract_info(video_url, download=False)
+        # print(info_dict)
         video_url = info_dict.get('url', None)
+        # print(video_url)
         duration = info_dict.get('duration', None)
+        print(info_dict.get('resolution', None))
 
-    # Calculate random start time
-    start_time = random.randint(20, max(85, duration - 120))  # Ensures a 1-minute clip (and cuts out intro + outro that might not be parcour)
+    # input("TEST")
+    start_time = random.randint(10, max(85, duration - 120))  # Ensures a 1-minute clip (and cuts out intro + outro that might not be parcour)
 
     ffmpeg_command = [
-        'ffmpeg',
-        '-y',
+        'ffmpeg', 
         '-ss', str(start_time),  # Fast seek to start
-        '-t', f'{60*speed}',  # Duration of the clip
+
+        '-y',
+        '-t', f'{60*speed}',  #Duration of the clip
         '-i', video_url,
-        # '-vf', "crop=ih*(9/16):ih",  # Crop to 9:16 aspect ratio, maintaining full height
+
         '-vf', f"crop=ih*(9/16):ih,setpts={1/speed}*PTS",  # Crop to 9:16 and speed up 2x
-        '-r', '60',  # Set frame rate
-        '-c:v', 'libx264',  # Use H.264 codec for video
-        '-preset', 'slow',  # Faster encoding preset
+        # '-r', '60',  # Set frame rate
+        # '-c:v', 'libx264',  # Use H.264 codec for video
+        # '-preset', 'slow',  # Faster encoding preset
         '-an',  # No audio
         'output/input_video.mp4'  # Output file
     ]
 
     # Run the command
     # subprocess.run(ffmpeg_command)
-    # subprocess.run(ffmpeg_command, stdout=subprocess.DEVNULL)
-    run_ffmpeg(ffmpeg_command)
+    subprocess.run(ffmpeg_command, stdout=subprocess.DEVNULL)
+    # run_ffmpeg(ffmpeg_command)
 
     if blur:
         blur_rectangle_in_video()
@@ -145,6 +171,6 @@ import subprocess as sps
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
     # pass
-    # download_clip("SAT-60")
+    # download_clip("COK-23")
     download_random_clip()
     # blur_rectangle_in_video()

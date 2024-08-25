@@ -12,8 +12,6 @@ elif os_name == 'Windows':
 else:
     input("FAILED TO DETECT OS!!!! ERROR!!")
 
-
-
 def getsize_from_bbox(font, text):
     bbox = font.getbbox(text)
     return bbox[2] - bbox[0], bbox[3] - bbox[1]
@@ -39,28 +37,22 @@ def wrap_text(text, font, max_width):
         lines.append(line.strip())
     return lines
 
-padding = 10
-reddit_logo_padding = 10
-inner_padding = 10
-logo_size = 55  # Adjust for the actual size of your logo
-button_height = 35  # Adjust based on your button image height
-subberLeftPadding = 18
-min_width = 10  # Minimum width of the bubble
-
-
 reddit_logo_path = "assets/reddit_logo.jpg"
 subbers_path = "assets/subbers.png"
-# from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, scale_factor=1.3):
-    # Constants for layout
-    mult = 1.6
-    padding = 15
-    inner_padding = 10
-    logo_size = 55
-    subreddit_font_size = 22  # Subreddit name font size
-    username_font_size = 13  # Username font size
-    username_transparency = 228  # Username text transparency (0-255)
+def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, video_height=1280):
+    # Calculate scale factor based on video height
+    scale_factor = (video_height / 1280)*1.5
+
+    # Constants for layout (scaled)
+    padding = int(15 * scale_factor)
+    inner_padding = int(10 * scale_factor)
+    logo_size = int(55 * scale_factor)
+    subreddit_font_size = int(22 * scale_factor)
+    username_font_size = int(13 * scale_factor)
+    text_font_size = int(18 * scale_factor)
+    button_height = int(35 * scale_factor)
+    subberLeftPadding = int(18 * scale_factor)
 
     # Load and prepare images
     reddit_logo = Image.open(reddit_logo_path).resize((logo_size, logo_size), Image.LANCZOS)
@@ -72,16 +64,16 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     # Font and text processing
     subreddit_font = ImageFont.truetype(font_path, subreddit_font_size)
     username_font = ImageFont.truetype(font_path, username_font_size)
-    text_font = ImageFont.truetype(font_path, 18)
+    text_font = ImageFont.truetype(font_path, text_font_size)
 
     # CUTTING OUT MORE THAN 30 WORDS FOR BREVITY (TBD IMPROVE THIS!)
     text = ' '.join(text.split()[:45])+"..." if len(text.split()) > 45 else text
 
-    text_lines = wrap_text(text, text_font, base_width - 2 * inner_padding - logo_size - padding)
+    scaled_base_width = int(base_width * scale_factor)
+    text_lines = wrap_text(text, text_font, scaled_base_width - 2 * inner_padding - logo_size - padding)
     max_text_width = max([getsize_from_bbox(text_font, line)[0] for line in text_lines] + [0])
-    min_width = inner_padding + logo_size + padding + (logo_size + mult * padding) + (getsize_from_bbox(subreddit_font, subreddit)[0])
-    bubble_width = int(min(max(max_text_width + 2 * inner_padding + 2 * padding, min_width), base_width))
-    
+    min_width = inner_padding + logo_size + padding + (logo_size + 1.6 * padding) + (getsize_from_bbox(subreddit_font, subreddit)[0])
+    bubble_width = int(min(max(max_text_width + 2 * inner_padding + 2 * padding, min_width), scaled_base_width))
 
     # Calculate total height
     text_height = sum(getsize_from_bbox(text_font, line)[1] for line in text_lines) + (len(text_lines) - 1) * inner_padding
@@ -96,10 +88,9 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     paste_with_transparency(img, reddit_logo, (padding, padding))
     paste_with_transparency(img, subbers, (subberLeftPadding, total_height - button_height))
 
-
     # Add subreddit and username text next to the logo
-    d.text((logo_size + mult * padding, padding + 4), "r/"+subreddit, fill="black", font=subreddit_font)
-    d.text((logo_size + mult * padding, padding + subreddit_font_size + 8), username, fill=(0, 0, 0, username_transparency), font=username_font)
+    d.text((logo_size + int(1.6 * padding), padding + 4), "r/"+subreddit, fill="black", font=subreddit_font)
+    d.text((logo_size + int(1.6 * padding), padding + subreddit_font_size + 8), username, fill=(0, 0, 0, 228), font=username_font)
 
     # Add main text below logo, subreddit, and username
     y_text_start = padding + logo_size + inner_padding - 1
@@ -112,18 +103,13 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     # Apply rounded corners
     rounded_mask = Image.new('L', (bubble_width, total_height), 0)
     draw_rounded = ImageDraw.Draw(rounded_mask)
-    draw_rounded.rounded_rectangle([(0, 0), (bubble_width, total_height)], radius=20, fill=255)
+    draw_rounded.rounded_rectangle([(0, 0), (bubble_width, total_height)], radius=int(20 * scale_factor), fill=255)
     img.putalpha(rounded_mask)
-
-    # Scale the entire bubble by factor Y
-    if scale_factor != 1.0:
-        img = img.resize((int(bubble_width * scale_factor), int(total_height * scale_factor)), Image.LANCZOS)
 
     # Save or return the image
     img_path = f"output/bubbles/{filename}.png"
     img.save(img_path, format="PNG")
     return img_path
 
-
 if __name__ == "__main__":
-    create_text_bubble("THIS to say. I have 10 other things to say about this issue so I am making a very long story about this", "default_username", "AskReddit")
+    create_text_bubble("THIS to say. I have 10 other things to say about this issue so I am making a very long story about this", "default_username", "AskReddit", video_height=1080)  # Test with 1080p resolution

@@ -1,3 +1,4 @@
+import sched
 import subprocess
 import os
 from mutagen.mp3 import MP3
@@ -222,7 +223,7 @@ def times_for_next_uploads_pacific():
             repeated_times = repeated_times[repeated_times.index(time)+1:]
 
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(datetime_list_1)
+    # print(repeated_times)
     print(scheduled_upload_date)
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
@@ -316,6 +317,7 @@ def get_scheduled_video():
         id=",".join(video_ids)
     ).execute()
 
+    
     # Iterate through the videos and find the scheduled one
     for video in videos_response.get("items", []):
         if video["status"]["privacyStatus"] == "private" and "publishAt" in video["status"]:
@@ -325,6 +327,7 @@ def get_scheduled_video():
             # today = datetime.datetime.utcnow()
             scheduled_upload_date -= timedelta(hours=7)
             return scheduled_upload_date
+        
 
         
     print("No scheduled videos found.")
@@ -394,7 +397,7 @@ def retain_latest_entries(file_path, num_entries=100):
 
 
 if __name__ == '__main__':
-    times_for_next_uploads_pacific()
+    print(times_for_next_uploads_pacific())
     # # Extract the hour from the third time (7 PM)
     # test = get_unprocessed_times()
     # hour_19 = test[2].hour

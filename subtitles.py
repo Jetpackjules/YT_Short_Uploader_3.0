@@ -77,11 +77,7 @@ import textwrap
 
 
 def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/video_subbed.mp4", 
-             font='Impact', 
-             fontsize=65, stroke_width=30, subtitle_height=0.35):
-            # NEW OG: fontsize=60, stroke_width=25
-            # OG: fontsize=34, stroke_width=5
-
+             font_size=65, strokewidth=20, font='Impact', subtitle_height=0.75):
 
     generate_srt("output/audiofiles/combined_audio_no_music.mp3")
     subtitle_file_path="output/audiofiles/subs.srt"
@@ -93,6 +89,14 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
     video = VideoFileClip(video_file_path)
     vidHeight = video.h
     vidWidth = video.w*1.0
+    
+    # Calculate fontsize and stroke_width based on video resolution
+    base_height = 1280  # Base height for original values
+    scale_factor = vidHeight / base_height
+    # print(scale_factor)1
+    # input("TEST")
+    fontsize = (font_size * scale_factor)
+    stroke_width = (strokewidth * scale_factor)
     
     # Ensure subtitle_height is within the valid range
     subtitle_height = max(0.0, min(1.0, subtitle_height))
@@ -114,8 +118,7 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
         if not txt.strip():
             return ColorClip(size=(1, 1), color=(0, 0, 0, 0), duration=0.1).set_position('center').set_opacity(0)
 
-        wrapped_text = textwrap.fill(txt, width=500)  # Adjust 'width' based on your needs
-        #I DONT THINK THIS REALLY DOES ANYTHING!^^^
+        wrapped_text = textwrap.fill(txt, width=int(50 * scale_factor))  # Adjust 'width' based on your needs and scale it
 
         return TextClip(wrapped_text,
                         fontsize=fontsize,
@@ -136,7 +139,7 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
         # Censor subtitles (shouldnt be necessary because we r doing this at post-level)
         txt = censor(txt)
 
-        wrapped_text = textwrap.fill(txt, width=50)  # Adjust 'width' based on your needs
+        wrapped_text = textwrap.fill(txt, width=int(50 * scale_factor))  # Adjust 'width' based on your needs and scale it
 
         return TextClip(wrapped_text,
                         fontsize=fontsize,

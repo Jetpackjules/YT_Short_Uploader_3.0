@@ -39,7 +39,7 @@ def make_vid(post):
 
 
     # Create a bubble for the main post
-    main_post_img_path = create_text_bubble(post['post'], post['user'], "AskReddit")
+    main_post_img_path = create_text_bubble(post['post'], post['user'], "AskReddit", video_height=clip.h)
     post['post'] = clean(post['post'])
     duration = tts_function("post", post['post'])
     transcript += post['post']
@@ -153,15 +153,17 @@ def make_vid(post):
     return transcript, music_volume
 
 
-def generate(vidName = "", pubTime="default", upload=True):
+def generate(vidName = "", pubTime="default", upload=True, download=True, process=True) :
     # Scrape reddit
-    redditPull = get_unprocessed_post("AskReddit", process=upload)  # Get an unprocessed post #dont process if not uploading
+    
+    redditPull = get_unprocessed_post("AskReddit", process=process)  # Get an unprocessed post #dont process if not uploading
     print("REDDIT SCRAPED! Generating video...")
     # Grab yt minecraft gameplay:
-    if (vidName != ""):
-        download_clip(vidName)
-    else:
-        clip_name = download_random_clip()
+    if download:
+        if (vidName != ""):
+            download_clip(vidName)
+        else:
+            clip_name = download_random_clip()
 
     # Add bubbles and compile:
     transcript, music_volume = make_vid(redditPull)
@@ -184,5 +186,4 @@ min_len = 34
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    generate(upload=False)
-    generate(upload=False)
+    generate(upload=False, download=False, process=False)
