@@ -198,8 +198,10 @@ def times_for_next_uploads_pacific():
     # Calculate next upload day's date
     today = datetime.datetime.utcnow()
     scheduled_upload_date = get_scheduled_video()
-    today = today.replace(hour=20, minute=0, second=0, microsecond=0)
+    # today = today.replace(hour=20, minute=0, second=0, microsecond=0) #COMMENTED THIS RECENTLY 9/3 SO MAY HAVE BROKEN STUFF!
     
+    # print(scheduled_upload_date)
+    # print(today)
     offset_days = ((scheduled_upload_date - today).days)
 
     print(f"The offset between today and the video's scheduled upload date is {offset_days} day(s).")
@@ -208,7 +210,7 @@ def times_for_next_uploads_pacific():
     second_day = current_time + timedelta(days=2+offset_days) # <- THIS SHOULD BE ONE NORMALLY!
     third_day = current_time + timedelta(days=3+offset_days) # <- THIS SHOULD BE ONE NORMALLY!
 
-    # Define specific times for tomorrow
+    # Define specific times for tomorrow\
     times = get_unprocessed_times()
 
     # Create datetime objects for each specific time
@@ -331,7 +333,7 @@ def get_scheduled_video():
 
         
     print("No scheduled videos found.")
-    return 0
+    return datetime.datetime.utcnow()
 
 # import cv2
 # def save_first_frame_as_png(video_path="output/video_subbed.mp4", output_path="output/thumbnail.png"):
