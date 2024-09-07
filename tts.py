@@ -197,7 +197,7 @@ logger = logging.getLogger(__name__)
 def openAItts(filename, text):
     global voice_num
     #Voice options: alloy, echo, fable, onyx, nova, and shimmer
-    voices = ["echo", "nova"] #Fable and shimmer are also pretty good
+    voices = ["echo", "echo"] # (<- need 2 for %2) Fable and shimmer are also pretty good (Used to use ECHO AND nova but removed fem echo for uniformity)
     voice_num += 1
     voice = voices[(voice_num % 2)]
 

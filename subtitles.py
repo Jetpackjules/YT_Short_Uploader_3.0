@@ -77,7 +77,7 @@ import textwrap
 
 
 def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/video_subbed.mp4", 
-             font_size=65, strokewidth=20, font='Impact', subtitle_height=0.75):
+             font_size=65, strokewidth=20, font='Impact', subtitle_height=0.35):
 
     generate_srt("output/audiofiles/combined_audio_no_music.mp3")
     subtitle_file_path="output/audiofiles/subs.srt"

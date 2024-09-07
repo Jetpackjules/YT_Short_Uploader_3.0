@@ -26,7 +26,7 @@ output_video_path = "output/video_raw.mp4"
 
 
 
-def make_vid(post):
+def make_vid(post, read_post=False):
     music_volume = 0.00
     transcript = "" 
     comment_pause = 0.35
@@ -61,43 +61,66 @@ def make_vid(post):
     start_time += (duration + comment_pause)
     
     user_times = []
-    # Loop over comments to create bubbles and audio clips
-    clip_len = get_media_duration(input_video_path)
-    for idx, comment in enumerate(post['comments']):
-        # Clean up comment:
-        # print(comment["text"])
-        comment["text"] = clean(comment['text'])
+    
+    if not read_post:
+        # Loop over comments to create bubbles and audio clips
+        clip_len = get_media_duration(input_video_path)
+        for idx, comment in enumerate(post['comments']):
+            # Clean up comment:
+            # print(comment["text"])
+            comment["text"] = clean(comment['text'])
 
-        # Ignore the rest if the vid is already at least 45 secs long
-        if ((start_time >= min_len)):
-            break
-        if ((comment['text'] == "[removed]") | (contains_link(comment['text']))):
-            continue
+            # Ignore the rest if the vid is already at least 45 secs long
+            if ((start_time >= min_len)):
+                break
+            if ((comment['text'] == "[removed]") | (contains_link(comment['text']))):
+                continue
+            
+            duration = tts_function(f"comment_{idx}", comment['text'])
+            comment_audio_path = f"output/audiofiles/comment_{idx}.mp3"  # Unique path for each comment
+            if (((start_time + duration) >= 55) | ((start_time + duration) >= clip_len)):
+                continue
+
+            user = comment['user']
+            user_times.append((start_time, start_time+duration+comment_pause, user))
+
+            if os.path.exists(comment_audio_path):
+                comment_audio = AudioFileClip(comment_audio_path)
+                actual_duration = comment_audio.duration
+                if abs(actual_duration - duration) > 0.1:  # Allow for a small difference
+                    print(f"Warning: Expected duration {duration} doesn't match actual duration {actual_duration} for comment {idx}")
+                    duration = actual_duration  # Use the actual duration instead
+
+                comment_audio = comment_audio.set_duration(duration).set_start(start_time).set_end(start_time+duration -0.15)
+                audio_clips.append(comment_audio)
+                # Insert a silent audio clip between the comments
+                if idx < len(post['comments']) - 1:  # Check if it's not the last comment
+                    silent_audio = make_silent_audio(comment_pause)
+                    audio_clips.append(silent_audio)
+
+            start_time += (duration+comment_pause)
+            transcript += ("\n\n"+"*"+comment['text'])
+    else:
+        # For "read post" videos, add the post description
         
-        duration = tts_function(f"comment_{idx}", comment['text'])
-        comment_audio_path = f"output/audiofiles/comment_{idx}.mp3"  # Unique path for each comment
-        if (((start_time + duration) >= 55) | ((start_time + duration) >= clip_len)):
-            continue
-
-        user = comment['user']
-        user_times.append((start_time, start_time+duration+comment_pause, user))
-
-        if os.path.exists(comment_audio_path):
-            comment_audio = AudioFileClip(comment_audio_path)
-            actual_duration = comment_audio.duration
-            if abs(actual_duration - duration) > 0.1:  # Allow for a small difference
-                print(f"Warning: Expected duration {duration} doesn't match actual duration {actual_duration} for comment {idx}")
-                duration = actual_duration  # Use the actual duration instead
-
-            comment_audio = comment_audio.set_duration(duration).set_start(start_time).set_end(start_time+duration -0.15)
-            audio_clips.append(comment_audio)
-            # Insert a silent audio clip between the comments
-            if idx < len(post['comments']) - 1:  # Check if it's not the last comment
-                silent_audio = make_silent_audio(comment_pause)
-                audio_clips.append(silent_audio)
-
-        start_time += (duration+comment_pause)
-        transcript += ("\n\n"+"*"+comment['text'])
+        post_desc = post["body"]
+        if post_desc:
+            post_desc = clean(post_desc)
+            duration = tts_function("post_desc", post_desc)
+            post_desc_audio_path = f"output/audiofiles/post_desc.mp3"
+            
+            if os.path.exists(post_desc_audio_path):
+                post_desc_audio = AudioFileClip(post_desc_audio_path)
+                actual_duration = post_desc_audio.duration
+                if abs(actual_duration - duration) > 0.1:
+                    print(f"Warning: Expected duration {duration} doesn't match actual duration {actual_duration} for post description")
+                    duration = actual_duration
+                
+                post_desc_audio = post_desc_audio.set_duration(duration).set_start(start_time)
+                audio_clips.append(post_desc_audio)
+            
+            transcript += ("\n\n" + "*" + post_desc)
+            start_time += duration
 
     # print("USER TIMES:")
     save_as_srt(user_times)
@@ -153,10 +176,10 @@ def make_vid(post):
     return transcript, music_volume
 
 
-def generate(vidName = "", pubTime="default", upload=True, download=True, process=True) :
+def generate(vidName="", pubTime="default", subreddit="AskReddit", upload=True, download=True, process=True, read_post=False):
     # Scrape reddit
     
-    redditPull = get_unprocessed_post("AskReddit", process=process)  # Get an unprocessed post #dont process if not uploading
+    redditPull = get_unprocessed_post(subreddit, process=process)  # Get an unprocessed post #dont process if not uploading
     print("REDDIT SCRAPED! Generating video...")
     # Grab yt minecraft gameplay:
     if download:
@@ -166,7 +189,7 @@ def generate(vidName = "", pubTime="default", upload=True, download=True, proces
             clip_name = download_random_clip()
 
     # Add bubbles and compile:
-    transcript, music_volume = make_vid(redditPull)
+    transcript, music_volume = make_vid(redditPull, read_post)
 
     #Make thumbnail:
     # save_first_frame_as_png()
@@ -182,8 +205,8 @@ def generate(vidName = "", pubTime="default", upload=True, download=True, proces
 #How long min video length should be (wont go far over this!)
 #DEFAULT: 45
 #Until 6/25: 28
-min_len = 34
+min_len = 60
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    generate(upload=False, download=False, process=False)
+    generate(upload=False, download=False, process=False, subreddit="offmychest", read_post=True)
