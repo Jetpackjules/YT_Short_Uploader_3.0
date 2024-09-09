@@ -11,9 +11,10 @@ def unique_color_picker(deterministic=False):
     subtitle_colors = [
         # '#FFFF00',  # Yellow
         '#FFFFFF',  # White
-        # '#90EE90',  # Soft green
+        '#90EE90',  # Soft green
         '#FFC0CB',  # Pale pink
         '#87CEEB',  # Sky blue
+
     ]
     used_colors = set()
     last_color = None
@@ -87,7 +88,7 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
     generate_srt("output/audiofiles/combined_audio_no_music.mp3")
     subtitle_file_path="output/audiofiles/subs.srt"
     trim_srt_file(subtitle_file_path)
-    get_color = unique_color_picker(deterministic=True)
+    get_color = unique_color_picker(deterministic=False)
 
 
     # Load the video clip

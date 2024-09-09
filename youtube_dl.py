@@ -16,13 +16,13 @@ videos = {
 
     # "satisfying_1hr": {"url": "https://www.youtube.com/watch?v=d8vpIg1fWGA", "length": 60, "speed": 2.0, "blur": False},
 #VERIFIED GOOD:
-    # "SAT-22": {"url": "https://www.youtube.com/watch?v=GOxi2-3fVIo", "length": 22, "speed": 2.0, "blur": False},
-    # "3D-60": {"url": "https://www.youtube.com/watch?v=Lx2yQ-CVoxQ", "length": 60, "speed": 2.0, "blur": False}, #GOOD
-    # "SAT-10": {"url": "https://www.youtube.com/watch?v=j9lPiUVZ9_c", "length": 10, "speed": 2.0, "blur": False},
-    # "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False},
-    # "COK-60": {"url": "https://www.youtube.com/watch?v=uFHfyqOztvg", "length": 60, "speed": 1.0, "blur": False},
+    "SAT-22": {"url": "https://www.youtube.com/watch?v=GOxi2-3fVIo", "length": 22, "speed": 2.0, "blur": False},
+    "3D-60": {"url": "https://www.youtube.com/watch?v=Lx2yQ-CVoxQ", "length": 60, "speed": 2.0, "blur": False}, #GOOD
+    "SAT-10": {"url": "https://www.youtube.com/watch?v=j9lPiUVZ9_c", "length": 10, "speed": 2.0, "blur": False},
+    "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False},
+    "COK-60": {"url": "https://www.youtube.com/watch?v=uFHfyqOztvg", "length": 60, "speed": 1.0, "blur": False},
 #COPYWRITED:
-    "COK-23": {"url": "https://www.youtube.com/watch?v=Y9p5YLvNt50", "length": 23, "speed": 1.2, "blur": False}
+    # "COK-23": {"url": "https://www.youtube.com/watch?v=Y9p5YLvNt50", "length": 23, "speed": 1.2, "blur": False}
 
 }
 

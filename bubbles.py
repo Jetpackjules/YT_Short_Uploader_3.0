@@ -8,8 +8,8 @@ from moviepy.video.fx.all import crop
 # if os_name == 'macOS':
 #     font_path = "/Library/Fonts/Arial.ttf"
 # elif os_name == 'Windows':
-username_font_path = "C:/Windows/Fonts/arial.ttf"
-font_path = "C:/Windows/Fonts/arialbd.ttf"  # Use 'arialbd.ttf' for bold Arial
+username_font_path = "C:/Windows/Fonts/Verdana.ttf"
+font_path = "C:/Windows/Fonts/Verdanab.ttf"  # Use 'arialbd.ttf' for bold Arial
 # else:
 #     input("FAILED TO DETECT OS!!!! ERROR!!")
 
@@ -79,7 +79,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     # Calculate total height
     text_height = sum(getsize_from_bbox(text_font, line)[1] for line in text_lines) + (len(text_lines) - 1) * inner_padding
     content_height = logo_size + text_height + 2 * inner_padding
-    total_height = int((content_height+ 2 * padding + 6*(scale_factor*2.5)))
+    total_height = int((content_height+ 2 * padding + 6*(1.3)))
 
     # Create bubble image
     img = Image.new('RGB', (bubble_width, total_height), 'white')
@@ -113,4 +113,4 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     return img_path
 
 if __name__ == "__main__":
-    create_text_bubble("I just got a crazy job offer!!!", "default_username", "AskReddit", video_height=3000)  # Test with 1080p resolution
+    create_text_bubble("Whsat are hints that women give that men don't pick up on?", "default_username", "AskReddit", video_height=2350)  # Test with 1080p resolution
