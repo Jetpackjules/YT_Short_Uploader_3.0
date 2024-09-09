@@ -205,7 +205,7 @@ def generate(vidName="", pubTime="default", subreddit="AskReddit", upload=True, 
 #How long min video length should be (wont go far over this!)
 #DEFAULT: 45
 #Until 6/25: 28
-min_len = 60
+min_len = 30
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":

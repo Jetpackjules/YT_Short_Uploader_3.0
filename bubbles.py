@@ -1,16 +1,17 @@
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 from moviepy.video.fx.all import crop
-from helper import detect_os
+# from helper import detect_os
 
-font_path = ""
-os_name = detect_os()
-if os_name == 'macOS':
-    font_path = "/Library/Fonts/Arial.ttf"
-elif os_name == 'Windows':
-    font_path = "C:/Windows/Fonts/arial.ttf"
-else:
-    input("FAILED TO DETECT OS!!!! ERROR!!")
+# font_path = ""
+# os_name = detect_os()
+# if os_name == 'macOS':
+#     font_path = "/Library/Fonts/Arial.ttf"
+# elif os_name == 'Windows':
+username_font_path = "C:/Windows/Fonts/arial.ttf"
+font_path = "C:/Windows/Fonts/arialbd.ttf"  # Use 'arialbd.ttf' for bold Arial
+# else:
+#     input("FAILED TO DETECT OS!!!! ERROR!!")
 
 def getsize_from_bbox(font, text):
     bbox = font.getbbox(text)
@@ -42,17 +43,17 @@ subbers_path = "assets/subbers.png"
 
 def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, video_height=1280):
     # Calculate scale factor based on video height
-    scale_factor = (video_height / 1280)*1.5
+    scale_factor = (video_height / 1080)*1.5
 
     # Constants for layout (scaled)
-    padding = int(15 * scale_factor)
-    inner_padding = int(10 * scale_factor)
-    logo_size = int(55 * scale_factor)
+    padding = int(15 * scale_factor)-5
+    inner_padding = int(10 * scale_factor)-1
+    logo_size = int(55 * scale_factor*0.88)
     subreddit_font_size = int(22 * scale_factor)
     username_font_size = int(13 * scale_factor)
     text_font_size = int(18 * scale_factor)
     button_height = int(35 * scale_factor)
-    subberLeftPadding = int(18 * scale_factor)
+    subberLeftPadding = int(18 * scale_factor * 0.75)
 
     # Load and prepare images
     reddit_logo = Image.open(reddit_logo_path).resize((logo_size, logo_size), Image.LANCZOS)
@@ -63,7 +64,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
 
     # Font and text processing
     subreddit_font = ImageFont.truetype(font_path, subreddit_font_size)
-    username_font = ImageFont.truetype(font_path, username_font_size)
+    username_font = ImageFont.truetype(username_font_path, username_font_size)
     text_font = ImageFont.truetype(font_path, text_font_size)
 
     # CUTTING OUT MORE THAN 30 WORDS FOR BREVITY (TBD IMPROVE THIS!)
@@ -78,27 +79,27 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     # Calculate total height
     text_height = sum(getsize_from_bbox(text_font, line)[1] for line in text_lines) + (len(text_lines) - 1) * inner_padding
     content_height = logo_size + text_height + 2 * inner_padding
-    total_height = content_height + 2 * padding + 6
+    total_height = int((content_height+ 2 * padding + 6*(scale_factor*2.5)))
 
     # Create bubble image
     img = Image.new('RGB', (bubble_width, total_height), 'white')
     d = ImageDraw.Draw(img)
 
     # Place the Reddit logo
-    paste_with_transparency(img, reddit_logo, (padding, padding))
-    paste_with_transparency(img, subbers, (subberLeftPadding, total_height - button_height))
+    paste_with_transparency(img, reddit_logo, (int(padding*1.4), padding))
+    paste_with_transparency(img, subbers, (int(padding*1.0), int((total_height - button_height)*0.99)))
 
     # Add subreddit and username text next to the logo
-    d.text((logo_size + int(1.6 * padding), padding + 4), "r/"+subreddit, fill="black", font=subreddit_font)
-    d.text((logo_size + int(1.6 * padding), padding + subreddit_font_size + 8), username, fill=(0, 0, 0, 228), font=username_font)
+    d.text((logo_size + int(2.0 * padding), padding + 4), "r/"+subreddit, fill="black", font=subreddit_font)
+    d.text((logo_size + int(2.0 * padding), padding + subreddit_font_size + 8), username, fill=(0, 0, 0, 228), font=username_font)
 
     # Add main text below logo, subreddit, and username
-    y_text_start = padding + logo_size + inner_padding - 1
+    y_text_start = int((padding + logo_size + inner_padding )*0.95)
     for line in text_lines:
         text_width, text_height = getsize_from_bbox(text_font, line)
         text_x = padding + inner_padding - 5
         d.text((text_x, y_text_start), line, fill="black", font=text_font)
-        y_text_start += text_height + 3
+        y_text_start += int(text_height + 3*1.8)
 
     # Apply rounded corners
     rounded_mask = Image.new('L', (bubble_width, total_height), 0)
@@ -112,4 +113,4 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     return img_path
 
 if __name__ == "__main__":
-    create_text_bubble("THIS to say. I have 10 other things to say about this issue so I am making a very long story about this", "default_username", "AskReddit", video_height=1080)  # Test with 1080p resolution
+    create_text_bubble("I just got a crazy job offer!!!", "default_username", "AskReddit", video_height=3000)  # Test with 1080p resolution

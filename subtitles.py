@@ -7,27 +7,32 @@ from Sub_Align import generate_srt
 from helper import censor
 
 import random
-def unique_color_picker():
+def unique_color_picker(deterministic=False):
     subtitle_colors = [
         # '#FFFF00',  # Yellow
-        '#90EE90',  # Soft green
-        '#FFC0CB',  # Pale pink
-        '#87CEEB'   # Sky blue
         '#FFFFFF',  # White
+        # '#90EE90',  # Soft green
+        '#FFC0CB',  # Pale pink
+        '#87CEEB',  # Sky blue
     ]
     used_colors = set()
     last_color = None
+    color_counter = 0
 
     def get_color():
-        nonlocal used_colors, last_color
-        if len(used_colors) == len(subtitle_colors):
-            used_colors.clear()  # Reset the used colors
-            used_colors.add(last_color)  # Ensure last color is not picked again immediately
+        nonlocal used_colors, last_color, color_counter
+        if deterministic:
+            color = subtitle_colors[color_counter % len(subtitle_colors)]
+            color_counter += 1
+        else:
+            if len(used_colors) == len(subtitle_colors):
+                used_colors.clear()  # Reset the used colors
+                used_colors.add(last_color)  # Ensure last color is not picked again immediately
 
-        available_colors = list(set(subtitle_colors) - used_colors)
-        color = random.choice(available_colors)
-        used_colors.add(color)
-        last_color = color
+            available_colors = list(set(subtitle_colors) - used_colors)
+            color = random.choice(available_colors)
+            used_colors.add(color)
+            last_color = color
         return color
 
     return get_color
@@ -82,7 +87,7 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
     generate_srt("output/audiofiles/combined_audio_no_music.mp3")
     subtitle_file_path="output/audiofiles/subs.srt"
     trim_srt_file(subtitle_file_path)
-    get_color = unique_color_picker()
+    get_color = unique_color_picker(deterministic=True)
 
 
     # Load the video clip

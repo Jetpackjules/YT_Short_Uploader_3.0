@@ -45,13 +45,17 @@ def scrape_questions_and_answers(subreddit_name='AskReddit'):
             except json.JSONDecodeError:
                 posts = {}
 
+
     # Initialize the dictionary to hold questions and answers
     qa_dict = {}
-    total_non_nsfw_posts = 0
+    total_valid_posts = 0
+
+    def calculate_tts_time(char_count, word_count):
+        return (0.04 * char_count + 0.05 * word_count)
 
     # Continue fetching until we have 31 non-NSFW posts
     post_limit = 0
-    while total_non_nsfw_posts < 12:
+    while total_valid_posts < 12:
         post_limit += 75
         top_posts = subreddit.top(limit=post_limit, time_filter="week")  # Fetch more posts in each iteration to ensure we reach the required number
 
@@ -63,9 +67,18 @@ def scrape_questions_and_answers(subreddit_name='AskReddit'):
                 
 
             if (not post.over_18) and (not has_profanity(post.title)) and (not has_profanity(post.selftext)):  # Check if the post is NSFW and skip if it is
-                print("New posts found: ", str(total_non_nsfw_posts))
+                desc_char_count = len(post.selftext)
+                desc_word_count = len(post.selftext.split())
+                post_char_count = len(post.title)
+                post_word_count = len(post.title.split())
+                print("Desc time: ", calculate_tts_time(desc_char_count, desc_word_count))
+                if (calculate_tts_time(desc_char_count, desc_word_count) > 57-calculate_tts_time(post_char_count, post_word_count)): #Check if post and desc fits under a min
+                    print("Post desc too long for 1 min video! - Skipping...")
+                    continue
+
+                print("New posts found: ", str(total_valid_posts))
                 post_id = post.id
-                total_non_nsfw_posts += 1
+                total_valid_posts += 1
                 author_name = "u/[deleted]" if post.author is None else "u/" + str(post.author.name)
 
                 qa_dict[post_id] = {
@@ -86,7 +99,7 @@ def scrape_questions_and_answers(subreddit_name='AskReddit'):
                         })
             else:
                 print("NSFW - Skipping...")
-            if total_non_nsfw_posts >= 12:
+            if total_valid_posts >= 12:
                 break  # Exit the loop once we have enough posts
 
     save_posts_to_file(qa_dict, filename)
@@ -133,7 +146,7 @@ def get_unprocessed_post(subreddit='AskReddit', process=True):
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
     subreddit = "AskReddit"
-    # subreddit = "offmychest"
+    subreddit = "offmychest"
     scrape_questions_and_answers(subreddit)
 
 

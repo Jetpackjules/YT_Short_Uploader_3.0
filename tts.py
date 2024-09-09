@@ -234,5 +234,19 @@ def openAItts(filename, text):
 if __name__ == "__main__":
     # googleTTS("testGoogle-man", 'While in a deep sleep on the beach when you are lost in slumber hearing the waves, feeling the warmth of the sun that makes you feel so cozy, and smelling the salt in the air.')
     # googleTTS("testGoogle-fem", 'While in a deep sleep on the beach when you are lost in slumber hearing the waves, feeling the warmth of the sun that makes you feel so cozy, and smelling the salt in the air.')
+    test_text_200 = "The forest was quiet, with only the occasional rustle of leaves as a breeze passed through. The tall trees stood like silent sentinels, their branches creating a canopy that filtered the sunlight into soft, dappled patterns on the ground. It was a place of peace, where the busyness of the world seemed far away. A narrow path wound its way through the trees, leading deeper into the heart of the woods. The air was cool and fresh, filled with the earthy scent of moss and damp soil. As they walked along the path, the figure felt a sense of calm wash over them. There was something about being in nature that always brought clarity. The sounds of birds chirping in the distance, the occasional snap of a twig underfoot, and the whisper of the wind through the trees all combined to create a symphony of quietude. Each step felt deliberate, each breath more purposeful. It was as if the weight of the world had been lifted, if only for a little while. Deeper into the forest, a small stream appeared, its water bubbling over rocks as it wound its way through the landscape. The figure stopped by the edge, crouching down to dip their fingers into the cool, clear water. It was a reminder of the simplicity and beauty that could still be found in the world, untouched by human hands. As the sun began to lower in the sky, casting long shadows, the forest seemed to change. The air grew cooler, and the sounds of the day gave way to the quiet hum of evening. It was time to leave, but the sense of peace lingered. The figure turned and made their way back along the path, knowing they would return to this place again."
     
-    openAItts("testOpenAI_timing", "This is a test!")
+    
+    
+    # CHAR: WORD = TIME
+    # 704 : 114 = 34s
+    # 594 : 105 = 30s
+    # 534 : 92 = 26s
+    # 258 : 48 = 12s
+    # 859 : 156 = 42s
+    # 1868 : 340 = 92s
+    # 1615 : 296 = 80s
+
+
+    openAItts("testOpenAI_timing", test_text_200)
+
