@@ -43,7 +43,7 @@ subbers_path = "assets/subbers.png"
 
 def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, video_height=1280):
     # Calculate scale factor based on video height
-    scale_factor = (video_height / 1080)*1.5
+    scale_factor = (video_height / 1280)*1.5
 
     # Constants for layout (scaled)
     padding = int(15 * scale_factor)-5
