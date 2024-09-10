@@ -43,7 +43,7 @@ subbers_path = "assets/subbers.png"
 
 def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, video_height=1280):
     # Calculate scale factor based on video height
-    scale_factor = (video_height / 1280)#*1.5
+    scale_factor = (video_height / 1280)*1.5
 
     # Constants for layout (scaled)
     padding = int(15 * scale_factor-5*scale_factor)
@@ -87,7 +87,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
 
     # Place the Reddit logo
     paste_with_transparency(img, reddit_logo, (int(padding*1.4), padding))
-    paste_with_transparency(img, subbers, (int(padding*1.0), int((total_height - button_height)*0.99)))
+    paste_with_transparency(img, subbers, (int(padding*1.0), int((total_height - button_height)*1.01)))
 
     # Add subreddit and username text next to the logo
     d.text((logo_size + int(2.0 * padding), padding + 4), "r/"+subreddit, fill="black", font=subreddit_font)

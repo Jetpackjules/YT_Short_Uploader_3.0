@@ -1,7 +1,7 @@
 # from PIL import Image, ImageDraw, ImageFont, ImageOps
 from moviepy.editor import AudioFileClip, concatenate_audioclips
 import os
-# import moviepy as mp
+import moviepy as mp
 # from moviepy.audio.AudioClip import AudioClip
 from moviepy.editor import CompositeAudioClip
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
@@ -167,9 +167,15 @@ def make_vid(post, read_post=False):
         final_video = final_video.set_audio(combined_audio)
         audio_duration = combined_audio.duration
         video_duration = audio_duration -0.17 #(- 0.23) <- THIS WAS MAIN # + 0.5  # 0.5 seconds longer than audio (COMMENTING THIS DOES NOT IMPROVE THE TIME ERRORS ON RENDER!!!)
-        final_video = final_video.set_duration(video_duration)
 
-    
+        final_video = final_video.fx(mp.vfx.loop, duration=video_duration)
+        if final_video.duration > video_duration:
+            final_video = final_video.subclip(0, video_duration)
+            
+        #ATTEMPTED FIX FORTHE WEIRD TIME NOT EQUAL BUG!        
+        # final_video = final_video.set_duration(video_duration)
+
+            
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
