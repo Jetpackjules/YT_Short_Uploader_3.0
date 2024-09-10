@@ -43,17 +43,17 @@ subbers_path = "assets/subbers.png"
 
 def create_text_bubble(text, username, subreddit, filename="bubble_out", base_width=450, video_height=1280):
     # Calculate scale factor based on video height
-    scale_factor = (video_height / 1280)*1.5
+    scale_factor = (video_height / 1280)#*1.5
 
     # Constants for layout (scaled)
-    padding = int(15 * scale_factor)-5
-    inner_padding = int(10 * scale_factor)-1
+    padding = int(15 * scale_factor-5*scale_factor)
+    inner_padding = int(10 * scale_factor -1*scale_factor)
     logo_size = int(55 * scale_factor*0.88)
     subreddit_font_size = int(22 * scale_factor)
     username_font_size = int(13 * scale_factor)
     text_font_size = int(18 * scale_factor)
     button_height = int(35 * scale_factor)
-    subberLeftPadding = int(18 * scale_factor * 0.75)
+    # subberLeftPadding = int(18 * scale_factor * 0.75)
 
     # Load and prepare images
     reddit_logo = Image.open(reddit_logo_path).resize((logo_size, logo_size), Image.LANCZOS)
@@ -78,8 +78,8 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
 
     # Calculate total height
     text_height = sum(getsize_from_bbox(text_font, line)[1] for line in text_lines) + (len(text_lines) - 1) * inner_padding
-    content_height = logo_size + text_height + 2 * inner_padding
-    total_height = int((content_height+ 2 * padding + 6*(1.3)))
+    content_height = text_height + int((logo_size + 3.5 * inner_padding))
+    total_height = int((content_height+ 2 * padding)) # + 6*(1.3)))
 
     # Create bubble image
     img = Image.new('RGB', (bubble_width, total_height), 'white')
@@ -97,9 +97,9 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     y_text_start = int((padding + logo_size + inner_padding )*0.95)
     for line in text_lines:
         text_width, text_height = getsize_from_bbox(text_font, line)
-        text_x = padding + inner_padding - 5
+        text_x = padding + inner_padding - 5*scale_factor
         d.text((text_x, y_text_start), line, fill="black", font=text_font)
-        y_text_start += int(text_height + 3*1.8)
+        y_text_start += int(text_height + 3*1.8*scale_factor)
 
     # Apply rounded corners
     rounded_mask = Image.new('L', (bubble_width, total_height), 0)
@@ -113,4 +113,4 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     return img_path
 
 if __name__ == "__main__":
-    create_text_bubble("Whsat are hints that women give that men don't pick up on?", "default_username", "AskReddit", video_height=2350)  # Test with 1080p resolution
+    create_text_bubble("Im getting married! Is this not like  SUPER exciting! Great sample post, jules!", "default_username", "AskReddit", video_height=3080)  # Test with 1080p resolution
