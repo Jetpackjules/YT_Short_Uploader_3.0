@@ -1,7 +1,7 @@
 # from PIL import Image, ImageDraw, ImageFont, ImageOps
 from moviepy.editor import AudioFileClip, concatenate_audioclips
 import os
-import moviepy as mp
+import moviepy.editor as mp
 # from moviepy.audio.AudioClip import AudioClip
 from moviepy.editor import CompositeAudioClip
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
@@ -111,12 +111,13 @@ def make_vid(post, read_post=False):
             
             if os.path.exists(post_desc_audio_path):
                 post_desc_audio = AudioFileClip(post_desc_audio_path)
-                actual_duration = post_desc_audio.duration
-                if abs(actual_duration - duration) > 0.1:
-                    print(f"Warning: Expected duration {duration} doesn't match actual duration {actual_duration} for post description")
-                    duration = actual_duration
-                
-                post_desc_audio = post_desc_audio.set_duration(duration).set_start(start_time)
+                # actual_duration = post_desc_audio.duration
+                duration = actual_duration
+                # if abs(actual_duration - duration) > 0.1:
+                #     print(f"Warning: Expected duration {duration} doesn't match actual duration {actual_duration} for post description")
+                #     duration = actual_duration
+                #        .set_duration(duration) VVV
+                post_desc_audio = post_desc_audio.set_start(start_time)
                 audio_clips.append(post_desc_audio)
             
             transcript += ("\n\n" + "*" + post_desc)
@@ -175,7 +176,11 @@ def make_vid(post, read_post=False):
         #ATTEMPTED FIX FORTHE WEIRD TIME NOT EQUAL BUG!        
         # final_video = final_video.set_duration(video_duration)
 
-            
+    final_video = final_video.fx(mp.vfx.loop, duration=video_duration)
+    if final_video.duration > video_duration:
+        final_video = final_video.subclip(0, video_duration)
+
+        
     final_video.write_videofile(output_video_path, fps=60, codec="libx264", preset="slow")
     add_subs()
 
