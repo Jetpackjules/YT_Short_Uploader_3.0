@@ -22,7 +22,7 @@ videos = {
     "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False},
     "COK-60": {"url": "https://www.youtube.com/watch?v=uFHfyqOztvg", "length": 60, "speed": 1.0, "blur": False},
 #COPYWRITED:
-    # "COK-23": {"url": "https://www.youtube.com/watch?v=Y9p5YLvNt50", "length": 23, "speed": 1.2, "blur": False}
+    "COK-23": {"url": "https://www.youtube.com/watch?v=Y9p5YLvNt50", "length": 23, "speed": 1.2, "blur": False}
 
 }
 
