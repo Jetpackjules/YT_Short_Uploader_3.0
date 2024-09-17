@@ -4,7 +4,7 @@ conda env export > environment.yml
 To create env (from file to PC):
 conda env create --file=environment.yml
 
-To update ENV (FROM FILE TO PC) (run in conda terminal):
+To update ENV (FROM FILE TO PC) (run in conda terminal) (if i remove --prune it works in terminal?):
 conda env update --file environment.yml --prune
 
 INSTALL:
