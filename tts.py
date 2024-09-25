@@ -219,9 +219,9 @@ def openAItts(filename, text):
         )
         response.write_to_file(speech_file_path)
         # response.stream_to_file(speech_file_path)
-        logger.info(f"Audio file '{filename}' saved successfully.")
+        print(f"Audio file '{filename}' saved successfully.")
     except Exception as e:
-        logger.error(f"Error in openAItts: {str(e)}")
+        print(f"Error in openAItts: {str(e)}")
         return 0  # Return 0 duration in case of error
 
     speed_up_audio(f'output/Audiofiles/{filename}.mp3', 1.25)

@@ -24,7 +24,7 @@ videos = {
     "SAT-20": {"url": "https://www.youtube.com/watch?v=6ff4SkmB_4A", "length": 20, "speed": 2.0, "blur": False},
     "COK-60": {"url": "https://www.youtube.com/watch?v=uFHfyqOztvg", "length": 60, "speed": 1.0, "blur": False},
 #COPYWRITED:
-    "COK-23": {"url": "https://www.youtube.com/watch?v=Y9p5YLvNt50", "length": 23, "speed": 1.2, "blur": False} #HIFH REZ!
+    # "COOK-23": {"url": "https://www.youtube.com/watch?v=Y9p5YLvNt50", "length": 23, "speed": 1.2, "blur": False} #HIFH REZ!
 
 }
 
@@ -175,6 +175,6 @@ import subprocess as sps
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
     # pass
-    # download_clip("COK-23")
-    download_random_clip()
+    download_clip("COOK-23")
+    # download_random_clip()
     # blur_rectangle_in_video()
