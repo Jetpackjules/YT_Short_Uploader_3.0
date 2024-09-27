@@ -163,11 +163,11 @@ def initialize_upload(youtube, options):
         playlist_id = options.playlistId
         thumbnail_path = "output/thumbnail.png"
 
-        #Doesnt really work :( TBD
+        #Doesnt really work :( TBD (may be using tokens, too?)
         # if playlist_id:
         #     add_video_to_playlist(youtube, video_id, playlist_id)
-        # if thumbnail_path:
-        #     set_thumbnail(youtube, video_id, thumbnail_path)
+        if thumbnail_path:
+            set_thumbnail(youtube, video_id, thumbnail_path)
 
 
 # This method implements an exponential backoff strategy to resume a

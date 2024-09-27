@@ -12,7 +12,7 @@ from youtube_dl import download_clip, download_random_clip
 import tts
 from subtitles import add_subs
 from upload_video import upload_video
-from helper import clean, contains_link, save_as_srt, make_silent_audio, generate_title, get_media_duration
+from helper import clean, contains_link, save_as_srt, make_silent_audio, generate_title, get_media_duration, save_first_frame_as_png
 import random
 from ai import gen_description, gen_tags
 
@@ -202,8 +202,8 @@ def generate(vidName="", pubTime="default", subreddit="AskReddit", upload=True, 
     # Add bubbles and compile:
     transcript, music_volume = make_vid(redditPull, read_post)
 
-    #Make thumbnail:
-    # save_first_frame_as_png()
+    # Make thumbnail:
+    save_first_frame_as_png()
 
     # Send clip to YT:
     if upload==True:

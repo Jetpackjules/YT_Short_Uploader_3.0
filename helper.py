@@ -303,7 +303,7 @@ def get_scheduled_video():
         part="id,snippet",
         forMine=True,
         type="video",
-        maxResults=50  # Fetch up to 50 videos to ensure we find scheduled ones
+        maxResults=25  # Fetch up to 50 videos to ensure we find scheduled ones
     ).execute()
 
     # Get video IDs
@@ -335,29 +335,29 @@ def get_scheduled_video():
     print("No scheduled videos found.")
     return datetime.datetime.utcnow()
 
-# import cv2
-# def save_first_frame_as_png(video_path="output/video_subbed.mp4", output_path="output/thumbnail.png"):
-#     # Check if the input video file exists
-#     if not os.path.exists(video_path):
-#         raise FileNotFoundError(f"The video file '{video_path}' does not exist.")
+import cv2
+def save_first_frame_as_png(video_path="output/video_subbed.mp4", output_path="output/thumbnail.png"):
+    # Check if the input video file exists
+    if not os.path.exists(video_path):
+        raise FileNotFoundError(f"The video file '{video_path}' does not exist.")
     
-#     # Open the video file using OpenCV
-#     video_capture = cv2.VideoCapture(video_path)
+    # Open the video file using OpenCV
+    video_capture = cv2.VideoCapture(video_path)
     
-#     # Read the first frame
-#     success, frame = video_capture.read()
+    # Read the first frame
+    success, frame = video_capture.read()
     
-#     # Check if the frame was successfully read
-#     if not success:
-#         raise RuntimeError(f"Failed to read the first frame from '{video_path}'.")
+    # Check if the frame was successfully read
+    if not success:
+        raise RuntimeError(f"Failed to read the first frame from '{video_path}'.")
     
-#     # Save the frame as a PNG image
-#     cv2.imwrite(output_path, frame)
+    # Save the frame as a PNG image
+    cv2.imwrite(output_path, frame)
     
-#     # Release the video capture object
-#     video_capture.release()
+    # Release the video capture object
+    video_capture.release()
 
-#     print(f"The first frame of '{video_path}' has been saved as '{output_path}'.")
+    print(f"The first frame of '{video_path}' has been saved as '{output_path}'.")
 
 
 from better_profanity import profanity
