@@ -8,7 +8,7 @@ from helper import times_for_next_uploads_pacific
 # Generates 3 vids tmmrw at morning, afternoon, and night, with different vids for each...
 if __name__ == "__main__":
     publishtimes = times_for_next_uploads_pacific()
-    generate(pubTime=publishtimes[0], upload=True, subreddit="offmychest", read_post=True) 
+    generate( pubTime=publishtimes[0], upload=True, subreddit="offmychest", read_post=True) 
     generate(pubTime=publishtimes[1], upload=True)
     generate(pubTime=publishtimes[2], upload=True, subreddit="offmychest", read_post=True)
     generate(pubTime=publishtimes[3], upload=True, subreddit="offmychest", read_post=True)

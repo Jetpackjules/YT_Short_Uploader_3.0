@@ -130,6 +130,10 @@ def make_vid(post, read_post=False):
 
     # Concatenate all audio clips together
     combined_audio = concatenate_audioclips(audio_clips)
+    #Trying to fix clip duration = 0 bug with this...
+    # combined_audio = combined_audio.set_start(start_time)
+    combined_audio = combined_audio.subclip(0, combined_audio.duration)
+    
     combined_audio.write_audiofile("output/audiofiles/combined_audio_no_music.mp3")
 
 

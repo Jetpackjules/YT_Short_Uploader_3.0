@@ -175,6 +175,6 @@ import subprocess as sps
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
     # pass
-    download_clip("COOK-23")
-    # download_random_clip()
+    # download_clip("COOK-23")
+    download_random_clip()
     # blur_rectangle_in_video()

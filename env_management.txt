@@ -22,3 +22,7 @@ INSTALL:
 
 5. ALSO RUN THIS IN POWERSHELL AS ADMIN to fix permissions: 
 # Set-ExecutionPolicy RemoteSigned
+
+
+
+P.S> Make SURE you are using correct NPM version! (I think 22?) (You can manage multiple with nvm)
