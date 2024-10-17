@@ -9,6 +9,7 @@ conda env update --file environment.yml --prune
 
 INSTALL:
 1. FFMPEG (website) (OR RUN: [[ winget install "FFmpeg (Essentials Build)" ]]) (VERSION: ffmpeg version 7.0-essentials_build-www.gyan.dev)
+
 2.  # MIGHT NEED TO RE-INSTALL IMAGE MAGICK WITH ALL BOXES CHECKED (except last 2, but LEGACY FEATURES needs ot be installed)
     # Useful info: https://moviepy-tburrows13.readthedocs.io/en/improve-docs/ref/VideoClip/TextClip.html
     # Download: https://imagemagick.org/script/download.php#windows
