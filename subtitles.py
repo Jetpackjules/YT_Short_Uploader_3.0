@@ -172,7 +172,39 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
     subtitles_stroke = SubtitlesClip(subtitles, stroke_generator).set_position(('center', yPos))
     
     final = CompositeVideoClip([video, subtitles_stroke, subtitles_text], size=video.size)
-    final.write_videofile(output_file_path, codec="libx264", fps=video.fps, preset="slow")
+
+
+    # ADD CAT OVERLAY:
+
+    # Load the cat video
+    cat_video = VideoFileClip('assets/sub_cat.webm')
+    cat_duration = cat_video.duration
+
+    # Remove the grey background from the cat video
+    # Adjust 'thr' and 's' parameters for better masking
+    cat_video_no_bg = cat_video.fx(vfx.mask_color, color=(204, 204, 204), thr=1, s=100) #usually 5!)
+
+    # Resize the cat video to be smaller (e.g., 25% of the main video's width)
+    cat_width = final.w * 1.75
+    cat_video_no_bg = cat_video_no_bg.resize(width=cat_width)
+
+    # Position the cat video at the top right corner
+    cat_video_no_bg = cat_video_no_bg.set_position(('center', 'top'))
+
+    # Set the start time for the cat video to overlay
+    start_time = final.duration - cat_duration
+    cat_video_no_bg = cat_video_no_bg.set_start(start_time)
+
+    # Create the composite video
+    final_video = CompositeVideoClip([final, cat_video_no_bg], size=final.size)
+
+# # Write the output video
+# final_video.write_videofile('output/final_video.mp4', codec='libx264')
+
+
+
+    #WRITE FINAL VIDEO:
+    final_video.write_videofile(output_file_path, codec="libx264", fps=video.fps, preset="slow")
 
     # MIGHT NEED TO RE-INSTALL IMAGE MAGICK WITH ALL BOXES CHECKED (except last 2, but LEGACY FEATURES needs ot be installed)
     # Useful info: https://moviepy-tburrows13.readthedocs.io/en/improve-docs/ref/VideoClip/TextClip.html
