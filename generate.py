@@ -25,8 +25,10 @@ input_video_path = "output/input_video.mp4"
 output_video_path = "output/video_raw.mp4"
 
 
-
 def make_vid(post, read_post=False):
+    #Make folders if they are empty!
+    os.makedirs("output/Audiofiles", exist_ok=True); os.makedirs("output/Bubbles", exist_ok=True)
+
     music_volume = 0.00
     transcript = "" 
     comment_pause = 0.35
@@ -224,4 +226,4 @@ min_len = 30
 
 # RUNS WHEN NOT AN IMPORT:
 if __name__ == "__main__":
-    generate(upload=False, download=False, process=False, subreddit="offmychest", read_post=True)
+    generate(upload=False, download=True, process=False, subreddit="offmychest", read_post=True)
