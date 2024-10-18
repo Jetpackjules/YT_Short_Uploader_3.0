@@ -182,7 +182,7 @@ def add_subs(video_file_path="output/video_raw.mp4", output_file_path="output/vi
 
     # Remove the grey background from the cat video
     # Adjust 'thr' and 's' parameters for better masking
-    cat_video_no_bg = cat_video.fx(vfx.mask_color, color=(204, 204, 204), thr=1, s=100) #usually 5!)
+    cat_video_no_bg = cat_video.fx(vfx.mask_color, color=(204, 204, 204), thr=6, s=5) #usually 5!)
 
     # Resize the cat video to be smaller (e.g., 25% of the main video's width)
     cat_width = final.w * 1.75
