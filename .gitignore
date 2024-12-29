@@ -1,0 +1,4 @@
+# Ignore temporary files
+*~
+/output/*
+video_subbedTEMP_MPY_wvf_snd.mp3

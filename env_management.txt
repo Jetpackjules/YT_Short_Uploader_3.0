@@ -1,0 +1,29 @@
+To CREATE/UPDATE YAML (from PC to file) go to reg. terminal:
+conda env export > environment.yml
+
+To create env (from file to PC):
+conda env create --file=environment.yml
+
+To update ENV (FROM FILE TO PC) (run in conda terminal) (if i remove --prune it works in terminal?):
+conda env update --file environment.yml --prune
+
+INSTALL:
+1. FFMPEG (website) (OR RUN: [[ winget install "FFmpeg (Essentials Build)" ]]) (VERSION: ffmpeg version 7.0-essentials_build-www.gyan.dev)
+
+2.  # MIGHT NEED TO RE-INSTALL IMAGE MAGICK WITH ALL BOXES CHECKED (except last 2, but LEGACY FEATURES needs ot be installed)
+    # Useful info: https://moviepy-tburrows13.readthedocs.io/en/improve-docs/ref/VideoClip/TextClip.html
+    # Download: https://imagemagick.org/script/download.php#windows
+    # version: ImageMagick-7.1.1-30-Q16-HDRI-x64-dll.exe
+
+3. INSTALL NODE JS!
+# https://nodejs.org/en/download (V20.12.2 last known working ver)
+
+4. INSTALL ECHOGARDEN! 
+# npm install echogarden -g
+
+5. ALSO RUN THIS IN POWERSHELL AS ADMIN to fix permissions: 
+# Set-ExecutionPolicy RemoteSigned
+
+
+
+P.S> Make SURE you are using correct NPM version! (I think 22?) (You can manage multiple with nvm)
