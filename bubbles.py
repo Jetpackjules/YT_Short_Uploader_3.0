@@ -61,7 +61,7 @@ def create_text_bubble(text, username, subreddit, filename="bubble_out", base_wi
     subbers_aspect_ratio = subbers.width / subbers.height
     subbers_width = int(button_height * subbers_aspect_ratio)
     subbers = subbers.resize((subbers_width, button_height), Image.LANCZOS)
-
+#2
     # Font and text processing
     subreddit_font = ImageFont.truetype(font_path, subreddit_font_size)
     username_font = ImageFont.truetype(username_font_path, username_font_size)
